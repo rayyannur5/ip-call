@@ -31,4 +31,4 @@ if ($res) {
         'message' => 'Bed gagal ditambahkan'
     ];
 }
-header('location: ../setting_umum.php');
+header('location: ../setting.php');

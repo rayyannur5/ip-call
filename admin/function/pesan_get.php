@@ -12,6 +12,7 @@ if (!empty($category)) {
         "SELECT category_log.name as name_category, log.value, log.timestamp FROM log
         JOIN category_log ON category_log.id = log.category_log_id
         WHERE log.category_log_id = $category
+        ORDER BY log.id DESC
         LIMIT $start, $limit"
     );
 
@@ -31,6 +32,7 @@ if (!empty($category)) {
     $data = queryArray(
         "SELECT category_log.name as name_category, log.value, log.timestamp FROM log
         JOIN category_log ON category_log.id = log.category_log_id
+        ORDER BY log.id DESC
         LIMIT $start, $limit"
     );
 

@@ -76,6 +76,9 @@ exten => 100,2,Hangup()
 
 exten => 200,1,Dial(PJSIP/hp,25)
 exten => 200,2,Hangup()
+
+exten => h,1,System(python3 /etc/asterisk/update.py \${datetime})
+
 ";
 
 foreach ($beds as $bed) {
@@ -95,9 +98,11 @@ username=$bed_id
 
 ";
         $txt_extensions = $txt_extensions . "
-exten => $bed_id,1,Dial(PJSIP/$bed_id,25)
-exten => $bed_id,2,Hangup()
-
+exten => $bed_id,1,Set(datetime=\${STRFTIME(\${EPOCH},,%Y%m%d-%H%M%S)})
+same => n,Set(recording_file=/opt/lampp/htdocs/records/\${datetime}.wav)
+same => n,MixMonitor(\${recording_file})
+same => n,Dial(PJSIP/$bed_id,30)
+same => n,Hangup()     
     ";
     }
 }

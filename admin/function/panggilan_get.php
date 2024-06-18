@@ -8,10 +8,11 @@ $category = isset($_GET["category"]) ? $_GET["category"] : "";
 
 if (!empty($category)) {
     $data = queryArray(
-        "SELECT bed.username as bed_name, category_history.name as name_category, history.duration, history.record, history.timestamp FROM history
+        "SELECT bed.username as name_bed, category_history.name as name_category, history.duration, history.record, history.timestamp FROM history
         JOIN category_history ON category_history.id = history.category_history_id
         JOIN bed ON bed.id = history.bed_id
         WHERE history.category_history_id = $category
+        ORDER BY history.id DESC
         LIMIT $start, $limit"
     );
 
@@ -29,9 +30,10 @@ if (!empty($category)) {
     ];
 } else {
     $data = queryArray(
-        "SELECT bed.username as bed_name, category_history.name as name_category, history.duration, history.record, history.timestamp FROM history
+        "SELECT bed.username as name_bed, category_history.name as name_category, history.duration, history.record, history.timestamp FROM history
         JOIN category_history ON category_history.id = history.category_history_id
         JOIN bed ON bed.id = history.bed_id
+        ORDER BY history.id DESC
         LIMIT $start, $limit"
     );
 

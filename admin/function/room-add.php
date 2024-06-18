@@ -64,4 +64,4 @@ if ($uploadOk == 1) {
     ];
 }
 
-header('location: ../setting_umum.php');
+header('location: ../setting.php');

@@ -117,4 +117,4 @@ if ($_FILES['audio']['name'] != "") {
         ];
     }
 }
-header('location: ../setting_umum.php');
+header('location: ../setting.php');

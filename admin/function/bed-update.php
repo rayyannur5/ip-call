@@ -25,4 +25,4 @@ if ($res) {
         'message' => 'Bed gagal diupdate'
     ];
 }
-header('location: ../setting_umum.php');
+header('location: ../setting.php');

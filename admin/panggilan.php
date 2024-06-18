@@ -147,7 +147,7 @@ $categories = queryArray("SELECT * FROM category_history");
                                 <th>Bed</th>
                                 <th>Kategori</th>
                                 <th>Durasi</th>
-                                <th>record</th>
+                                <th>Rekaman</th>
                                 <th>Waktu</th>
                             </tr>
                         </thead>
@@ -179,7 +179,14 @@ $categories = queryArray("SELECT * FROM category_history");
             { "data": "name_bed" },
             { "data": "name_category" },
             { "data": "duration" },
-            { "data": "record" },
+            { 
+                "data": "record",
+                "render" : function (data, type, row) {
+                    if(data == null) return "";
+                    return `<audio src="http://localhost/${data}" controls style="height: 20px;"></audio>`;
+                },
+                 "type": "html"
+            },
             { "data": "timestamp" }
         ]
     });

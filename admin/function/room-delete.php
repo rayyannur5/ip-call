@@ -23,4 +23,4 @@ if ($res) {
         'message' => 'Bed gagal dihapus'
     ];
 }
-header('location: ../setting_umum.php');
+header('location: ../setting.php');
