@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Jun 05, 2024 at 07:23 AM
+-- Generation Time: Jun 18, 2024 at 03:30 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -37,7 +37,6 @@ CREATE TABLE `bed` (
   `mode` int(11) NOT NULL DEFAULT 0,
   `ip` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
-
 
 
 -- --------------------------------------------------------
@@ -110,6 +109,7 @@ CREATE TABLE `log` (
   `timestamp` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
+
 -- --------------------------------------------------------
 
 --
@@ -122,12 +122,6 @@ CREATE TABLE `room` (
   `audio` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
---
--- Dumping data for table `room`
---
-
-INSERT INTO `room` (`id`, `name`, `audio`) VALUES
-(1, 'Mawar', 'uploads/mawar.ogg');
 
 -- --------------------------------------------------------
 
@@ -161,7 +155,25 @@ CREATE TABLE `user` (
 INSERT INTO `user` (`id`, `username`, `password`, `role`) VALUES
 (1, 'admin', '$2a$12$2EFZP1/0rFCgFCvXQTRn5O9zN1S9wg9T4bOlSKTf3MmIZeA04nuki', 'admin'),
 (2, 'user', '$2a$12$EekB/L1fpWNNY0C1YuN0LeJd4p3BZ8TXosvZ42E.abB4imgyRp0BO', 'user'),
-(3, 'teknisi', '$2a$12$oiKuCq7wsyYjLTABysoXDO4aToFtH0lTSN8zS/nGVlAeuxxFqDlgS', 'teknisi');
+(3, 'teknisi', '$2a$12$sDCLUYKOadQx4bF3Eiikx.IsCfIjWVhYWUDeO09RvmEF/TYv/qHZW', 'teknisi');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `utils`
+--
+
+CREATE TABLE `utils` (
+  `type` varchar(255) NOT NULL,
+  `value` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `utils`
+--
+
+INSERT INTO `utils` (`type`, `value`) VALUES
+('interval_update_status', 15);
 
 --
 -- Indexes for dumped tables
