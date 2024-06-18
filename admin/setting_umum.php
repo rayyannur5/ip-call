@@ -7,7 +7,7 @@ if (!isset($_SESSION["user"])) {
     }
 }
 require_once "config.php";
-
+$utils = queryArray("SELECT * FROM utils");
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -16,7 +16,7 @@ require_once "config.php";
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Dashboard</title>
+    <title>Setting Umum</title>
     <link rel="stylesheet" href="dist/css/adminlte.min.css">
     <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
     <link rel="stylesheet" href="plugins/icheck-bootstrap/icheck-bootstrap.min.css">
@@ -61,7 +61,7 @@ require_once "config.php";
                         <!-- Add icons to the links using the .nav-icon class
                      with font-awesome or any other icon font library -->
                         <li class="nav-item">
-                            <a href="index.php" class="nav-link active">
+                            <a href="index.php" class="nav-link">
                                 <i class="nav-icon fas fa-home"></i>
                                 <p>
                                     Dashboard
@@ -94,7 +94,7 @@ require_once "config.php";
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="setting_umum.php" class="nav-link">
+                                <a href="setting_umum.php" class="nav-link active">
                                     <i class="nav-icon fas fa-sliders-h"></i>
                                     <p>
                                         Setting Umum
@@ -123,34 +123,44 @@ require_once "config.php";
             <section class="content-header">
                 <div class="container-fluid">
                     <div class="d-flex justify-content-between">
-                        <h1>Dashboard</h1>
+                        <h1>Setting Umum</h1>
                     </div>
                 </div><!-- /.container-fluid -->
             </section>
 
             <section class="content">
                 <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-md-12 col-lg-6">
-                            <form action="get">
-                                <select class="custom-select w-25" name="message-filter">
-                                    <option value="month">Bulan ini</option>
-                                    <option value="week">Minggu ini</option>
-                                    <option value="day">Hari ini</option>
-                                </select>
-                            </form>
-                            <canvas id="message-log"></canvas>
-                        </div>
-                        <div class="col-md-12 col-lg-6">
-                            <form action="get">
-                                <select class="custom-select w-25" name="call-filter">
-                                    <option value="month">Bulan ini</option>
-                                    <option value="week">Minggu ini</option>
-                                    <option value="day">Hari ini</option>
-                                </select>
-                            </form>
-                            <canvas id="call-log"></canvas>
-                        </div>
+                    <div class="card p-4">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Value</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach($utils as $util) { ?>
+                                    <tr>
+                                        <td><?= $util['type'] ?></td>
+                                        <td>
+                                            <input id="<?= $util['type'] ?>_input" class="form-control" type="number" value="<?= $util['value'] ?>">
+                                        </td>
+                                        <td>
+                                            <button id="<?= $util['type'] ?>_button" class="btn btn-primary">update</button>
+                                        </td>
+                                    </tr>
+
+                                    <script>
+                                        document.getElementById("<?= $util['type'] ?>_button").onclick = () => {
+                                            const value = document.getElementById("<?= $util['type'] ?>_input").value;
+                                            window.location.href = `function/utils_update.php?type=<?= $util['type'] ?>&value=${value}`
+                                        }
+                                    </script>
+
+                                <?php } ?>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </section>
@@ -160,75 +170,20 @@ require_once "config.php";
     <script src="plugins/jquery/jquery.min.js"></script>
     <script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="dist/js/adminlte.min.js"></script>
-    <script src="plugins/chart.js/chart.js"></script>
 
-    <script>
-      const messageLog = document.getElementById('message-log');
-      const callLog = document.getElementById('call-log');
-
-      new Chart(messageLog, {
-        type: 'bar',
-
-        data: {
-          labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-          datasets: [{
-            label: '# of Votes',
-            data: [12, 19, 3, 5, 2, 3],
-            borderWidth: 1
-          }]
-        },
-        options: {
-          scales: {
-            y: {
-              beginAtZero: true
-            }
-          },
-          plugins: {
-              title: {
-                  display: true,
-                  text: 'Grafik Log Pesan',
-                  font: {
-                      size: 24
-                  }
-              },
-              legend: {
-                  display: false // Menyembunyikan legenda
-              }
-          }
-        }
-      });
-
-      new Chart(callLog, {
-        type: 'bar',
-        data: {
-          labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-          datasets: [{
-            label: '# of Votes',
-            data: [12, 19, 3, 5, 2, 3],
-            borderWidth: 1
-          }]
-        },
-        options: {
-          scales: {
-            y: {
-              beginAtZero: true
-            }
-          },
-          plugins: {
-              title: {
-                  display: true,
-                  text: 'Grafik Log Panggilan',
-                  font: {
-                      size: 24
-                  }
-              },
-              legend: {
-                  display: false // Menyembunyikan legenda
-              }
-          }
-        }
-      });
-    </script>
+    <?php if (isset($_SESSION["flash-message"])) { ?>
+        <script>
+            $(document).Toasts('create', {
+                title: 'Notifikasi',
+                autohide: true,
+                delay: 5000,
+                position: 'bottomRight',
+                class: '<?= $_SESSION["flash-message"]["success"] ? "bg-success mr-5 mb-5" : "bg-danger mr-5 mb-5" ?>',
+                body: '<?= $_SESSION["flash-message"]["message"] ?>'
+            })
+        </script>
+    <?php unset($_SESSION["flash-message"]);
+    } ?>
 
 </body>
 

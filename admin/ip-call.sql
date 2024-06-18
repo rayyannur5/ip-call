@@ -93,6 +93,7 @@ CREATE TABLE `history` (
   `bed_id` varchar(255) NOT NULL,
   `category_history_id` int(11) NOT NULL,
   `duration` varchar(255) DEFAULT NULL,
+  `record` varchar(255) DEFAULT NULL,
   `timestamp` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 

@@ -3,11 +3,11 @@ session_start();
 
 if (isset($_SESSION["user"])) {
     if ($_SESSION["user"] == "admin") {
-        header("location: http://localhost/ip-call-admin");
+        header("location: http://localhost/ip-call/admin");
     } elseif ($_SESSION["user"] == "user") {
         header("location: http://localhost");
     } elseif ($_SESSION["user"] == "teknisi") {
-        header("location: http://localhost");
+        header("location: http://localhost/ip-call/admin");
     }
 }
 
@@ -21,11 +21,11 @@ if (isset($_POST["username"])) {
             $_SESSION["user"] = $user[0]["role"];
 
             if ($_SESSION["user"] == "admin") {
-                header("location: http://localhost/ip-call-admin");
+                header("location: http://localhost/ip-call/admin");
             } elseif ($_SESSION["user"] == "user") {
                 header("location: http://localhost");
             } elseif ($_SESSION["user"] == "teknisi") {
-                header("location: http://localhost");
+                header("location: http://localhost/ip-call/admin");
             }
         } else {
             $wrong_password = true;

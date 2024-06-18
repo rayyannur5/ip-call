@@ -30,4 +30,4 @@ if ($res) {
         'message' => 'Toilet gagal ditambahkan'
     ];
 }
-header('location: ../index.php');
+header('location: ../setting_umum.php');

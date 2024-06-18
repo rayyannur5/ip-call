@@ -18,4 +18,4 @@ if ($res) {
         'message' => 'Toilet gagal dihapus'
     ];
 }
-header('location: ../index.php');
+header('location: ../setting_umum.php');

@@ -17,4 +17,4 @@ if ($res) {
         'message' => 'Ruang gagal dihapus'
     ];
 }
-header('location: ../index.php');
+header('location: ../setting_umum.php');

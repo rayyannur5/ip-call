@@ -1,4 +1,4 @@
 <?php
 session_start();
 session_unset();
-header("location: http://localhost/auth/login.php");
+header("location: http://localhost/ip-call/auth/login.php");
