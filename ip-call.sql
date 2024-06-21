@@ -173,7 +173,8 @@ CREATE TABLE `utils` (
 --
 
 INSERT INTO `utils` (`type`, `value`) VALUES
-('interval_update_status', 15);
+('interval_update_status', 15),
+('one_room_one_device', 0);
 
 --
 -- Indexes for dumped tables

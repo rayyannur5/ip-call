@@ -4,6 +4,8 @@ require_once ('init.php');
 
 $rooms = queryArray("SELECT * FROM room");
 
+$one_room_one_device = queryArray("SELECT value FROM utils WHERE type = 'one_room_one_device'")[0];
+
 foreach ($rooms as $key => $room) {
     $room_id = $room['id'];
     $room_name = $room['name'];
@@ -14,6 +16,14 @@ foreach ($rooms as $key => $room) {
         'id' => $room_id,
         'username' => "Lampu $room_name"
     ]);
+    
+    if($one_room_one_device['value'] == 1){
+        array_push($devices, [
+            'id' => $room_id . '_room',
+            'username' => "Ruang $room_name"
+        ]);
+    }
+
     $rooms[$key]['device'] = $devices;
 }
 
