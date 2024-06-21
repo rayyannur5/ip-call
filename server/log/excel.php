@@ -11,9 +11,8 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Table\TableStyle;
 
 try {
     //code...
-    $month = $_GET['month'];
-    $start_date = date("$month-01 00:00:00");
-    $end_date = date("$month-t 23:59:59");
+    $start_date = date("{$_GET['start_date']} 00:00:00");
+    $end_date = date("{$_GET['end_date']} 23:59:59");
     
     $res = queryArray("SELECT log.*, category_log.name FROM log JOIN category_log ON category_log.id = log.category_log_id
      WHERE log.timestamp BETWEEN '$start_date' AND '$end_date'");

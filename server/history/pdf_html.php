@@ -1,8 +1,9 @@
 <?php
     require_once('../init_html.php');
-    $month = $_GET['month'];
-    $start_date = date("$month-01 00:00:00");
-    $end_date = date("$month-t 23:59:59");
+    $_start_date = $_GET['start_date'];
+    $_end_date = $_GET['end_date'];
+    $start_date = date("$_start_date 00:00:00");
+    $end_date = date("$_end_date 23:59:59");
 
     $res = queryArray("SELECT history.*, category_history.name, bed.username FROM history 
     JOIN category_history ON category_history.id = history.category_history_id

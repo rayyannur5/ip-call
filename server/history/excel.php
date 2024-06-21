@@ -12,9 +12,8 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Table\TableStyle;
 try {
     //code...
 
-    $month = $_GET['month'];
-    $start_date = date("$month-01 00:00:00");
-    $end_date = date("$month-t 23:59:59");
+    $start_date = date("{$_GET['start_date']} 00:00:00");
+    $end_date = date("{$_GET['end_date']} 23:59:59");
     
     $res = queryArray("SELECT history.*, category_history.name, bed.username FROM history 
     JOIN category_history ON category_history.id = history.category_history_id

@@ -1,9 +1,10 @@
 <?php
     require_once('../init_html.php');
     
-    $month = $_GET['month'];
-    $start_date = date("$month-01 00:00:00");
-    $end_date = date("$month-t 23:59:59");
+    $_start_date = $_GET['start_date'];
+    $_end_date = $_GET['end_date'];
+    $start_date = date("$_start_date 00:00:00");
+    $end_date = date("$_end_date 23:59:59");
 
     $res = queryArray("SELECT log.*, category_log.name FROM log JOIN category_log ON category_log.id = log.category_log_id
     WHERE log.timestamp BETWEEN '$start_date' AND '$end_date'");
