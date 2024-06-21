@@ -8,6 +8,9 @@ if (!isset($_SESSION["user"])) {
 }
 require_once "config.php";
 $categories = queryArray("SELECT * FROM category_history");
+
+$date_now = date('Y-m-d');
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -134,6 +137,7 @@ $categories = queryArray("SELECT * FROM category_history");
                 <div class="container-fluid">
                     <div class="card p-4">
                         <div class="d-flex justify-content-end">
+                        <input type="date" class="form-control w-25 mr-2" id="date-filter" value="<?= $date_now ?>">
                             <select class="custom-select w-25" id="category-filter">
                                 <option value="">Semua Kategori</option>
                                 <?php foreach ($categories as $category) { ?>
@@ -170,6 +174,7 @@ $categories = queryArray("SELECT * FROM category_history");
             "url": "function/panggilan_get.php",
             "data": function ( d ) {
                 d.category = $('#category-filter').val();
+                d.date = $('#date-filter').val();
             }
         },
         processing: true,
@@ -192,8 +197,12 @@ $categories = queryArray("SELECT * FROM category_history");
     });
 
     $('#category-filter').on('change', function() {
-            table.draw();
-        });
+        table.draw();
+    });
+
+    $('#date-filter').on('change', function() {
+        table.draw();
+    });
     </script>
 
 </body>
