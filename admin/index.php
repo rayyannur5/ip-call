@@ -132,23 +132,19 @@ require_once "config.php";
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-md-12 col-lg-6">
-                            <form action="get">
-                                <select class="custom-select w-25" name="message-filter">
-                                    <option value="month">Bulan ini</option>
-                                    <option value="week">Minggu ini</option>
-                                    <option value="day">Hari ini</option>
-                                </select>
-                            </form>
+                            <select class="custom-select w-25" id="message-filter">
+                                <option value="month">30 Hari Terakhir</option>
+                                <option value="week">7 Minggu Terakhir</option>
+                                <option value="day">Hari ini</option>
+                            </select>
                             <canvas id="message-log"></canvas>
                         </div>
                         <div class="col-md-12 col-lg-6">
-                            <form action="get">
-                                <select class="custom-select w-25" name="call-filter">
-                                    <option value="month">Bulan ini</option>
-                                    <option value="week">Minggu ini</option>
-                                    <option value="day">Hari ini</option>
-                                </select>
-                            </form>
+                            <select class="custom-select w-25" id="call-filter">
+                                <option value="month">30 Hari Terakhir</option>
+                                <option value="week">7 Minggu Terakhir</option>
+                                <option value="day">Hari ini</option>
+                            </select>
                             <canvas id="call-log"></canvas>
                         </div>
                     </div>
@@ -163,71 +159,116 @@ require_once "config.php";
     <script src="plugins/chart.js/chart.js"></script>
 
     <script>
+        let chartMessage;
+        let chartCall;
+
       const messageLog = document.getElementById('message-log');
       const callLog = document.getElementById('call-log');
 
-      new Chart(messageLog, {
-        type: 'bar',
+   
+        async function createChartMessage() {
 
-        data: {
-          labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-          datasets: [{
-            label: '# of Votes',
-            data: [12, 19, 3, 5, 2, 3],
-            borderWidth: 1
-          }]
-        },
-        options: {
-          scales: {
-            y: {
-              beginAtZero: true
-            }
-          },
-          plugins: {
-              title: {
-                  display: true,
-                  text: 'Grafik Log Pesan',
-                  font: {
-                      size: 24
-                  }
-              },
-              legend: {
-                  display: false // Menyembunyikan legenda
-              }
-          }
-        }
-      });
+            const filter = document.getElementById('message-filter').value;
 
-      new Chart(callLog, {
-        type: 'bar',
-        data: {
-          labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-          datasets: [{
-            label: '# of Votes',
-            data: [12, 19, 3, 5, 2, 3],
-            borderWidth: 1
-          }]
-        },
-        options: {
-          scales: {
-            y: {
-              beginAtZero: true
+            const response = await fetch(`function/pesan_chart.php?filter=${filter}`);
+            const data = await response.json();
+
+            const labels = data.map(item => item.name);
+            const datasets = data.map(item => item.count);
+
+            if (chartMessage) {
+                chartMessage.destroy();
             }
-          },
-          plugins: {
-              title: {
-                  display: true,
-                  text: 'Grafik Log Panggilan',
-                  font: {
-                      size: 24
-                  }
+        
+            chartMessage = new Chart(messageLog, {
+              type: 'bar',
+      
+              data: {
+                labels: labels,
+                datasets: [{
+                  data: datasets,
+                  borderWidth: 1
+                }]
               },
-              legend: {
-                  display: false // Menyembunyikan legenda
+              options: {
+                scales: {
+                  y: {
+                    beginAtZero: true
+                  }
+                },
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Grafik Log Pesan',
+                        font: {
+                            size: 24
+                        }
+                    },
+                    legend: {
+                        display: false // Menyembunyikan legenda
+                    }
+                }
               }
-          }
+            });
         }
-      });
+
+        async function createChartCall() {
+
+            const filter = document.getElementById('call-filter').value;
+
+            const response = await fetch(`function/panggilan_chart.php?filter=${filter}`);
+            const data = await response.json();
+
+            const labels = data.map(item => item.name);
+            const datasets = data.map(item => item.count);
+
+            if (chartCall) {
+                chartCall.destroy();
+            }
+        
+            chartCall = new Chart(callLog, {
+              type: 'bar',
+      
+              data: {
+                labels: labels,
+                datasets: [{
+                  data: datasets,
+                  borderWidth: 1
+                }]
+              },
+              options: {
+                scales: {
+                  y: {
+                    beginAtZero: true
+                  }
+                },
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Grafik Log Panggilan',
+                        font: {
+                            size: 24
+                        }
+                    },
+                    legend: {
+                        display: false // Menyembunyikan legenda
+                    }
+                }
+              }
+            });
+        }
+
+
+    createChartMessage()
+    $('#message-filter').on('change', function() {
+        createChartMessage()
+    });
+
+    createChartCall()
+    $('#call-filter').on('change', function() {
+        createChartCall()
+    });
+
     </script>
 
 </body>
