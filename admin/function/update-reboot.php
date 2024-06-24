@@ -77,7 +77,7 @@ exten => 100,2,Hangup()
 exten => 200,1,Dial(PJSIP/hp,25)
 exten => 200,2,Hangup()
 
-exten => h,1,System(python3 /etc/asterisk/update.py \${datetime})
+exten => h,1,System(python3 /opt/lampp/htdocs/ip-call/update.py \${datetime})
 
 ";
 
