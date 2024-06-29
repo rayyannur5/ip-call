@@ -40,11 +40,14 @@ if (!empty($category)) {
 
     $total_result = $conn->query("SELECT COUNT(*) AS total FROM log");
     $total = $total_result->fetch_assoc()["total"];
+    
+    $total_result_filtered = $conn->query("SELECT COUNT(*) AS total FROM log WHERE DATE(log.timestamp) = '$date'");
+    $total_filtered = $total_result_filtered->fetch_assoc()["total"];
 
     $response = [
         "draw" => intval($_GET["draw"]),
         "recordsTotal" => $total,
-        "recordsFiltered" => $total,
+        "recordsFiltered" => $total_filtered,
         "data" => $data,
     ];
 }
