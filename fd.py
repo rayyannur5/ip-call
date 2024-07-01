@@ -2,6 +2,7 @@ import psutil
 import tkinter as tk
 from tkinter import messagebox
 from tkcalendar import DateEntry
+from PIL import Image, ImageTk
 import signal
 import sys
 import datetime
@@ -32,18 +33,52 @@ class USBMonitor:
 
     def show_usb_window(self):
         if self.usb_window is None:
+            # self.usb_window = tk.Toplevel(self.root, bg='white')
+            # self.usb_window.title("USB Flashdisk Terdeteksi")
+            # self.usb_window.geometry("300x150")  # Mengatur ukuran jendela
+            # self.center_window(self.usb_window)  # Menempatkan jendela di tengah layar
+            # self.usb_window.configure()  # Mengatur latar belakang jendela popup dengan warna biru
+
+            # # Menggunakan frame untuk tata letak
+            # frame = tk.Frame(self.usb_window, bg='white')  # Mengatur frame dengan warna biru
+            # frame.pack(fill='both', expand=True, padx=20, pady=20)
+
+            # today = datetime.date.today()
+
+
+            # tk.Label(frame, bg='white', text="Start Date").grid(row=0, column=0, padx=5, pady=5)
+            # self.start_date_entry = DateEntry(frame, maxdate=today, date_pattern='yyyy-mm-dd')
+            # self.start_date_entry.grid(row=0, column=1, padx=5, pady=5)
+
+            # tk.Label(frame, bg='white', text="End Date").grid(row=1, column=0, padx=5, pady=5)
+            # self.end_date_entry = DateEntry(frame, maxdate=today, date_pattern='yyyy-mm-dd')
+            # self.end_date_entry.grid(row=1, column=1, padx=5, pady=5)
+
+            # # Download button
+            # download_button = tk.Button(frame, text="Download", command=self.download, bg='white', fg='#3498db')
+            # download_button.grid(row=2, column=0, columnspan=4, padx=10, pady=10)
+        
             self.usb_window = tk.Toplevel(self.root, bg='white')
             self.usb_window.title("USB Flashdisk Terdeteksi")
-            self.usb_window.geometry("300x150")  # Mengatur ukuran jendela
-            self.center_window(self.usb_window)  # Menempatkan jendela di tengah layar
-            self.usb_window.configure()  # Mengatur latar belakang jendela popup dengan warna biru
+            self.usb_window.geometry("400x250")
+            self.usb_window.attributes('-alpha', 0.5)
+            self.center_window(self.usb_window)
 
-            # Menggunakan frame untuk tata letak
-            frame = tk.Frame(self.usb_window, bg='white')  # Mengatur frame dengan warna biru
-            frame.pack(fill='both', expand=True, padx=20, pady=20)
+            # Load and place background image
+            self.background_image = Image.open("/opt/lampp/htdocs/ip-call/assets/bg.JPEG")
+            self.background_image = self.background_image.resize((400, 250), Image.ANTIALIAS)
+            self.background_photo = ImageTk.PhotoImage(self.background_image)
+            
+            self.canvas = tk.Canvas(self.usb_window, width=400, height=250)
+            self.canvas.pack(fill='both', expand=True)
+            self.canvas.create_image(0, 0, image=self.background_photo, anchor='nw')
+
+            # Create a frame for widgets
+            frame = tk.Canvas(self.canvas, highlightthickness=0)
+            frame.create_image(0, 0, image=self.background_photo, anchor='nw')
+            frame.place(relx=0.5, rely=0.5, anchor='center')
 
             today = datetime.date.today()
-
 
             tk.Label(frame, bg='white', text="Start Date").grid(row=0, column=0, padx=5, pady=5)
             self.start_date_entry = DateEntry(frame, maxdate=today, date_pattern='yyyy-mm-dd')
@@ -53,9 +88,8 @@ class USBMonitor:
             self.end_date_entry = DateEntry(frame, maxdate=today, date_pattern='yyyy-mm-dd')
             self.end_date_entry.grid(row=1, column=1, padx=5, pady=5)
 
-            # Download button
             download_button = tk.Button(frame, text="Download", command=self.download, bg='white', fg='#3498db')
-            download_button.grid(row=2, column=0, columnspan=4, padx=10, pady=10)
+            download_button.grid(row=2, column=0, columnspan=2, padx=10, pady=10)
 
     def hide_usb_window(self):
         if self.usb_window is not None:

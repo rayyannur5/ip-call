@@ -101,15 +101,30 @@ require_once "config.php";
                                     </p>
                                 </a>
                             </li>
+                            <li class="nav-item">
+                                <a href="function/logout.php" class="nav-link">
+                                    <i class="nav-icon fas fa-sign-out-alt"></i>
+                                    <p>
+                                        Logout
+                                    </p>
+                                </a>
+                            </li>
+                        <?php } else { ?>
+                            <li class="nav-item">
+                                <a onclick="closeWindow()" class="nav-link">
+                                    <i class="nav-icon fas fa-window-close"></i>
+                                    <p>
+                                        Close
+                                    </p>
+                                </a>
+                            </li>
+                            <script type="text/javascript">
+                                function closeWindow() {
+                                    window.open('','_parent',''); 
+                                    window.close();
+                                }
+                            </script>
                         <?php } ?>
-                        <li class="nav-item">
-                            <a href="function/logout.php" class="nav-link">
-                                <i class="nav-icon fas fa-sign-out-alt"></i>
-                                <p>
-                                    Logout
-                                </p>
-                            </a>
-                        </li>
                     </ul>
                 </nav>
                 <!-- /.sidebar-menu -->
