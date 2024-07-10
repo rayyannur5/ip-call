@@ -221,7 +221,7 @@ class USBMonitor:
         window.geometry(f'+{x}+{y}')  # Menyesuaikan dengan posisi tengah layar
 
 if __name__ == "__main__":
-    logging.basicConfig(filename='/home/rayyan/app.log', filemode='w', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+    logging.basicConfig(filename='/home/nursecallserver/app.log', filemode='w', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
     logging.info("Aplikasi berjalan")
     
     monitor = USBMonitor()
