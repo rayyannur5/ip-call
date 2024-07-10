@@ -7,9 +7,8 @@ if (!isset($_SESSION["user"])) {
     }
 }
 require_once "config.php";
-$categories = queryArray("SELECT * FROM category_history");
 
-$date_now = date('Y-m-d');
+$list = queryArray("SELECT * FROM list_hour_audio");
 
 ?>
 <!DOCTYPE html>
@@ -19,12 +18,12 @@ $date_now = date('Y-m-d');
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Log Panggilan</title>
+    <title>List Audio</title>
     <link rel="stylesheet" href="dist/css/adminlte.min.css">
     <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
     <link rel="stylesheet" href="plugins/icheck-bootstrap/icheck-bootstrap.min.css">
-    <!-- <link rel="stylesheet" href="plugins/datatables/jquery.dataTables.js"> -->
-    <link rel="stylesheet" href="plugins/datatables-bs4/css/dataTables.bootstrap4.css">
+
+
 </head>
 
 <body class="hold-transition sidebar-mini">
@@ -82,7 +81,7 @@ $date_now = date('Y-m-d');
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="panggilan.php" class="nav-link active">
+                            <a href="panggilan.php" class="nav-link">
                                 <i class="nav-icon fas fa-phone"></i>
                                 <p>
                                     Log Panggilan
@@ -90,7 +89,7 @@ $date_now = date('Y-m-d');
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="audio.php" class="nav-link">
+                            <a href="audio.php" class="nav-link active">
                                 <i class="nav-icon fas fa-sliders-h"></i>
                                 <p>
                                     Setting audio
@@ -138,7 +137,6 @@ $date_now = date('Y-m-d');
                                 }
                             </script>
                         <?php } ?>
-                        
                     </ul>
                 </nav>
                 <!-- /.sidebar-menu -->
@@ -151,34 +149,42 @@ $date_now = date('Y-m-d');
         <div class="content-wrapper px-4 py-2">
             <section class="content-header">
                 <div class="container-fluid">
-                    <div class="d-flex justify-content-between">
-                        <h1>Log Panggilan</h1>
+                <div class="d-flex justify-content-between">
+                        <h1>Setting Audio</h1>
+                        <div class="d-flex">
+                            <button class="btn btn-primary d-flex align-items-center" data-toggle="modal" data-target="#modal-tambah-list">
+                                <i class="fas fa-plus"></i>
+                                <div class="ml-2">Tambah List</div>
+                            </button>
+                        </div>
                     </div>
-                </div><!-- /.container-fluid -->
+                </div>
             </section>
 
             <section class="content">
                 <div class="container-fluid">
                     <div class="card p-4">
-                        <div class="d-flex justify-content-end">
-                        <input type="date" class="form-control w-25 mr-2" id="date-filter" value="<?= $date_now ?>">
-                            <select class="custom-select w-25" id="category-filter">
-                                <option value="">Semua Kategori</option>
-                                <?php foreach ($categories as $category) { ?>
-                                    <option value="<?= $category["id"] ?>"> <?= $category["name"] ?></option>
+                        <table class="table table-striped display" >
+                            <thead>
+                                <tr>
+                                    <th>Waktu</th>
+                                    <th>Volume</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach($list as $item) { ?>
+                                    <tr>
+                                        <td><?= $item['time'] ?></td>
+                                        <td><?= $item['vol'] ?></td>
+                                        <td>
+                                            <a href="function/list-audio-delete.php?time=<?= $item['time'] ?>">
+                                                <button class="btn btn-danger btn-sm">Delete</button>    
+                                            </a>
+                                        </td>
+                                    </tr>
                                 <?php } ?>
-                            </select>
-                        </div>
-                        <table id="table" class="table table-striped display" >
-                        <thead>
-                            <tr>
-                                <th>Bed</th>
-                                <th>Kategori</th>
-                                <th>Durasi</th>
-                                <th>Rekaman</th>
-                                <th>Waktu</th>
-                            </tr>
-                        </thead>
+                            </tbody>
                         </table>
                     </div>
                 </div>
@@ -186,48 +192,53 @@ $date_now = date('Y-m-d');
         </div>
     </div>
 
+
+    <div class="modal fade" id="modal-tambah-list">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form action="function/list-audio-add.php" method="post" enctype="multipart/form-data">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Tambah List</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label >Waktu</label>
+                            <input type="time" class="form-control" name="time" required>
+                        </div>
+                        <div class="form-group">
+                            <label >Volume</label>
+                            <input type="number" class="form-control" name="vol" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer justify-content-between">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
+                        <button type="submit" class="btn btn-primary">Simpan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <script src="plugins/jquery/jquery.min.js"></script>
     <script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="dist/js/adminlte.min.js"></script>
-    <script src="plugins/datatables/jquery.dataTables.js"></script>
-    <script src="plugins/datatables-bs4/js/dataTables.bootstrap4.js"></script>
 
-    <script>
-    var table = new DataTable('#table', {
-        ajax: {
-            "url": "function/panggilan_get.php",
-            "data": function ( d ) {
-                d.category = $('#category-filter').val();
-                d.date = $('#date-filter').val();
-            }
-        },
-        processing: true,
-        serverSide: true,
-        searching: false,
-        columns: [
-            { "data": "name_bed" },
-            { "data": "name_category" },
-            { "data": "duration" },
-            { 
-                "data": "record",
-                "render" : function (data, type, row) {
-                    if(data == null) return "";
-                    return `<audio src="http://localhost/${data}" controls style="height: 20px;"></audio>`;
-                },
-                 "type": "html"
-            },
-            { "data": "timestamp" }
-        ]
-    });
-
-    $('#category-filter').on('change', function() {
-        table.draw();
-    });
-
-    $('#date-filter').on('change', function() {
-        table.draw();
-    });
-    </script>
+    <?php if (isset($_SESSION["flash-message"])) { ?>
+        <script>
+            $(document).Toasts('create', {
+                title: 'Notifikasi',
+                autohide: true,
+                delay: 5000,
+                position: 'bottomRight',
+                class: '<?= $_SESSION["flash-message"]["success"] ? "bg-success mr-5 mb-5" : "bg-danger mr-5 mb-5" ?>',
+                body: '<?= $_SESSION["flash-message"]["message"] ?>'
+            })
+        </script>
+    <?php unset($_SESSION["flash-message"]);
+    } ?>
 
 </body>
 

@@ -81,6 +81,14 @@ $rooms = queryArray("SELECT * FROM room");
                                 </p>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a href="audio.php" class="nav-link">
+                                <i class="nav-icon fas fa-sliders-h"></i>
+                                <p>
+                                    Setting audio
+                                </p>
+                            </a>
+                        </li>
                         <?php if ($_SESSION["user"] == "teknisi") { ?>
                             <li class="nav-item">
                                 <a href="setting.php" class="nav-link active">
