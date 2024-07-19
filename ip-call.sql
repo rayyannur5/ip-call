@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Jun 18, 2024 at 03:30 PM
+-- Generation Time: Jul 19, 2024 at 03:38 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -96,6 +96,18 @@ CREATE TABLE `history` (
   `timestamp` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `list_hour_audio`
+--
+
+CREATE TABLE `list_hour_audio` (
+  `time` time NOT NULL,
+  `vol` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 -- --------------------------------------------------------
 
 --
@@ -109,6 +121,9 @@ CREATE TABLE `log` (
   `timestamp` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
+--
+-- Dumping data for table `log`
+--
 
 -- --------------------------------------------------------
 
@@ -122,6 +137,9 @@ CREATE TABLE `room` (
   `audio` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
+--
+-- Dumping data for table `room`
+--
 
 -- --------------------------------------------------------
 
@@ -134,6 +152,10 @@ CREATE TABLE `toilet` (
   `room_id` int(10) UNSIGNED NOT NULL,
   `username` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+--
+-- Dumping data for table `toilet`
+--
 
 -- --------------------------------------------------------
 
@@ -174,7 +196,7 @@ CREATE TABLE `utils` (
 
 INSERT INTO `utils` (`type`, `value`) VALUES
 ('interval_update_status', 15),
-('one_room_one_device', 0);
+('one_room_one_device', 1);
 
 --
 -- Indexes for dumped tables
