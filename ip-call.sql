@@ -177,7 +177,7 @@ CREATE TABLE `user` (
 INSERT INTO `user` (`id`, `username`, `password`, `role`) VALUES
 (1, 'admin', '$2a$12$2EFZP1/0rFCgFCvXQTRn5O9zN1S9wg9T4bOlSKTf3MmIZeA04nuki', 'admin'),
 (2, 'user', '$2a$12$EekB/L1fpWNNY0C1YuN0LeJd4p3BZ8TXosvZ42E.abB4imgyRp0BO', 'user'),
-(3, 'teknisi', '$2a$12$sDCLUYKOadQx4bF3Eiikx.IsCfIjWVhYWUDeO09RvmEF/TYv/qHZW', 'teknisi');
+(3, 'teknisi', '$2a$12$BkHEQIXudIoGWOVmrgE7wOp.Wqc5P2LmYxR7CYXFFitgM7.4ws9Hu', 'teknisi');
 
 -- --------------------------------------------------------
 
