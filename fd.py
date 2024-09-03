@@ -8,7 +8,7 @@ import sys
 import datetime
 import requests
 import os
-import logging
+import subprocess
 
 class USBMonitor:
     def __init__(self, check_interval=1):
@@ -65,8 +65,8 @@ class USBMonitor:
             self.center_window(self.usb_window)
 
             # Load and place background image
-            self.background_image = Image.open("/opt/lampp/htdocs/ip-call/assets/bg.JPEG")
-            self.background_image = self.background_image.resize((400, 250), Image.ANTIALIAS)
+            self.background_image = Image.open("assets/bg.JPEG")
+            self.background_image = self.background_image.resize((400, 250), Image.Resampling.LANCZOS)
             self.background_photo = ImageTk.PhotoImage(self.background_image)
             
             self.canvas = tk.Canvas(self.usb_window, width=400, height=250)
@@ -74,7 +74,7 @@ class USBMonitor:
             self.canvas.create_image(0, 0, image=self.background_photo, anchor='nw')
 
             # Create a frame for widgets
-            frame = tk.Canvas(self.canvas, highlightthickness=0)
+            frame = tk.Canvas(self.canvas, highlightthickness=0, width=400, height=250)
             frame.create_image(0, 0, image=self.background_photo, anchor='nw')
             frame.place(relx=0.5, rely=0.5, anchor='center')
 
@@ -90,6 +90,10 @@ class USBMonitor:
 
             download_button = tk.Button(frame, text="Download", command=self.download, bg='white', fg='#3498db')
             download_button.grid(row=2, column=0, columnspan=2, padx=10, pady=10)
+
+            # # Move the backup button to frame
+            backup = tk.Button(self.canvas, text="Backup", bg='white', command=self.backup, fg='#3498db')
+            backup.place(relx=0.98, rely=0.98, anchor='se')
 
     def hide_usb_window(self):
         if self.usb_window is not None:
@@ -122,57 +126,87 @@ class USBMonitor:
             if response_history_pdf.status_code == 200:
                 # Simpan file ke USB flashdisk
                 filename = f"PDF_RIWAYAT_TELEPON_{start_date}~{end_date}.pdf"
-                logging.info(f"DOWNLOAD {filename} SUCCESS")
                 print(filename)
                 with open(os.path.join(folder_path, filename), 'wb') as file:
                     file.write(response_history_pdf.content)
             else:
                 messagebox.showerror("Error", f"{filename} Failed to download file.")
-                logging.error(f"DOWNLOAD {filename} FAILED")
             
             if response_history_excel.status_code == 200:
                 # Simpan file ke USB flashdisk
                 filename = f"EXCEL_RIWAYAT_TELEPON_{start_date}~{end_date}.xlsx"
-                logging.info(f"DOWNLOAD {filename} SUCCESS")
                 print(filename)
                 with open(os.path.join(folder_path, filename), 'wb') as file:
                     file.write(response_history_excel.content)
             else:
                 messagebox.showerror("Error", f"{filename} Failed to download file.")
-                logging.error(f"DOWNLOAD {filename} FAILED")
             
             
             if response_log_pdf.status_code == 200:
                 # Simpan file ke USB flashdisk
                 filename = f"PDF_LOG_{start_date}~{end_date}.pdf"
-                logging.info(f"DOWNLOAD {filename} SUCCESS")
                 print(filename)
                 with open(os.path.join(folder_path, filename), 'wb') as file:
                     file.write(response_log_pdf.content)
             else:
                 messagebox.showerror("Error", f"{filename} Failed to download file.")
-                logging.error(f"DOWNLOAD {filename} FAILED")
             
             
             if response_log_excel.status_code == 200:
                 # Simpan file ke USB flashdisk
                 filename = f"EXCEL_LOG_{start_date}~{end_date}.xlsx"
-                logging.info(f"DOWNLOAD {filename} SUCCESS")
                 print(filename)
                 with open(os.path.join(folder_path, filename), 'wb') as file:
                     file.write(response_log_excel.content)
             else:
                 messagebox.showerror("Error", f"{filename} Failed to download file.")
-                logging.error(f"DOWNLOAD {filename} FAILED")
-
 
             messagebox.showinfo("Success", "Download berhasil")
 
             self.hide_usb_window()
         except Exception as e:
             messagebox.showerror("Error", f"An error occurred: {str(e)}")
-            logging.error(f"An error occurred: {str(e)}")
 
+    def backup(self):
+        popup = tk.Toplevel(self.root)
+        popup.title("Verifikasi Password")
+        popup.geometry("300x150")
+        popup.attributes('-topmost', True)  # Ensure the popup is on top
+
+        tk.Label(popup, text="Masukkan Password untuk Backup:").pack(pady=10)
+
+        # Entry for password
+        self.password_entry = tk.Entry(popup, show='*')
+        self.password_entry.pack(pady=5)
+
+        # Buttons
+        confirm_button = tk.Button(popup, text="Confirm", command=self.verify_password)
+        confirm_button.pack(side='left', padx=10)
+
+        cancel_button = tk.Button(popup, text="Cancel", command=popup.destroy)
+        cancel_button.pack(side='right', padx=10)
+
+    def verify_password(self):
+        entered_password = self.password_entry.get()
+        correct_password = "Pa$$w0rd"  # Replace with your actual password or method of validation
+
+        if entered_password == correct_password:
+            try:
+                result = subprocess.run(["mysqldump","--user=root", "--password=","--host=localhost","ip-call"], capture_output=True, text=True, check=True)
+                dump_output = result.stdout
+                filename = f"backup_ip-call_{datetime.datetime.now().strftime('%Y-%m-%d_%H.%M.%S')}.sql"
+                usb_drive_path = self.detect_usb()[0]['mountpoint']
+                folder_path = os.path.join(usb_drive_path, "BACKUP")
+                os.makedirs(folder_path, exist_ok=True)
+              
+                with open(os.path.join(folder_path, filename), 'w') as file:
+                    file.write(dump_output)
+                messagebox.showinfo("Success", "data backup successfully")
+            except Exception as e:
+                messagebox.showerror("Error", f"An error occurred: {str(e)}")
+
+        else:
+            messagebox.showerror("Error", "Password salah. Coba lagi.")
 
     def check_usb(self):
         usb_drives = self.detect_usb()
@@ -206,7 +240,6 @@ class USBMonitor:
         self.root.mainloop()
 
     def signal_handler(self, signal, frame):
-        logging.info("APLIKASI BERHENTI")
         self.root.quit()
         sys.exit(0)
 
@@ -221,9 +254,6 @@ class USBMonitor:
         window.geometry(f'+{x}+{y}')  # Menyesuaikan dengan posisi tengah layar
 
 if __name__ == "__main__":
-    logging.basicConfig(filename='/home/nursecallserver/app.log', filemode='w', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
-    logging.info("Aplikasi berjalan")
     
     monitor = USBMonitor()
     monitor.run()
-    logging.shutdown()
