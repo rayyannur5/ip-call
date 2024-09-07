@@ -65,7 +65,7 @@ class USBMonitor:
             self.center_window(self.usb_window)
 
             # Load and place background image
-            self.background_image = Image.open("assets/bg.JPEG")
+            self.background_image = Image.open("/opt/lampp/htdocs/ip-call/assets/bg.JPEG")
             self.background_image = self.background_image.resize((400, 250))
             self.background_photo = ImageTk.PhotoImage(self.background_image)
             
