@@ -1,16 +1,12 @@
 import requests
-import paho.mqtt.client as mqtt
 import time
 from datetime import datetime
 
+def millis():
+    return round(time.time() * 1000)
 
-def on_connect(client, userdata, flags, rc):
-    print("LOG| Connected with result code "+str(rc))
-    
-    client.subscribe(f"setmic")
+while True:
 
-# The callback for when a PUBLISH message is received from the server.
-def on_message(client, userdata, msg):
     response = requests.get('http://localhost/ip-call/server/hour/get.php').json()
     print(response)
     yr, month, day, hr, minute = map(int, time.strftime("%Y %m %d %H %M").split())
@@ -28,7 +24,8 @@ def on_message(client, userdata, msg):
     
     # Jika tidak ada waktu yang lebih kecil dari reference_time
     if not smaller_times:
-        return None
+        time.sleep(30)
+        continue
     
     # Mengambil waktu terbesar dari yang lebih kecil
     largest_smaller_time = max(smaller_times, key=lambda x: datetime.strptime(x, format))
@@ -36,12 +33,8 @@ def on_message(client, userdata, msg):
     # Mencari objek dalam array yang memiliki waktu tersebut
     result_obj = next((item for item in array_input if item['time'] == largest_smaller_time), None)
 
-    print(result_obj)
+    print(result_obj['vol'])
+    response = requests.get('http://localhost/ip-call/server/hour/set.php?vol=' + result_obj['vol'])
     # print(msg.topic+" "+str(msg.payload))
 
-client = mqtt.Client()
-client.on_connect = on_connect
-client.on_message = on_message
-
-client.connect('localhost', 1883, 60)
-client.loop_forever()
+    time.sleep(30)
