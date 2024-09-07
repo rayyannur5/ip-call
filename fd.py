@@ -66,7 +66,7 @@ class USBMonitor:
 
             # Load and place background image
             self.background_image = Image.open("assets/bg.JPEG")
-            self.background_image = self.background_image.resize((400, 250), Image.Resampling.LANCZOS)
+            self.background_image = self.background_image.resize((400, 250))
             self.background_photo = ImageTk.PhotoImage(self.background_image)
             
             self.canvas = tk.Canvas(self.usb_window, width=400, height=250)
