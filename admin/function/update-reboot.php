@@ -71,10 +71,10 @@ direct_media=no
 $txt_extensions = "
 [plan-num]
 
-exten => 100,1,Dial(PJSIP/webrtc_client,25)
+exten => 100,1,Dial(PJSIP/webrtc_client,10)
 exten => 100,2,Hangup()
 
-exten => 200,1,Dial(PJSIP/hp,25)
+exten => 200,1,Dial(PJSIP/hp,10)
 exten => 200,2,Hangup()
 
 exten => h,1,System(python3 /opt/lampp/htdocs/ip-call/update.py \${datetime})
@@ -101,7 +101,7 @@ username=$bed_id
 exten => $bed_id,1,Set(datetime=\${STRFTIME(\${EPOCH},,%Y%m%d-%H%M%S)})
 same => n,Set(recording_file=/opt/lampp/htdocs/records/\${datetime}.wav)
 same => n,MixMonitor(\${recording_file})
-same => n,Dial(PJSIP/$bed_id,30)
+same => n,Dial(PJSIP/$bed_id,10)
 same => n,Hangup()     
     ";
     }
