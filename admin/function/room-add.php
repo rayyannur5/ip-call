@@ -1,67 +1,32 @@
 <?php
+global $conn;
 require_once('../config.php');
 session_start();
 
-$target_dir = "uploads/";
-$target_file = $target_dir . basename($_FILES["audio"]["name"]);
-$uploadOk = 1;
-$imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+$id = $_POST['id'];
 
-$message = "";
+try {
+    mysqli_begin_transaction($conn);
 
-// Check if file already exists
-if (file_exists($target_file)) {
-    $message = "Sorry, file already exists.";
-    $uploadOk = 0;
-}
+    $fullname = implode(" ", $_POST['name']);
+    $res = queryBoolean("INSERT INTO room VALUES ($id, '$fullname')");
 
-// Check file size
-if ($_FILES["audio"]["size"] > 500000) {
-    $message = "Sorry, your file is too large.";
-    $uploadOk = 0;
-}
-
-// Allow certain file formats
-if ($imageFileType != "ogg") {
-    $message = "Sorry, only OGG files are allowed.";
-    $uploadOk = 0;
-}
-
-// Check if $uploadOk is set to 0 by an error
-if ($uploadOk == 0) {
-    $message = "Sorry, your file was not uploaded.";
-    // if everything is ok, try to upload file
-} else {
-    if (move_uploaded_file($_FILES["audio"]["tmp_name"], '../' . $target_file)) {
-        $message = "The file " . htmlspecialchars(basename($_FILES["audio"]["name"])) . " has been uploaded.";
-        $uploadOk = 1;
-    } else {
-        $uploadOk = 0;
-        $message = "Sorry, there was an error uploading your file.";
+    foreach($_POST['name'] as $key => $name) {
+        $target_dir = "uploads/";
+        $target_file = $target_dir . basename($_FILES["audio"]["name"][$key]);
+        move_uploaded_file($_FILES["audio"]["tmp_name"][$key], '../' . $target_file);
+        queryBoolean("INSERT INTO mastersound VALUES (NULL, '$name', '$target_file')");
     }
-}
-
-if ($uploadOk == 1) {
-    $name = $_POST['name'];
-
-    $res = queryBoolean("INSERT INTO room VALUES (NULL, '$name', '$target_file')");
-
-    if ($res) {
-        $_SESSION['flash-message'] = [
-            'success' => true,
-            'message' => 'Tambah Ruang Berhasil'
-        ];
-    } else {
-        $_SESSION['flash-message'] = [
-            'success' => false,
-            'message' => 'Tambah Ruang Gagal'
-        ];
-    }
-} else {
+    mysqli_commit($conn);
     $_SESSION['flash-message'] = [
-        'success' => false,
-        'message' => $message
+        'success' => true,
+        'message' => 'Tambah Ruang Berhasil'
     ];
-}
 
-header('location: ../setting.php');
+    header('location: ../setting.php');
+
+
+} catch (Throwable $th){
+    var_dump($th);
+    die();
+}

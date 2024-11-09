@@ -8,6 +8,15 @@ if (!isset($_SESSION["user"])) {
 }
 require_once "config.php";
 $rooms = queryArray("SELECT * FROM room");
+foreach($rooms as $key => $room) {
+    $rooms[$key]['names'] = explode(' ', $room['name']);
+    foreach($rooms[$key]['names'] as $key2 => $name) {
+        $rooms[$key]['audio'][$key2] = queryArray("SELECT * FROM mastersound WHERE name = '$name'")[0]['source'];
+    }
+}
+
+//var_dump($rooms);
+//die();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -329,17 +338,19 @@ $rooms = queryArray("SELECT * FROM room");
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <label for="tambah-ruang-nama">Nama Ruang</label>
-                            <input type="text" class="form-control" id="tambah-ruang-nama" placeholder="Ketik disini" name="name" required>
+                            <label>ID</label>
+                            <input type="text" name="id" value="" class="form-control" />
                         </div>
-                        <div class="custom-file">
-                            <input type="file" class="custom-file-input" name="audio" id="tambah-ruang-file" accept=".ogg" required>
-                            <label class="custom-file-label" id="tambah-label-ruang-file" for="tambah-ruang-file">Choose file</label>
-                            <script>
-                                document.getElementById("tambah-ruang-file").onchange = (event) => {
-                                    document.getElementById("tambah-label-ruang-file").innerHTML = event.target.files[0].name
-                                }
-                            </script>
+                        <div id="section-tambah-nama-ruang">
+                            <div class="form-group" id="kombinasi-1">
+                                <label for="tambah-ruang-nama">Nama Ruang 1</label>
+                                <input type="text" class="form-control" placeholder="Ketik disini" name="name[]" required>
+                                <input type="file" name="audio[]" required>
+                            </div>
+                        </div>
+                        <div class="mt-2">
+                            <button type="button" class="btn btn-primary" onclick="tambahKombinasi()">Tambah Kombinasi</button>
+                            <button type="button" class="btn btn-danger" onclick="kurangKombinasi()">Kurang Kombinasi</button>
                         </div>
                     </div>
                     <div class="modal-footer justify-content-between">
@@ -363,24 +374,21 @@ $rooms = queryArray("SELECT * FROM room");
                             </button>
                         </div>
                         <div class="modal-body">
-                            <input type="text" name="id" value="<?= $room["id"] ?>" hidden />
                             <div class="form-group">
-                                <label for="input-ruang-nama-<?= $room["id"] ?>">Nama</label>
-                                <input type="text" class="form-control" name="name" id="input-ruang-nama-<?= $room["id"] ?>" placeholder="Ketik disini" value="<?= $room["name"] ?>">
+                                <label>ID</label>
+                                <input type="text" name="last_id" value="<?= $room["id"] ?>" hidden/>
+                                <input type="text" name="id" value="<?= $room["id"] ?>" class="form-control" />
                             </div>
-                            <div class="d-flex flex-column">
-                                <label>Audio</label>
-                                <audio src="<?= $room["audio"] ?>" controls class="w-100 mb-2"></audio>
-                            </div>
-                            <div class="custom-file">
-                                <input type="file" class="custom-file-input" name="audio" id="input-ruang-file<?= $room["id"] ?>" accept=".ogg">
-                                <label class="custom-file-label" id="label-ruang-file<?= $room["id"] ?>" for="input-ruang-file<?= $room["id"] ?>">Choose file</label>
-                            </div>
-                            <script>
-                                document.getElementById("input-ruang-file<?= $room["id"] ?>").onchange = (event) => {
-                                    document.getElementById("label-ruang-file<?= $room["id"] ?>").innerHTML = event.target.files[0].name
-                                }
-                            </script>
+
+                            <?php foreach ($room['names'] as $key2 => $name) { ?>
+                                <div class="form-group">
+                                    <label for="input-ruang-nama-<?= $room["id"] ?>">Nama</label>
+                                    <input type="text" name="last_name[]" placeholder="Ketik disini" value="<?= $name ?>" hidden>
+                                    <input type="text" class="form-control" name="name[]" id="input-ruang-nama-<?= $room["id"] ?>" placeholder="Ketik disini" value="<?= $name ?>">
+                                    <input type="file" name="audio[]" id="input-ruang-file<?= $room["id"] ?>">
+                                    <audio src="<?= $room["audio"][$key2] ?>" controls class="w-100 mb-2"></audio>
+                                </div>
+                            <?php } ?>
                         </div>
                         <div class="modal-footer justify-content-between">
                             <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
@@ -416,6 +424,27 @@ $rooms = queryArray("SELECT * FROM room");
         </script>
     <?php unset($_SESSION["flash-message"]);
     } ?>
+
+    <script>
+        var counterNama = 1
+        function tambahKombinasi() {
+            counterNama++
+            $('#section-tambah-nama-ruang').append(`
+                <div class="form-group" id="kombinasi-${counterNama}">
+                    <label for="tambah-ruang-nama">Nama Ruang ${counterNama}</label>
+                    <input type="text" class="form-control" placeholder="Ketik disini" name="name[]" required>
+                    <input type="file" name="audio[]" required>
+                </div>
+            `)
+        }
+
+
+        function kurangKombinasi() {
+            if(counterNama == 1) return
+            $(`#kombinasi-${counterNama}`).remove()
+            counterNama--
+        }
+    </script>
 </body>
 
 </html>

@@ -44,6 +44,14 @@ password=hp
 username=hp
 [hp](aor_template)
 
+[server](endpoint_basic)
+auth=server
+aors=server
+callerid=\"server\" <server>
+[server](authentication)
+password=server
+username=server
+[server](aor_template)
 
 [webrtc_client]
 type=aor
@@ -76,6 +84,9 @@ exten => 100,2,Hangup()
 
 exten => 200,1,Dial(PJSIP/hp,10)
 exten => 200,2,Hangup()
+
+exten => 300,1,Dial(PJSIP/server,10)
+exten => 300,2,Hangup()
 
 exten => h,1,System(python3 /opt/lampp/htdocs/ip-call/update.py \${datetime})
 

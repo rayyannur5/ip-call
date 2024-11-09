@@ -1,73 +1,54 @@
 <?php
+global $conn;
 require_once('../config.php');
 session_start();
 
 $name = $_POST['name'];
 $id = $_POST['id'];
+$last_id = $_POST['last_id'];
 
+//var_dump($_POST);
+//var_dump($_FILES);
+//die();
 
-if ($_FILES['audio']['name'] != "") {
-    $target_dir = "uploads/";
-    $target_file = $target_dir . basename($_FILES["audio"]["name"]);
-    $uploadOk = 1;
-    $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+try {
+    mysqli_begin_transaction($conn);
 
-    $message = "";
+    $fullname = implode(" ", $_POST['name']);
+    $res = queryBoolean("UPDATE room SET id = $id, name = '$fullname' WHERE id = $last_id");
 
-    // Check if file already exists
-    if (file_exists($target_file)) {
-        $message = "Sorry, file already exists.";
-        $uploadOk = 0;
-    }
+    foreach($_POST['name'] as $key => $name) {
 
-    // Check file size
-    if ($_FILES["audio"]["size"] > 500000) {
-        $message = "Sorry, your file is too large.";
-        $uploadOk = 0;
-    }
+        $last_name = $_POST['last_name'][$key];
 
-    // Allow certain file formats
-    if ($imageFileType != "ogg") {
-        $message = "Sorry, only OGG files are allowed.";
-        $uploadOk = 0;
-    }
-
-    // Check if $uploadOk is set to 0 by an error
-    if ($uploadOk == 0) {
-        $message = "Sorry, your file was not uploaded.";
-        // if everything is ok, try to upload file
-    } else {
-        if (move_uploaded_file($_FILES["audio"]["tmp_name"], '../' . $target_file)) {
-            $message = "The file " . htmlspecialchars(basename($_FILES["audio"]["name"])) . " has been uploaded.";
-            $uploadOk = 1;
-        } else {
-            $uploadOk = 0;
-            $message = "Sorry, there was an error uploading your file.";
-        }
-    }
-
-    if ($uploadOk == 1) {
-
-        $room = queryArray("SELECT * FROM room WHERE id = $id")[0];
-        unlink('../' . $room['audio']);
-
-        $beds = queryArray("SELECT * FROM bed WHERE room_id = $id");
+        $beds = queryArray("SELECT * FROM bed WHERE room_id = $last_id");
 
         foreach ($beds as $index => $bed) {
             $bed_id = $bed['id'];
-            $username = 'Ruang ' . $name . ' ' . $index + 1;
-            queryBoolean("UPDATE bed SET username = '$username' WHERE id = $bed_id");
+            $new_bed_id = "01" . ($id < 10 ? "0" . $id : $id) . (($index + 1) < 10 ? "0" . ($index + 1) : ($index + 1));
+            $username = 'Ruang ' . $fullname . ' ' . $index + 1;
+            queryBoolean("UPDATE bed SET id = '$new_bed_id', room_id = $id, username = '$username' WHERE id = $bed_id");
         }
 
-        $toilets = queryArray("SELECT * FROM toilet WHERE room_id = $id");
+        $toilets = queryArray("SELECT * FROM toilet WHERE room_id = $last_id");
 
         foreach ($toilets as $index => $toilet) {
             $toilet_id = $toilet['id'];
-            $username = 'Toilet ' . $name . ' ' . $index + 1;
-            queryBoolean("UPDATE toilet SET username = '$username' WHERE id = $toilet_id");
+            $new_toilet_id = "02" . ($id < 10 ? "0" . $id : $id) . (($index + 1) < 10 ? "0" . ($index + 1) : ($index + 1));
+            $username = 'Toilet ' . $fullname . ' ' . $index + 1;
+            queryBoolean("UPDATE toilet SET id = '$new_toilet_id', room_id = $id, username = '$username' WHERE id = $toilet_id");
         }
 
-        $res = queryBoolean("UPDATE room SET name = '$name', audio = '$target_file' WHERE id = $id");
+        if($_FILES['audio']['name'][$key] != "") {
+
+            $sound = queryArray("SELECT * FROM mastersound WHERE name = '$last_name'")[0];
+            unlink('../' . $sound['source']);
+
+            $target_dir = "uploads/";
+            $target_file = $target_dir . basename($_FILES["audio"]["name"][$key]);
+            move_uploaded_file($_FILES["audio"]["tmp_name"][$key], '../' . $target_file);
+            queryBoolean("UPDATE mastersound SET source = '$target_file', name = '$name' WHERE name = '$last_name'");
+        }
 
         if ($res) {
             $_SESSION['flash-message'] = [
@@ -80,41 +61,13 @@ if ($_FILES['audio']['name'] != "") {
                 'message' => 'Ubah Ruang Gagal'
             ];
         }
-    } else {
-        $_SESSION['flash-message'] = [
-            'success' => false,
-            'message' => $message
-        ];
-    }
-} else {
-    $res = queryBoolean("UPDATE room SET name = '$name' WHERE id = $id");
-
-    $beds = queryArray("SELECT * FROM bed WHERE room_id = $id");
-
-    foreach ($beds as $index => $bed) {
-        $bed_id = $bed['id'];
-        $username = 'Ruang ' . $name . ' ' . $index + 1;
-        queryBoolean("UPDATE bed SET username = '$username' WHERE id = $bed_id");
     }
 
-    $toilets = queryArray("SELECT * FROM toilet WHERE room_id = $id");
-
-    foreach ($toilets as $index => $toilet) {
-        $toilet_id = $toilet['id'];
-        $username = 'Toilet ' . $name . ' ' . $index + 1;
-        queryBoolean("UPDATE toilet SET username = '$username' WHERE id = $toilet_id");
-    }
-
-    if ($res) {
-        $_SESSION['flash-message'] = [
-            'success' => true,
-            'message' => 'Ubah Ruang Berhasil'
-        ];
-    } else {
-        $_SESSION['flash-message'] = [
-            'success' => false,
-            'message' => 'Ubah Ruang Gagal'
-        ];
-    }
+    mysqli_commit($conn);
+    header('location: ../setting.php');
+} catch (Exception $e) {
+    mysqli_rollback($conn);
+    var_dump($e);
+    die();
 }
-header('location: ../setting.php');
+
