@@ -6,6 +6,7 @@ session_start();
 $name = $_POST['name'];
 $id = $_POST['id'];
 $last_id = $_POST['last_id'];
+$jenis = $_POST['jenis'];
 
 //var_dump($_POST);
 //var_dump($_FILES);
@@ -15,7 +16,9 @@ try {
     mysqli_begin_transaction($conn);
 
     $fullname = implode(" ", $_POST['name']);
-    $res = queryBoolean("UPDATE room SET id = $id, name = '$fullname' WHERE id = $last_id");
+    $res = queryBoolean("UPDATE room SET id = $id, name = '$fullname', type = '$jenis' WHERE id = $last_id");
+    $room = queryArray("SELECT * FROM room WHERE id = $id");
+    $jenis = $room[0]['type'];
 
     foreach($_POST['name'] as $key => $name) {
 
@@ -26,7 +29,7 @@ try {
         foreach ($beds as $index => $bed) {
             $bed_id = $bed['id'];
             $new_bed_id = "01" . ($id < 10 ? "0" . $id : $id) . (($index + 1) < 10 ? "0" . ($index + 1) : ($index + 1));
-            $username = 'Ruang ' . $fullname . ' ' . $index + 1;
+            $username = $jenis.' ' . $fullname . ' ' . $index + 1;
             queryBoolean("UPDATE bed SET id = '$new_bed_id', room_id = $id, username = '$username' WHERE id = $bed_id");
         }
 
@@ -50,17 +53,11 @@ try {
             queryBoolean("UPDATE mastersound SET source = '$target_file', name = '$name' WHERE name = '$last_name'");
         }
 
-        if ($res) {
             $_SESSION['flash-message'] = [
                 'success' => true,
                 'message' => 'Ubah Ruang Berhasil'
             ];
-        } else {
-            $_SESSION['flash-message'] = [
-                'success' => false,
-                'message' => 'Ubah Ruang Gagal'
-            ];
-        }
+
     }
 
     mysqli_commit($conn);

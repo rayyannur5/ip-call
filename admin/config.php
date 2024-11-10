@@ -1,5 +1,8 @@
 <?php
 date_default_timezone_set('Asia/Jakarta');
+ini_set('display_errors', '1');
+ini_set('display_startup_errors', '1');
+error_reporting(E_ALL);
 
 $conn = mysqli_connect("localhost", "root", "", "ip-call");
 
@@ -18,7 +21,7 @@ function queryArray($query)
             "success" => false,
             "error" => $th->getMessage()
         ]);
-        exit(0);
+        die();
     }
 }
 
@@ -33,6 +36,6 @@ function queryBoolean($query)
             "success" => false,
             "error" => $th->getMessage()
         ]);
-        exit(0);
+        die();
     }
 }

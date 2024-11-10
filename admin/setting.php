@@ -341,6 +341,14 @@ foreach($rooms as $key => $room) {
                             <label>ID</label>
                             <input type="text" name="id" value="" class="form-control" />
                         </div>
+                        <div class="form-group mb-2">
+                            <label>Jenis Ruang</label>
+                            <select name="jenis" class="form-control" id="">
+                                <option value="Ruang">Ruang</option>
+                                <option value="Kamar">Kamar</option>
+                                <option value="">Tidak ada</option>
+                            </select>
+                        </div>
                         <div id="section-tambah-nama-ruang">
                             <div class="form-group" id="kombinasi-1">
                                 <label for="tambah-ruang-nama">Nama Ruang 1</label>
@@ -378,6 +386,14 @@ foreach($rooms as $key => $room) {
                                 <label>ID</label>
                                 <input type="text" name="last_id" value="<?= $room["id"] ?>" hidden/>
                                 <input type="text" name="id" value="<?= $room["id"] ?>" class="form-control" />
+                            </div>
+                            <div class="mb-2">
+                                <label>Jenis Ruang</label>
+                                <select name="jenis" class="form-control" id="">
+                                    <option value="Ruang" <?= $room['type'] == "Ruang" ? 'selected' : '' ?> >Ruang</option>
+                                    <option value="Kamar" <?= $room['type'] == "Kamar" ? 'selected' : '' ?> >Kamar</option>
+                                    <option value="" <?= $room['type']  == "" ? 'selected' : '' ?> >Tidak ada</option>
+                                </select>
                             </div>
 
                             <?php foreach ($room['names'] as $key2 => $name) { ?>
