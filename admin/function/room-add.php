@@ -9,8 +9,8 @@ $type = $_POST['jenis'];
 try {
     mysqli_begin_transaction($conn);
 
-    $fullname = implode(" ", $_POST['name']);
-    $res = queryBoolean("INSERT INTO room VALUES ($id, '$type', '$fullname')");
+    $fullname = ltrim(implode(" ", $_POST['name']));
+    $res = queryBoolean("INSERT INTO room VALUES ($id, '$type', '$fullname', '')");
 
     foreach($_POST['name'] as $key => $name) {
         $check = queryArray("SELECT * FROM mastersound WHERE name = '$name'");

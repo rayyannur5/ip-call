@@ -15,7 +15,7 @@ $jenis = $_POST['jenis'];
 try {
     mysqli_begin_transaction($conn);
 
-    $fullname = implode(" ", $_POST['name']);
+    $fullname = ltrim(implode(" ", $_POST['name']));
     $res = queryBoolean("UPDATE room SET id = $id, name = '$fullname', type = '$jenis' WHERE id = $last_id");
     $room = queryArray("SELECT * FROM room WHERE id = $id");
     $jenis = $room[0]['type'];
@@ -25,20 +25,31 @@ try {
         $last_name = $_POST['last_name'][$key];
 
         $beds = queryArray("SELECT * FROM bed WHERE room_id = $last_id");
-
+        $is_only_one = count($beds) == 1;
         foreach ($beds as $index => $bed) {
             $bed_id = $bed['id'];
             $new_bed_id = "01" . ($id < 10 ? "0" . $id : $id) . (($index + 1) < 10 ? "0" . ($index + 1) : ($index + 1));
-            $username = $jenis.' ' . $fullname . ' ' . $index + 1;
+            if($is_only_one) {
+                $username = $jenis.' ' . $fullname;
+            } else {
+                $username = $jenis.' ' . $fullname . ' ' . $index + 1;
+            }
+
+            $username = ltrim($username);
             queryBoolean("UPDATE bed SET id = '$new_bed_id', room_id = $id, username = '$username' WHERE id = $bed_id");
         }
 
         $toilets = queryArray("SELECT * FROM toilet WHERE room_id = $last_id");
-
+        $is_only_one_toilet = count($toilets) == 1;
         foreach ($toilets as $index => $toilet) {
             $toilet_id = $toilet['id'];
             $new_toilet_id = "02" . ($id < 10 ? "0" . $id : $id) . (($index + 1) < 10 ? "0" . ($index + 1) : ($index + 1));
-            $username = 'Toilet ' . $fullname . ' ' . $index + 1;
+            if($is_only_one_toilet) {
+                $username = 'Toilet ' . $fullname;
+            } else {
+                $username = 'Toilet ' . $fullname . ' ' . $index + 1;
+            }
+
             queryBoolean("UPDATE toilet SET id = '$new_toilet_id', room_id = $id, username = '$username' WHERE id = $toilet_id");
         }
 

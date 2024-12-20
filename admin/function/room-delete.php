@@ -11,11 +11,13 @@ try {
     $room = queryArray("SELECT * FROM room WHERE id = $id")[0];
 
     $names = explode(" ", $room['name']);
-    foreach($names as $name) {
-        $audio = queryArray("SELECT * FROM mastersound WHERE name = '$name'")[0];
-        unlink('../' . $audio['source']);
-        queryBoolean("DELETE FROM mastersound WHERE name = '$name'");
-    }
+//    foreach($names as $name) {
+//        $audio = queryArray("SELECT * FROM mastersound WHERE name = '$name'")[0];
+//        if(!str_contains( $audio['source'], "static")) {
+//            unlink('../' . $audio['source']);
+//            queryBoolean("DELETE FROM mastersound WHERE name = '$name'");
+//        }
+//    }
 
     queryBoolean("DELETE FROM bed WHERE room_id = '$id'");
     queryBoolean("DELETE FROM toilet WHERE room_id = '$id'");

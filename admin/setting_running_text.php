@@ -1,5 +1,5 @@
 <?php
-$menu = 'audio';
+$menu = 'setting_running_text';
 session_start();
 
 if (!isset($_SESSION["user"])) {
@@ -8,9 +8,7 @@ if (!isset($_SESSION["user"])) {
     }
 }
 require_once "config.php";
-
-$list = queryArray("SELECT * FROM list_hour_audio");
-
+$utils = queryArray("SELECT * FROM running_text");
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -19,12 +17,10 @@ $list = queryArray("SELECT * FROM list_hour_audio");
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>List Audio</title>
+    <title>Setting Umum</title>
     <link rel="stylesheet" href="dist/css/adminlte.min.css">
     <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
     <link rel="stylesheet" href="plugins/icheck-bootstrap/icheck-bootstrap.min.css">
-
-
 </head>
 
 <body class="hold-transition sidebar-mini">
@@ -48,84 +44,54 @@ $list = queryArray("SELECT * FROM list_hour_audio");
             </ul>
 
         </nav>
-        <!-- /.navbar -->
+
         <?php include('sidebar.php') ?>
-
-
 
         <div class="content-wrapper px-4 py-2">
             <section class="content-header">
                 <div class="container-fluid">
-                <div class="d-flex justify-content-between">
-                        <h1>Setting Audio</h1>
-                        <div class="d-flex">
-                            <button class="btn btn-primary d-flex align-items-center" data-toggle="modal" data-target="#modal-tambah-list">
-                                <i class="fas fa-plus"></i>
-                                <div class="ml-2">Tambah List</div>
-                            </button>
-                        </div>
+                    <div class="d-flex justify-content-between">
+                        <h1>Setting Umum</h1>
                     </div>
-                </div>
+                </div><!-- /.container-fluid -->
             </section>
 
             <section class="content">
                 <div class="container-fluid">
                     <div class="card p-4">
-                        <table class="table table-striped display" >
+                        <table class="table table-striped">
                             <thead>
                                 <tr>
-                                    <th>Waktu</th>
-                                    <th>Volume</th>
+                                    <th>Type</th>
+                                    <th>Value</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php foreach($list as $item) { ?>
+                                <?php foreach($utils as $util) { ?>
                                     <tr>
-                                        <td><?= $item['time'] ?></td>
-                                        <td><?= $item['vol'] ?></td>
+                                        <td><?= $util['type'] ?></td>
                                         <td>
-                                            <a href="function/list-audio-delete.php?time=<?= $item['time'] ?>">
-                                                <button class="btn btn-danger btn-sm">Delete</button>    
-                                            </a>
+                                            <input id="<?= $util['type'] ?>_input" class="form-control" type="number" value="<?= $util['value'] ?>">
+                                        </td>
+                                        <td>
+                                            <button id="<?= $util['type'] ?>_button" class="btn btn-primary">update</button>
                                         </td>
                                     </tr>
+
+                                    <script>
+                                        document.getElementById("<?= $util['type'] ?>_button").onclick = () => {
+                                            const value = document.getElementById("<?= $util['type'] ?>_input").value;
+                                            window.location.href = `function/utils_update.php?type=<?= $util['type'] ?>&value=${value}`
+                                        }
+                                    </script>
+
                                 <?php } ?>
                             </tbody>
                         </table>
                     </div>
                 </div>
             </section>
-        </div>
-    </div>
-
-
-    <div class="modal fade" id="modal-tambah-list">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <form action="function/list-audio-add.php" method="post" enctype="multipart/form-data">
-                    <div class="modal-header">
-                        <h4 class="modal-title">Tambah List</h4>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label >Waktu</label>
-                            <input type="time" class="form-control" name="time" required>
-                        </div>
-                        <div class="form-group">
-                            <label >Volume</label>
-                            <input type="number" class="form-control" name="vol" required>
-                        </div>
-                    </div>
-                    <div class="modal-footer justify-content-between">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
-                        <button type="submit" class="btn btn-primary">Simpan</button>
-                    </div>
-                </form>
-            </div>
         </div>
     </div>
 

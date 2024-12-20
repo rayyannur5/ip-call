@@ -10,11 +10,13 @@ $room_name = $room['name'];
 
 $toilet_before = queryArray("SELECT * FROM toilet WHERE room_id = $room_id");
 
+$nomor = str_pad( count($toilet_before) + 1,2,"0", STR_PAD_LEFT);
+
 // create id
-$id = "02" . ($room_id < 10 ? "0" . $room_id : $room_id) . (count($toilet_before) < 10 ? "0" . count($toilet_before) + 1 : count($toilet_before) + 1);
+$id = "02" . ($room_id < 10 ? "0" . $room_id : $room_id) . $nomor;
 
 // create name
-$name = "Toilet " . $room_name . " " . count($toilet_before) + 1;
+$name = "Toilet " . $room_name . " " . (count($toilet_before) == 0 ? "" : count($toilet_before) + 1);
 
 // insert into db
 $res = queryBoolean("INSERT INTO toilet VALUES ('$id', $room_id, '$name')");
