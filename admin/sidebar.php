@@ -81,6 +81,22 @@
                         </a>
                     </li>
                 <?php } ?>
+                <?php if ($_SESSION["user"] != "teknisi") { ?>
+                    <li class="nav-item">
+                        <a onclick="closeWindow()" class="nav-link">
+                            <i class="nav-icon fas fa-window-close"></i>
+                            <p>
+                                Close
+                            </p>
+                        </a>
+                    </li>
+                    <script type="text/javascript">
+                        function closeWindow() {
+                            window.open('','_parent','');
+                            window.close();
+                        }
+                    </script>
+                <?php } ?>
             </ul>
         </nav>
         <!-- /.sidebar-menu -->
