@@ -4,7 +4,7 @@ session_start();
 
 if (!isset($_SESSION["user"])) {
     if ($_SESSION["user"] != "admin" || $_SESSION["user"] != "teknisi") {
-        header("location: http://localhost/ip-call/auth/login.php");
+        header("location: ../../auth/login.php");
     }
 }
 require_once "config.php";
@@ -66,21 +66,35 @@ $date_now = date('Y-m-d');
             <section class="content">
                 <div class="container-fluid">
                     <div class="card p-4">
-                        <div class="d-flex justify-content-end">
+                        <div class="d-flex justify-content-end" style="gap: 10px">
                             <!-- <a href="" class="btn btn-success mr-2">Unduh Excel</a> -->
-                            <input type="date" class="form-control w-25 mr-2" id="date-filter" value="<?= $date_now ?>">
+                            <div class="d-flex align-items-center">
+                                <div>Start :</div>
+                                <input type="date" class="form-control  mr-2" id="date-filter-start" style="width: 200px" value="<?= $date_now ?>">
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <div>End :</div>
+                                <input type="date" class="form-control  mr-2" id="date-filter-end" style="width: 200px" value="<?= $date_now ?>">
+                            </div>
                             <select class="custom-select w-25" id="category-filter">
                                 <option value="">Semua Kategori</option>
                                 <?php foreach ($categories as $category) { ?>
                                     <option value="<?= $category["id"] ?>"> <?= $category["name"] ?></option>
                                 <?php } ?>
                             </select>
+                            <select class="custom-select w-25" id="presence-filter">
+                                <option value="">Semua Jenis</option>
+                                <option value="1">Kehadiran Perawat</option>
+                                <option value="0">Tidak Kehadiran Perawat</option>
+                            </select>
                         </div>
                         <table id="table" class="table table-striped display" >
                         <thead>
                             <tr>
                                 <th>Kategori</th>
-                                <th>Pesan</th>
+                                <th>Ruang</th>
+                                <th>Waktu</th>
+                                <th>Kehadiran Perawat</th>
                                 <th>Waktu</th>
                             </tr>
                         </thead>
@@ -102,8 +116,12 @@ $date_now = date('Y-m-d');
         ajax: {
             "url": "function/pesan_get.php",
             "data": function ( d ) {
-                d.date = $('#date-filter').val();
+                d.date_start = $('#date-filter-start').val();
+                d.date_end = $('#date-filter-end').val();
                 d.category = $('#category-filter').val();
+                d.presence = $('#presence-filter').val();
+
+                console.log(d)
             }
         },
         processing: true,
@@ -111,17 +129,28 @@ $date_now = date('Y-m-d');
         searching: false,
         columns: [
             { "data": "name_category" },
-            { "data": "value" },
+            { "data": "username" },
+            { "data": "time" },
+            { "data": "kehadiran_perawat" },
             { "data": "timestamp" }
         ]
     });
 
-    $('#date-filter').on('change', function() {
-            table.draw();
-        });
+    $('#date-filter-start').on('change', function() {
+        table.draw();
+    });
+
+    $('#date-filter-end').on('change', function() {
+        table.draw();
+    });
+
     $('#category-filter').on('change', function() {
-            table.draw();
-        });
+        table.draw();
+    });
+
+    $('#presence-filter').on('change', function() {
+        table.draw();
+    });
     </script>
 
 </body>

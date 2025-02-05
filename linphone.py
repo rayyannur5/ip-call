@@ -10,6 +10,7 @@ username = 'server'
 password = 'server'
 isconnected = Event()
 inCalling = Event()
+reregister = Event()
 
 # The callback for when the client receives a CONNACK response from the server.
 def on_connect(client, userdata, flags, rc):
@@ -17,6 +18,7 @@ def on_connect(client, userdata, flags, rc):
 
     client.subscribe('panggil')
     client.subscribe('tutup')
+    client.subscribe('server')
 
 # The callback for when a PUBLISH message is received from the server.
 # first_on = Event()
@@ -30,6 +32,9 @@ def on_message(client, userdata, msg):
         if msg.topic == 'tutup':
             execute('linphonecsh generic terminate')
             inCalling.clear()
+    
+    if msg.topic == 'server':
+        reregister.set()
     print(msg.topic+" "+msg.payload.decode())
 
 client = mqtt.Client()
@@ -78,3 +83,8 @@ while True:
     res = execute('linphonecsh status hook')
     if 'on-hook' in res:
         inCalling.clear()
+
+    if reregister.is_set():
+        execute('linphonecsh unregister')
+        setupLinphone()
+        reregister.clear()

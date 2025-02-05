@@ -15,6 +15,7 @@ def on_connect(client, userdata, flags, rc):
         # print(room['id'])
         for device in room['device']:
             # print(device)
+            device['running_text'] = room['running_text']
         
             if 'room_id' in device:
                 devices.append(device)
@@ -28,8 +29,6 @@ def on_connect(client, userdata, flags, rc):
 
             # if 'vol' in device :
             #     print(device)
-
-
 
 def on_message(client, userdata, msg):
 #     if first_on.is_set() :
@@ -62,7 +61,7 @@ while True :
     client.loop()
 
     if len(messages) > 0 :
-        if millis() - time_before > 8000:
+        if millis() - time_before > 1000:
             
             try :
                 id = messages[index]['topic'][-6:]
@@ -81,7 +80,7 @@ while True :
                         str_kirim = str_kirim.replace('Ruang', 'Perawat')
 
                 print(filtered_list['username'])
-                client.publish("dotmatrix", payload=str_kirim, qos=0, retain=False)
+                client.publish(filtered_list['running_text'], payload=str_kirim, qos=0, retain=False)
 
                 index+=1
                 if index >= len(messages):

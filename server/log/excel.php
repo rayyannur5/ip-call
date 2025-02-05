@@ -14,13 +14,21 @@ try {
     $start_date = date("{$_GET['start_date']} 00:00:00");
     $end_date = date("{$_GET['end_date']} 23:59:59");
     
-    $res = queryArray("SELECT log.*, category_log.name FROM log JOIN category_log ON category_log.id = log.category_log_id
-     WHERE log.timestamp BETWEEN '$start_date' AND '$end_date'");
-    $array = [];
+    $res = queryArray("
+        SELECT 
+            log.id, 
+            category_log.name,
+            coalesce(bed.username, toilet.username) as username,
+            sec_to_time(log.time) as time,
+            case when log.nurse_presence = 1 then 'Ya' else 'Tidak' end as presence,
+            log.timestamp
+        FROM log 
+        JOIN category_log ON category_log.id = log.category_log_id
+        LEFT JOIN bed ON bed.id = log.device_id
+        LEFT JOIN toilet on toilet.id = log.device_id
+        WHERE log.timestamp BETWEEN '$start_date' AND '$end_date'
+    ");
 
-    foreach ($res as $key => $value) {
-        array_push($array,[$value['id'], $value['name'], $value['value'], $value['timestamp']]);
-    }
     
     $spreadsheet = new Spreadsheet();
     // $activeWorksheet = $spreadsheet->getActiveSheet();
@@ -30,14 +38,18 @@ try {
     $spreadsheet->getActiveSheet()->getColumnDimension('B')->setWidth(15);
     $spreadsheet->getActiveSheet()->getColumnDimension('C')->setWidth(30);
     $spreadsheet->getActiveSheet()->getColumnDimension('D')->setWidth(20);
+    $spreadsheet->getActiveSheet()->getColumnDimension('E')->setWidth(20);
+    $spreadsheet->getActiveSheet()->getColumnDimension('F')->setWidth(20);
     $spreadsheet->getActiveSheet()->setCellValue('A1', 'id')
         ->setCellValue('B1', 'Kategori')
-        ->setCellValue('C1', 'Keterangan')
-        ->setCellValue('D1', 'Waktu');
+        ->setCellValue('C1', 'Ruang')
+        ->setCellValue('D1', 'Waktu')
+        ->setCellValue('E1', 'Kehadiran')
+        ->setCellValue('F1', 'timestamp');
 
 
     
-    $spreadsheet->getActiveSheet()->fromArray($array, null, 'A2');
+    $spreadsheet->getActiveSheet()->fromArray($res, null, 'A2');
 
 
     $filename = "EXCEL_LOG_" . date("Y-m-d H:i:s");

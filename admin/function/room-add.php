@@ -5,12 +5,18 @@ session_start();
 
 $id = $_POST['id'];
 $type = $_POST['jenis'];
+$type_bed = $_POST['type_bed'];
+$separator_bed = $_POST['separator_bed'];
+$running_text = $_POST['running_text'];
 
 try {
     mysqli_begin_transaction($conn);
 
     $fullname = ltrim(implode(" ", $_POST['name']));
-    $res = queryBoolean("INSERT INTO room VALUES ($id, '$type', '$fullname', '')");
+    $res = queryBoolean("
+        INSERT INTO room (id, type, name, running_text, type_bed, bed_separator) 
+        VALUES ($id, '$type', '$fullname', '$running_text', '$type_bed', '$separator_bed')
+    ");
 
     foreach($_POST['name'] as $key => $name) {
         $check = queryArray("SELECT * FROM mastersound WHERE name = '$name'");

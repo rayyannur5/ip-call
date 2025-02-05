@@ -52,6 +52,9 @@ $utils = queryArray("SELECT * FROM running_text");
                 <div class="container-fluid">
                     <div class="d-flex justify-content-between">
                         <h1>Setting Umum</h1>
+                        <a href="function/running-text-add.php">
+                            <button class="btn btn-primary"><i class="fa fa-plus"></i> Tambah</button>
+                        </a>
                     </div>
                 </div><!-- /.container-fluid -->
             </section>
@@ -62,20 +65,20 @@ $utils = queryArray("SELECT * FROM running_text");
                         <table class="table table-striped">
                             <thead>
                                 <tr>
-                                    <th>Type</th>
-                                    <th>Value</th>
+                                    <th>Topic</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php foreach($utils as $util) { ?>
+                                <?php foreach($utils as $key => $util) { ?>
                                     <tr>
-                                        <td><?= $util['type'] ?></td>
+                                        <td><?= $util['topic'] ?></td>
                                         <td>
-                                            <input id="<?= $util['type'] ?>_input" class="form-control" type="number" value="<?= $util['value'] ?>">
-                                        </td>
-                                        <td>
-                                            <button id="<?= $util['type'] ?>_button" class="btn btn-primary">update</button>
+                                            <?php if(count($utils) - 1 == $key) { ?>
+                                                <a href="function/running-text-delete.php">
+                                                    <button class="btn btn-danger">Hapus</button>
+                                                </a>
+                                            <?php } ?>
                                         </td>
                                     </tr>
 

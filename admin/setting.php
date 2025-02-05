@@ -16,6 +16,8 @@ foreach($rooms as $key => $room) {
     }
 }
 
+$running_texts = queryArray("SELECT * FROM running_text");
+
 //var_dump($rooms);
 //die();
 ?>
@@ -133,26 +135,14 @@ foreach($rooms as $key => $room) {
                                                                         <span class="input-group-text" id="switch-mode-<?= $bed["id"] ?>">Mode</span>
                                                                         <input type="number" class="form-control" name="mode" aria-describedby="switch-mode-<?= $bed["id"] ?>" value="<?= $bed["mode"] ?>">
                                                                     </div>
-                                                                    <label class="form-label" id="label-volume-range-<?= $bed["id"] ?>" for="ubah-volume-range-<?= $bed["id"] ?>">Volume : <?= $bed["vol"] ?></label>
-                                                                    <div class="range">
-                                                                        <input type="range" class="form-range w-100" name="vol" value="<?= $bed["vol"] ?>" id="ubah-volume-range-<?= $bed["id"] ?>" />
+                                                                    <div class="input-group mb-3">
+                                                                        <span class="input-group-text" id="volume-<?= $bed["id"] ?>">Volume</span>
+                                                                        <input type="number" class="form-control" name="vol" value="<?= $bed["vol"] ?>">
                                                                     </div>
-                                                                    <label class="form-label" id="label-mic-range-<?= $bed["id"] ?>" for="ubah-mic-range-<?= $bed["id"] ?>">Mic : <?= $bed["mic"] ?></label>
-                                                                    <div class="range">
-                                                                        <input type="range" class="form-range w-100" name="mic" value="<?= $bed["mic"] ?>" id="ubah-mic-range-<?= $bed["id"] ?>" />
+                                                                    <div class="input-group mb-3">
+                                                                        <span class="input-group-text" id="mic-<?= $bed["id"] ?>">Mic</span>
+                                                                        <input type="number" class="form-control" name="mic" value="<?= $bed["mic"] ?>">
                                                                     </div>
-
-                                                                    <script>
-                                                                        document.getElementById('ubah-volume-range-<?= $bed["id"] ?>').oninput = (val) => {
-                                                                            document.getElementById('label-volume-range-<?= $bed["id"] ?>').innerHTML = `Volume : ${val.target.value}`
-                                                                        }
-                                                                    </script>
-
-                                                                    <script>
-                                                                        document.getElementById('ubah-mic-range-<?= $bed["id"] ?>').oninput = (val) => {
-                                                                            document.getElementById('label-mic-range-<?= $bed["id"] ?>').innerHTML = `Mic : ${val.target.value}`
-                                                                        }
-                                                                    </script>
 
                                                                 </div>
                                                                 <div class="modal-footer justify-content-between">
@@ -250,11 +240,34 @@ foreach($rooms as $key => $room) {
                             <input type="text" name="id" value="" class="form-control" />
                         </div>
                         <div class="form-group mb-2">
+                            <label>Running Text</label>
+                            <select name="running_text" class="form-control" id="">
+                                <option value="">Tidak Ada</option>
+                                <?php foreach ($running_texts as $text) { ?>
+                                    <option value="<?= $text['topic'] ?>"><?= $text['topic'] ?></option>
+                                <?php } ?>
+                            </select>
+                        </div>
+                        <div class="form-group mb-2">
                             <label>Jenis Ruang</label>
                             <select name="jenis" class="form-control" id="">
                                 <option value="Ruang">Ruang</option>
                                 <option value="Kamar">Kamar</option>
                                 <option value="">Tidak ada</option>
+                            </select>
+                        </div>
+                        <div class="form-group mb-2">
+                            <label>Urutan Ruang</label>
+                            <select name="type_bed" class="form-control" id="">
+                                <option value="numeric">Numeric (1,2,3,..)</option>
+                                <option value="abjad">Abjad (A,B,C,..)</option>
+                            </select>
+                        </div>
+                        <div class="form-group mb-2">
+                            <label>Pemisah Ruang</label>
+                            <select name="separator_bed" class="form-control" id="">
+                                <option value="">Tidak ada</option>
+                                <option value="Bed">Bed</option>
                             </select>
                         </div>
                         <div id="section-tambah-nama-ruang">
@@ -295,12 +308,35 @@ foreach($rooms as $key => $room) {
                                 <input type="text" name="last_id" value="<?= $room["id"] ?>" hidden/>
                                 <input type="text" name="id" value="<?= $room["id"] ?>" class="form-control" />
                             </div>
+                            <div class="form-group mb-2">
+                                <label>Running Text</label>
+                                <select name="running_text" class="form-control" id="">
+                                    <option value="">Tidak Ada</option>
+                                    <?php foreach ($running_texts as $text) { ?>
+                                        <option value="<?= $text['topic'] ?>" <?= $text['topic'] == $room["running_text"] ? 'selected' : '' ?>><?= $text['topic'] ?></option>
+                                    <?php } ?>
+                                </select>
+                            </div>
                             <div class="mb-2">
                                 <label>Jenis Ruang</label>
                                 <select name="jenis" class="form-control" id="">
                                     <option value="Ruang" <?= $room['type'] == "Ruang" ? 'selected' : '' ?> >Ruang</option>
                                     <option value="Kamar" <?= $room['type'] == "Kamar" ? 'selected' : '' ?> >Kamar</option>
                                     <option value="" <?= $room['type']  == "" ? 'selected' : '' ?> >Tidak ada</option>
+                                </select>
+                            </div>
+                            <div class="form-group mb-2">
+                                <label>Urutan Ruang</label>
+                                <select name="type_bed" class="form-control" id="">
+                                    <option value="numeric" <?= $room['type_bed'] == 'numeric' ? 'selected' : '' ?> >Numeric (1,2,3,..)</option>
+                                    <option value="abjad" <?= $room['type_bed'] == 'abjad' ? 'selected' : '' ?> >Abjad (A,B,C,..)</option>
+                                </select>
+                            </div>
+                            <div class="form-group mb-2">
+                                <label>Pemisah Ruang</label>
+                                <select name="separator_bed" class="form-control" id="">
+                                    <option value="" <?= $room['bed_separator'] == "" ? 'selected' : '' ?> >Tidak ada</option>
+                                    <option value="Bed" <?= $room['bed_separator'] == "Bed" ? 'selected' : '' ?> >Bed</option>
                                 </select>
                             </div>
 
