@@ -1,6 +1,8 @@
 import time
 import requests
 import paho.mqtt.client as mqtt
+from collections import defaultdict
+import itertools
 
 host = "localhost"
 
@@ -35,7 +37,10 @@ def on_message(client, userdata, msg):
     print(msg.topic+" "+str(msg.payload))
     
     if ('x' not in str(msg.payload) ) and ('c' not in str(msg.payload)):
-        messages.append({'topic' : msg.topic, 'message' : msg.payload})
+        id = msg.topic[-6:]
+        filtered_list = [d for d in devices if d['id'] == id][0]
+        messages.append({'topic' : msg.topic, 'message' : msg.payload, 'running_text': filtered_list['running_text']})
+        print(messages)
 
     else :
         try :
@@ -53,6 +58,16 @@ client.connect(host, 1883, 60)
 
 def millis():
     return round(time.time() * 1000)
+
+
+def group_data(data_list):
+    grouped = defaultdict(list)
+    for item in data_list:
+        grouped[item["running_text"]].append(item)
+    return grouped
+
+grouped_data = group_data(messages)
+group_iterators = {g: itertools.cycle(v) for g, v in grouped_data.items()}
     
 time_before = 0
 index = 0
@@ -60,31 +75,45 @@ while True :
 
     client.loop()
 
-    if len(messages) > 0 :
-        if millis() - time_before > 1000:
+    if len(messages) > 0:
+        if millis() - time_before > 10000:
             
             try :
-                id = messages[index]['topic'][-6:]
-                filtered_list = [d for d in devices if d['id'] == id][0]
 
-                str_kirim = filtered_list['username']
+                new_grouped_data = group_data(messages)
+    
+                # Periksa apakah ada perubahan dalam jumlah grup atau elemen di grup
+                if new_grouped_data.keys() != grouped_data.keys() or any(len(new_grouped_data[g]) != len(grouped_data[g]) for g in new_grouped_data):
+                    grouped_data = new_grouped_data
+                    group_iterators = {g: itertools.cycle(v) for g, v in grouped_data.items()}
+                
+                # Ambil data berikutnya dari setiap grup
+                for group, iterator in group_iterators.items():
+                    data = next(iterator)
+                    # print(f"Group {group}: {data}")
 
-                if 'toilet' not in messages[index]['topic'] :
-                    if b'e' in messages[index]['message'] :
-                        str_kirim = str_kirim.replace('Ruang', 'Darurat')
-                    elif b'i' in messages[index]['message'] :
-                        str_kirim = str_kirim.replace('Ruang', 'Infus')
-                    elif b'b' in messages[index]['message'] :
-                        str_kirim = str_kirim.replace('Ruang', 'CodeBlue')
-                    elif b'a' in messages[index]['message'] :
-                        str_kirim = str_kirim.replace('Ruang', 'Perawat')
+                    id = data['topic'][-6:]
+                    filtered_list = [d for d in devices if d['id'] == id][0]
 
-                print(filtered_list['username'])
-                client.publish(filtered_list['running_text'], payload=str_kirim, qos=0, retain=False)
+                    str_kirim = filtered_list['username']
 
-                index+=1
-                if index >= len(messages):
-                    index = 0
+                    if 'toilet' not in data['topic'] :
+                        if b'e' in data['message'] :
+                            str_kirim = str_kirim.replace('Ruang', 'Darurat')
+                        elif b'i' in data['message'] :
+                            str_kirim = str_kirim.replace('Ruang', 'Infus')
+                        elif b'b' in data['message'] :
+                            str_kirim = str_kirim.replace('Ruang', 'CodeBlue')
+                        elif b'a' in data['message'] :
+                            str_kirim = str_kirim.replace('Ruang', 'Perawat')
+
+                    print(filtered_list['username'] + ' ' + data['topic'])
+                    if data['running_text'] != None:
+                        client.publish(data['running_text'], payload=str_kirim, qos=0, retain=False)
+
+                # index+=1
+                # if index >= len(messages):
+                #     index = 0
 
                 time_before = millis()
             except Exception as e:
