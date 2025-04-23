@@ -66,6 +66,8 @@ $utils = queryArray("SELECT * FROM running_text");
                             <thead>
                                 <tr>
                                     <th>Topic</th>
+                                    <th>Speed</th>
+                                    <th>Brightness</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -74,6 +76,13 @@ $utils = queryArray("SELECT * FROM running_text");
                                     <tr>
                                         <td><?= $util['topic'] ?></td>
                                         <td>
+                                            <input class="form-control" id="val-<?= $util['topic'] ?>" type="text" value="<?= $util['speed'] ?>">
+                                        </td>
+                                        <td>
+                                            <input class="form-control" id="val-b-<?= $util['topic'] ?>" type="text" value="<?= $util['brightness'] ?>">
+                                        </td>
+                                        <td>
+                                            <button id="<?= $util['topic'] ?>_button" class="btn btn-warning">Update</button>
                                             <?php if(count($utils) - 1 == $key) { ?>
                                                 <a href="function/running-text-delete.php">
                                                     <button class="btn btn-danger">Hapus</button>
@@ -83,9 +92,10 @@ $utils = queryArray("SELECT * FROM running_text");
                                     </tr>
 
                                     <script>
-                                        document.getElementById("<?= $util['type'] ?>_button").onclick = () => {
-                                            const value = document.getElementById("<?= $util['type'] ?>_input").value;
-                                            window.location.href = `function/utils_update.php?type=<?= $util['type'] ?>&value=${value}`
+                                        document.getElementById("<?= $util['topic'] ?>_button").onclick = () => {
+                                            const value = document.getElementById("val-<?= $util['topic'] ?>").value;
+                                            const valueb = document.getElementById("val-b-<?= $util['topic'] ?>").value;
+                                            window.location.href = `function/running_text_update.php?topic=<?= $util['topic'] ?>&speed=${value}&brightness=${valueb}`
                                         }
                                     </script>
 

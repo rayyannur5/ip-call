@@ -71,13 +71,22 @@ group_iterators = {g: itertools.cycle(v) for g, v in grouped_data.items()}
     
 time_before = 0
 index = 0
+
+timeout = 10000
+
 while True :
 
     client.loop()
 
     if len(messages) > 0:
-        if millis() - time_before > 10000:
-            
+        if millis() - time_before > timeout:
+
+            utils = requests.get(f'http://{host}/ip-call/server/utils.php').json()['data']
+
+            for util in utils:
+                if util['type'] == 'timeout_running_text':
+                    timeout = int(util['value'])
+
             try :
 
                 new_grouped_data = group_data(messages)
@@ -109,7 +118,10 @@ while True :
 
                     print(filtered_list['username'] + ' ' + data['topic'])
                     if data['running_text'] != None:
-                        client.publish(data['running_text'], payload=str_kirim, qos=0, retain=False)
+                        running_text_data = requests.get(f'http://{host}/ip-call/server/running_text.php?id={data['running_text']}').json()
+                        speed = str(running_text_data['speed']).rjust(3, '0')
+                        brightness = str(running_text_data['brightness']).rjust(3, '0')
+                        client.publish(data['running_text'], payload=speed + brightness + str_kirim, qos=0, retain=False)
 
                 # index+=1
                 # if index >= len(messages):
