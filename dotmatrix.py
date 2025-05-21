@@ -50,7 +50,7 @@ def on_message(client, userdata, msg):
             pass
 
 
-
+time.sleep(10)
 client = mqtt.Client()
 client.on_connect = on_connect
 client.on_message = on_message
@@ -81,7 +81,7 @@ while True :
     if len(messages) > 0:
         if millis() - time_before > timeout:
 
-            utils = requests.get(f'http://{host}/ip-call/server/utils.php').json()['data']
+            utils = requests.get(f"http://{host}/ip-call/server/utils.php").json()['data']
 
             for util in utils:
                 if util['type'] == 'timeout_running_text':
@@ -118,7 +118,7 @@ while True :
 
                     print(filtered_list['username'] + ' ' + data['topic'])
                     if data['running_text'] != None:
-                        running_text_data = requests.get(f'http://{host}/ip-call/server/running_text.php?id={data['running_text']}').json()
+                        running_text_data = requests.get(f"http://{host}/ip-call/server/running_text.php?id={data['running_text']}").json()
                         speed = str(running_text_data['speed']).rjust(3, '0')
                         brightness = str(running_text_data['brightness']).rjust(3, '0')
                         client.publish(data['running_text'], payload=speed + brightness + str_kirim, qos=0, retain=False)

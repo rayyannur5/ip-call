@@ -5,7 +5,7 @@ from threading import Event
 import requests
 
 # Global variables
-host = 'localhost'
+host = '127.0.0.1'
 username = 'server'
 password = 'server'
 isconnected = Event()
@@ -48,7 +48,7 @@ def millis():
     return round(time.time() * 1000)
 
 def setupLinphone():
-    execute("linphonecsh init -c /home/rayyan/.config/linphone/linphonerc")
+    execute("linphonecsh init -c /home/nursecallserver/.config/linphone/linphonerc")
     print("LOG| LINPHONE REGISTERING")
     execute(f"linphonecsh register --host {host} --username {username} --password {password}")
     res = execute("linphonecsh status register")
@@ -63,6 +63,7 @@ def setupLinphone():
     print("LOG| LINPHONE REGISTERED")
     isconnected.set()
 
+time.sleep(10)
 client.connect("localhost", 1883, 60)
 setupLinphone()
 client.loop_start()
@@ -71,7 +72,7 @@ timer5detik = 0
 
 while True:
     if millis() - timer5detik > 5000:
-        client.publish('internal', payload='1')
+        client.publish('internal', payload='1', retain=False, qos=1)
         timer5detik = millis()
     
     if not inCalling.is_set():

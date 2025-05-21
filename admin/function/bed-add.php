@@ -31,7 +31,7 @@ function convertToLetter($number) {
 if($jenis_bed == 'numeric'){
     $name = ($jenis != "" ? "$jenis " : "") . $room_name . " " . (count($bed_before) == 0 ? "" : $separator . count($bed_before) + 1);
 } else if($jenis_bed == 'abjad'){
-    $name = ($jenis != "" ? "$jenis " : "") . $room_name . " " . $separator . (count($bed_before) == 0 ? "" : convertToLetter(count($bed_before) + 1));
+    $name = ($jenis != "" ? "$jenis " : "") . $room_name . " " . (count($bed_before) == 0 ? "" : $separator . convertToLetter(count($bed_before) + 1));
 }
 
 
@@ -46,7 +46,7 @@ if(count($bed_before) == 1 ) {
 }
 
 // insert into db
-$res = queryBoolean("INSERT INTO bed VALUES ('$id', $room_id, '$name', 100, 100, 1, 0, NULL, '')");
+$res = queryBoolean("INSERT INTO bed VALUES ('$id', $room_id, '$name', 100, 100, 1, 0, NULL, '', 0)");
 
 if ($res) {
     $_SESSION['flash-message'] = [
