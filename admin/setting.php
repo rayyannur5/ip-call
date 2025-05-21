@@ -81,7 +81,10 @@ $running_texts = queryArray("SELECT * FROM running_text");
                             $room_id = $room["id"]; ?>
                             <div class="col-3">
                                 <div class="card card-success">
-                                    <div class="card-header">
+                                    <div class="d-flex bg-success justify-content-between align-items-center p-2">
+                                        <a class="btn btn-danger" href="function/bypass.php?id=<?= $room["id"] ?>&type=room">
+                                            <?= $room["bypass"] ?>
+                                        </a>
                                         <h3 class="card-title"><?= $room["name"] ?></h3>
                                         <div class="card-tools">
                                             <button type="button" class="btn btn-tool" data-toggle="modal" data-target="#modal-ubah-ruang-<?= $room_id ?>">
@@ -106,6 +109,9 @@ $running_texts = queryArray("SELECT * FROM running_text");
                                             $beds = queryArray("SELECT * FROM bed WHERE room_id = $room_id");
                                             foreach ($beds as $index => $bed) { ?>
                                                 <div class="bg-info rounded-lg p-3 mb-2 d-flex align-items-center justify-content-between">
+                                                    <a class="btn btn-danger" href="function/bypass.php?id=<?= $bed["id"] ?>&type=bed">
+                                                        <?= $bed["bypass"] ?>
+                                                    </a>
                                                     <div><?= $bed["id"] ?></div>
                                                     <div><?= $bed["username"] ?></div>
                                                     <button class="btn m-0 p-0 text-white" data-toggle="modal" data-target="#modal-ubah-bed-<?= $bed["id"] ?>">
@@ -181,6 +187,9 @@ $running_texts = queryArray("SELECT * FROM running_text");
                                             $toilets = queryArray("SELECT * FROM toilet WHERE room_id = $room_id");
                                             foreach ($toilets as $index => $toilet) { ?>
                                                 <div class="bg-info rounded-lg p-3 mb-2 d-flex align-items-center justify-content-between">
+                                                    <a class="btn btn-danger" href="function/bypass.php?id=<?= $toilet["id"] ?>&type=toilet">
+                                                        <?= $toilet["bypass"] ?>
+                                                    </a>
                                                     <div><?= $toilet["id"] ?></div>
                                                     <div><?= $toilet["username"] ?></div>
                                                     <?php if (count($toilets) == $index + 1) { ?>
