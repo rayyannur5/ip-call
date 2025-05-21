@@ -19,7 +19,7 @@ $id = "02" . ($room_id < 10 ? "0" . $room_id : $room_id) . $nomor;
 $name = "Toilet " . $room_name . " " . (count($toilet_before) == 0 ? "" : count($toilet_before) + 1);
 
 // insert into db
-$res = queryBoolean("INSERT INTO toilet VALUES ('$id', $room_id, '$name')");
+$res = queryBoolean("INSERT INTO toilet VALUES ('$id', $room_id, '$name', '')");
 
 if ($res) {
     $_SESSION['flash-message'] = [
