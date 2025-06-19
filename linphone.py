@@ -48,7 +48,7 @@ def millis():
     return round(time.time() * 1000)
 
 def setupLinphone():
-    execute("linphonecsh init -c /home/nursecallserver/.config/linphone/linphonerc")
+    execute("linphonecsh init -c /home/rayyan/.config/linphone/linphonerc")
     print("LOG| LINPHONE REGISTERING")
     execute(f"linphonecsh register --host {host} --username {username} --password {password}")
     res = execute("linphonecsh status register")
@@ -60,6 +60,22 @@ def setupLinphone():
         time.sleep(0.1)
         # if millis() - before_linphone >60000:
         #     execute("reboot")
+    
+    res = execute("linphonecsh generic 'soundcard list'")
+    before_linphone = millis()
+    while "echo" not in res:
+        if millis() - before_linphone > 60000:
+            execute("reboot")
+        res = execute("linphonecsh generic 'soundcard list'")
+        
+    res = res.split("\n")
+    for i in res:
+        if "echo" in i:
+            index_soundcard = i[0]
+            res = execute(f"linphonecsh generic 'soundcard use {index_soundcard}'")
+            print(f"LOG| {res}")
+            break
+    
     print("LOG| LINPHONE REGISTERED")
     isconnected.set()
 

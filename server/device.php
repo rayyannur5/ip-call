@@ -14,6 +14,7 @@ foreach ($rooms as $key => $room) {
     $devices = array_merge($beds, $toilets);
     array_push($devices, [
         'id' => $room_id,
+        'bypass' => $room['bypass'],
         'username' => "Lampu $room_name"
     ]);
     

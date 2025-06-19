@@ -1,6 +1,8 @@
 import paho.mqtt.client as mqtt
 import time
 
+time.sleep(10)
+
 host = "localhost"
 
 client = mqtt.Client()

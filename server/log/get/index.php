@@ -18,7 +18,7 @@ $date = isset($_GET['date']) ? $_GET['date'] : date('Y-m-d');
 //LEFT JOIN bed ON bed.id = log.device_id
 //LEFT JOIN toilet on toilet.id = log.device_id
 //WHERE date(timestamp) = '$date' ORDER BY timestamp DESC LIMIT $first_page, $batas");
-bed
+
 // versi tidak pagination
 $logs = queryArray("
 SELECT 

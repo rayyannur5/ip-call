@@ -1,12 +1,12 @@
 <?php
 require_once('../config.php');
 session_start();
-$res = queryBoolean("UPDATE bed SET tw = 0");
+$res = queryBoolean("UPDATE bed SET mode = 2");
 
 if ($res) {
     $_SESSION['flash-message'] = [
         'success' => true,
-        'message' => 'Bed berhasil diubah ke 1W semua'
+        'message' => 'Bed berhasil diubah ke CodeBlue'
     ];
 } else {
     $_SESSION['flash-message'] = [

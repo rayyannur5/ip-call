@@ -73,6 +73,22 @@
                         </a>
                     </li>
                     <li class="nav-item">
+                        <a href="setting_music.php" class="nav-link <?= $menu == 'setting_music' ? 'active' : '' ?>">
+                            <i class="nav-icon fas fa-sliders-h"></i>
+                            <p>
+                                Setting Musik (Murotal)
+                            </p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="setting_adzan.php" class="nav-link <?= $menu == 'setting_adzan' ? 'active' : '' ?>">
+                            <i class="nav-icon fas fa-sliders-h"></i>
+                            <p>
+                                Informasi Adzan
+                            </p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a href="function/logout.php" class="nav-link ">
                             <i class="nav-icon fas fa-sign-out-alt"></i>
                             <p>

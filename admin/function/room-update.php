@@ -95,13 +95,15 @@ try {
 
         if($_FILES['audio']['name'][$key] != "") {
 
-            $sound = queryArray("SELECT * FROM mastersound WHERE name = '$last_name'")[0];
-            unlink('../' . $sound['source']);
+//            $sound = queryArray("SELECT * FROM mastersound WHERE name = '$last_name'")[0];
+//            unlink('../' . $sound['source']);
 
             $target_dir = "uploads/";
             $target_file = $target_dir . basename($_FILES["audio"]["name"][$key]);
             move_uploaded_file($_FILES["audio"]["tmp_name"][$key], '../' . $target_file);
             queryBoolean("UPDATE mastersound SET source = '$target_file', name = '$name' WHERE name = '$last_name'");
+        } else {
+            queryBoolean("UPDATE mastersound SET   name = '$name' WHERE name = '$last_name'");
         }
 
             $_SESSION['flash-message'] = [

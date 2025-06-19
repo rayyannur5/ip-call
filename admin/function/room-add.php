@@ -20,11 +20,15 @@ try {
 
     foreach($_POST['name'] as $key => $name) {
         $check = queryArray("SELECT * FROM mastersound WHERE name = '$name'");
+        $target_dir = "uploads/";
+        $target_file = $target_dir . basename($_FILES["audio"]["name"][$key]);
+
+        move_uploaded_file($_FILES["audio"]["tmp_name"][$key], '../' . $target_file);
+
         if(count($check) == 0) {
-            $target_dir = "uploads/";
-            $target_file = $target_dir . basename($_FILES["audio"]["name"][$key]);
-            move_uploaded_file($_FILES["audio"]["tmp_name"][$key], '../' . $target_file);
             queryBoolean("INSERT INTO mastersound VALUES (NULL, '$name', '$target_file')");
+        } else {
+            queryBoolean("UPDATE mastersound SET source = '$target_file' WHERE name = '$name'");
         }
     }
     mysqli_commit($conn);

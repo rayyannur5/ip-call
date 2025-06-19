@@ -62,6 +62,8 @@ $running_texts = queryArray("SELECT * FROM running_text");
                     <div class="d-flex justify-content-between">
                         <h1>Setting Ruang</h1>
                         <div class="d-flex gap-2">
+                            <a href="function/setcodeblue.php" class="btn btn-primary mr-2">Jadikan CodeBlue Semua</a>
+                            <a href="function/setemergency.php" class="btn btn-danger mr-2">Jadikan Emergency Semua</a>
                             <a href="function/set1w.php" class="btn btn-warning mr-2">Jadikan 1W Semua</a>
                             <a href="function/set2w.php" class="btn btn-warning mr-4">Jadikan 2W Semua</a>
                             <button class="btn btn-primary d-flex align-items-center" data-toggle="modal" data-target="#modal-tambah-ruang">
