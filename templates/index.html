@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dasbor Monitor Log & Status</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #111827; }
+        .log-content::-webkit-scrollbar { width: 8px; }
+        .log-content::-webkit-scrollbar-track { background: #1f2937; }
+        .log-content::-webkit-scrollbar-thumb { background-color: #4b5563; border-radius: 4px; border: 2px solid #1f2937; }
+        .accordion-arrow { transition: transform 0.3s ease-in-out; }
+        .running-indicator .indicator-dot { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .5; } }
+    </style>
+</head>
+<body class="text-gray-200">
+
+    <div class="container mx-auto p-4 md:p-8">
+        <header class="text-center mb-8">
+            <h1 class="text-3xl md:text-4xl font-bold text-white">Dasbor Monitor Log & Status</h1>
+            <p class="text-gray-400 mt-2">Disediakan oleh Flask. Memantau proses secara real-time.</p>
+        </header>
+
+        <div id="log-container" class="space-y-4">
+            {% for script in scripts %}
+            <div class="log-accordion-item bg-gray-800 rounded-lg shadow-lg">
+                <div class="accordion-header p-4 flex justify-between items-center {{ 'cursor-pointer hover:bg-gray-700' if script.has_log else '' }} rounded-lg">
+                    <h3 class="font-bold text-lg text-white">{{ script.name }}</h3>
+                    <div class="flex items-center gap-4">
+                         <div class="status-indicator {{ 'running-indicator' if script.is_running else '' }}" data-script-name="{{ script.name }}">
+                             <div class="flex items-center gap-2">
+                                <span class="indicator-dot w-3 h-3 rounded-full {{ 'bg-green-500' if script.is_running else 'bg-red-500' }}"></span>
+                                <span class="indicator-text text-sm font-medium {{ 'text-green-400' if script.is_running else 'text-red-400' }}">
+                                    {{ 'RUNNING' if script.is_running else 'STOPPED' }}
+                                </span>
+                             </div>
+                         </div>
+                         {% if script.has_log %}
+                         <svg class="accordion-arrow w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                         {% else %}
+                         <div class="w-6 h-6 text-gray-500 text-center text-xs leading-6" title="Tidak ada file log">-</div>
+                         {% endif %}
+                    </div>
+                </div>
+                {% if script.has_log %}
+                <div class="log-content p-4 font-mono text-sm leading-6 bg-gray-900 h-80 overflow-y-auto hidden rounded-b-lg" data-file="{{ script.log_file }}">
+                    <div class="flex flex-col-reverse"></div>
+                </div>
+                {% endif %}
+            </div>
+            {% else %}
+            <div class="text-center text-gray-500 p-8 bg-gray-800 rounded-lg">
+                <p>Tidak ada skrip yang dikonfigurasi di `SCRIPTS_TO_MONITOR` pada `app.py`.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const socket = io();
+            const MAX_LOG_LINES = 150;
+
+            // Fungsionalitas untuk membuka/menutup accordion
+            document.querySelectorAll('.accordion-header').forEach(header => {
+                if (header.nextElementSibling && header.nextElementSibling.classList.contains('log-content')) {
+                    header.addEventListener('click', () => {
+                        const content = header.nextElementSibling;
+                        const arrow = header.querySelector('.accordion-arrow');
+                        content.classList.toggle('hidden');
+                        arrow.classList.toggle('rotate-180');
+                        header.classList.toggle('rounded-lg', content.classList.contains('hidden'));
+                    });
+                }
+            });
+
+            // Mendengarkan event untuk pembaruan status proses
+            socket.on('process_status_update', (statuses) => {
+                for (const scriptName in statuses) {
+                    const isRunning = statuses[scriptName];
+                    const indicatorDiv = document.querySelector(`.status-indicator[data-script-name="${scriptName}"]`);
+                    if (indicatorDiv) {
+                        const dot = indicatorDiv.querySelector('.indicator-dot');
+                        const text = indicatorDiv.querySelector('.indicator-text');
+                        indicatorDiv.classList.toggle('running-indicator', isRunning);
+                        dot.classList.toggle('bg-green-500', isRunning);
+                        dot.classList.toggle('bg-red-500', !isRunning);
+                        text.textContent = isRunning ? 'RUNNING' : 'STOPPED';
+                        text.classList.toggle('text-green-400', isRunning);
+                        text.classList.toggle('text-red-400', !isRunning);
+                    }
+                }
+            });
+
+            // Mendengarkan event untuk baris log baru
+            socket.on('new_log_line', (log) => {
+                const logDisplayArea = document.querySelector(`.log-content[data-file="${log.file}"] > div`);
+                if (!logDisplayArea) return;
+                const newLogLine = document.createElement('div');
+                newLogLine.innerHTML = `<span class="text-gray-500 mr-3">${new Date().toLocaleTimeString('id-ID')}</span><span class="text-gray-300">${log.data}</span>`;
+                logDisplayArea.prepend(newLogLine);
+                if (logDisplayArea.children.length > MAX_LOG_LINES) {
+                    logDisplayArea.lastChild.remove();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+```
+
+### Cara Menjalankan
+
+1.  **Siapkan skrip contoh** seperti `script_satu.py` dan `script_dua.py`. Pastikan mereka menggunakan modul `logging` untuk menulis ke file `.log` yang sesuai.
+2.  **Jalankan Skrip Anda:** Buka beberapa terminal dan jalankan skrip Python yang ingin Anda pantau.
+    ```bash
+    # Di terminal 1
+    python script_satu.py
+    
+    # Di terminal 2
+    python script_dua.py
+    ```
+3.  **Jalankan Dasbor:** Buka terminal lain, pastikan Anda berada di folder `dasbor_monitor`, dan jalankan server Flask.
+    ```bash
+    python app.py
+    ```
+4.  **Buka di Browser:** Buka browser web Anda dan akses alamat `http://127.0.0.1:5000`.
+
+Sekarang Anda memiliki dasbor pemantauan yang lengkap dan berfungsi penuh. Selamat menco
