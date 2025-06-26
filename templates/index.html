@@ -47,8 +47,12 @@
                     </div>
                 </div>
                 {% if script.has_log %}
+                <!-- PERUBAHAN: class flex-col-reverse dihapus dari div pembungkus -->
                 <div class="log-content p-4 font-mono text-sm leading-6 bg-gray-900 h-80 overflow-y-auto hidden rounded-b-lg" data-file="{{ script.log_file }}">
-                    <div class="flex flex-col-reverse"></div>
+                    <!-- PERUBAHAN: Loop untuk menampilkan log awal tanpa nomor -->
+                    {% for line in script.initial_logs %}
+                    <div><span class="text-gray-300">{{ line }}</span></div>
+                    {% endfor %}
                 </div>
                 {% endif %}
             </div>
@@ -63,7 +67,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const socket = io();
-            const MAX_LOG_LINES = 150;
+            const MAX_LOG_LINES = 200; // Bisa ditambah karena tidak dirender ulang
 
             // Fungsionalitas untuk membuka/menutup accordion
             document.querySelectorAll('.accordion-header').forEach(header => {
@@ -74,6 +78,11 @@
                         content.classList.toggle('hidden');
                         arrow.classList.toggle('rotate-180');
                         header.classList.toggle('rounded-lg', content.classList.contains('hidden'));
+
+                        // Langsung scroll ke bawah saat accordion dibuka
+                        if (!content.classList.contains('hidden')) {
+                            content.scrollTop = content.scrollHeight;
+                        }
                     });
                 }
             });
@@ -98,36 +107,25 @@
 
             // Mendengarkan event untuk baris log baru
             socket.on('new_log_line', (log) => {
-                const logDisplayArea = document.querySelector(`.log-content[data-file="${log.file}"] > div`);
-                if (!logDisplayArea) return;
+                const logContentDiv = document.querySelector(`.log-content[data-file="${log.file}"]`);
+                if (!logContentDiv) return;
+
                 const newLogLine = document.createElement('div');
-                newLogLine.innerHTML = `<span class="text-gray-500 mr-3">${new Date().toLocaleTimeString('id-ID')}</span><span class="text-gray-300">${log.data}</span>`;
-                logDisplayArea.prepend(newLogLine);
-                if (logDisplayArea.children.length > MAX_LOG_LINES) {
-                    logDisplayArea.lastChild.remove();
+                // PERUBAHAN: Format log baru disederhanakan tanpa timestamp
+                newLogLine.innerHTML = `<span class="text-gray-300">${log.data}</span>`;
+                
+                // PERUBAHAN: Menambahkan log ke bawah (append) bukan ke atas (prepend)
+                logContentDiv.appendChild(newLogLine);
+
+                // Menjaga agar jumlah baris tidak melebihi batas
+                if (logContentDiv.children.length > MAX_LOG_LINES) {
+                    logContentDiv.firstChild.remove();
                 }
+
+                // PERUBAHAN: Otomatis scroll ke bawah untuk melihat log terbaru
+                logContentDiv.scrollTop = logContentDiv.scrollHeight;
             });
         });
     </script>
 </body>
 </html>
-```
-
-### Cara Menjalankan
-
-1.  **Siapkan skrip contoh** seperti `script_satu.py` dan `script_dua.py`. Pastikan mereka menggunakan modul `logging` untuk menulis ke file `.log` yang sesuai.
-2.  **Jalankan Skrip Anda:** Buka beberapa terminal dan jalankan skrip Python yang ingin Anda pantau.
-    ```bash
-    # Di terminal 1
-    python script_satu.py
-    
-    # Di terminal 2
-    python script_dua.py
-    ```
-3.  **Jalankan Dasbor:** Buka terminal lain, pastikan Anda berada di folder `dasbor_monitor`, dan jalankan server Flask.
-    ```bash
-    python app.py
-    ```
-4.  **Buka di Browser:** Buka browser web Anda dan akses alamat `http://127.0.0.1:5000`.
-
-Sekarang Anda memiliki dasbor pemantauan yang lengkap dan berfungsi penuh. Selamat menco

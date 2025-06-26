@@ -11,12 +11,32 @@ from flask_socketio import SocketIO
 # ==============================================================================
 SCRIPTS_TO_MONITOR = [
     'dotmatrix.py',
+    'linphone.py',
+    'hour_audio.py',
+    'ping.py',
+    'fd.py',
+    'monitoring.py'
 ]
 
 # Inisialisasi Aplikasi Flask
 app = Flask(__name__)
 socketio = SocketIO(app)
-LOG_FOLDER = '.'
+LOG_FOLDER = '/opt/lampp/htdocs/ip-call/logs'
+
+# --- FUNGSI BARU: Untuk membaca N baris terakhir dari file ---
+def read_last_lines(filepath, num_lines=100):
+    """Membaca sejumlah baris terakhir dari file secara efisien."""
+    try:
+        with open(filepath, 'r', encoding='utf-8', errors='ignore') as f:
+            # Membaca semua baris, lalu ambil N terakhir. Cukup efisien untuk file log ukuran wajar.
+            # Untuk file yang sangat besar (Gigabyte), pendekatan lain mungkin diperlukan.
+            lines = f.readlines()
+            return [line.strip() for line in lines[-num_lines:]]
+    except FileNotFoundError:
+        return []
+    except Exception as e:
+        print(f"Error saat membaca baris terakhir dari {filepath}: {e}")
+        return []
 
 def check_process_status(script_name):
     """
@@ -25,11 +45,8 @@ def check_process_status(script_name):
     CATATAN: Perintah ini spesifik untuk Linux/macOS.
     """
     try:
-        # Menjalankan perintah dan menangkap outputnya
         result = subprocess.run(['ps', 'aux'], capture_output=True, text=True, check=True)
-        # Memeriksa setiap baris output
         for line in result.stdout.splitlines():
-            # Kondisi agar lebih spesifik: harus mengandung nama skrip, 'python', dan bukan proses 'grep' itu sendiri
             if script_name in line and 'python' in line.lower() and 'grep' not in line:
                 return True
         return False
@@ -48,17 +65,22 @@ def index():
     """
     scripts_data = []
     for script_name in sorted(SCRIPTS_TO_MONITOR):
-        log_file = script_name.replace('.py', '.log')
-        # Memeriksa apakah file log untuk skrip ini ada
-        has_log = os.path.exists(os.path.join(LOG_FOLDER, log_file))
-        # Memeriksa status awal proses
+        log_file = script_name.replace('.py', '.txt')
+        log_path = os.path.join(LOG_FOLDER, log_file)
+        has_log = os.path.exists(log_path)
         is_running = check_process_status(script_name)
         
+        # --- PERUBAHAN: Ambil 100 baris terakhir jika log ada ---
+        initial_logs = []
+        if has_log:
+            initial_logs = read_last_lines(log_path, 100)
+
         scripts_data.append({
             'name': script_name,
             'log_file': log_file,
             'has_log': has_log,
-            'is_running': is_running
+            'is_running': is_running,
+            'initial_logs': initial_logs # Kirim log awal ke template
         })
         
     print(f"Menyajikan dasbor untuk skrip: {[s['name'] for s in scripts_data]}")
@@ -72,7 +94,7 @@ def watch_and_report_background_task():
     """
     log_files_state = {}
     last_status_check = 0
-    status_check_interval = 5  # Periksa status proses setiap 5 detik
+    status_check_interval = 5
 
     print("--- Tugas Latar Belakang Dimulai: Mengawasi log dan status proses ---")
 
@@ -80,12 +102,13 @@ def watch_and_report_background_task():
         # BAGIAN 1: Mengawasi File Log
         try:
             for script_name in SCRIPTS_TO_MONITOR:
-                log_path = os.path.join(LOG_FOLDER, script_name.replace('.py', '.log'))
+                log_path = os.path.join(LOG_FOLDER, script_name.replace('.py', '.txt'))
                 if not os.path.exists(log_path):
                     continue
 
                 if log_path not in log_files_state:
                     file = open(log_path, 'r', encoding='utf-8', errors='ignore')
+                    # --- PERUBAHAN: Langsung ke akhir file saat memulai pengawasan ---
                     file.seek(0, 2)
                     log_files_state[log_path] = file
                 
@@ -121,4 +144,4 @@ def handle_disconnect():
 if __name__ == '__main__':
     print("--- Menjalankan Server Dasbor Monitor ---")
     socketio.start_background_task(target=watch_and_report_background_task)
-    socketio.run(app, host='0.0.0.0', port=5000, debug=False)
+    socketio.run(app, host='0.0.0.0', port=5000, debug=False, allow_unsafe_werkzeug=True)
