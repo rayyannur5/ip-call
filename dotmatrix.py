@@ -30,7 +30,7 @@ def on_message(client, userdata, msg):
     Callback function untuk menangani pesan MQTT yang masuk.
     Tetap menggunakan list dan mencegah duplikasi (topik dan isi pesan yang sama).
     """
-    log_print(f"Pesan diterima - Topik: {msg.topic}, Payload: {str(msg.payload)}")
+    # log_print(f"Pesan diterima - Topik: {msg.topic}, Payload: {str(msg.payload)}")
 
     # Bagian untuk menghapus pesan dari list
     if 'x' in str(msg.payload) or 'c' in str(msg.payload):
@@ -42,9 +42,10 @@ def on_message(client, userdata, msg):
             log_print(f"Pesan untuk topik {msg.topic} dihapus dari antrian.")
         except StopIteration:
             # Jika pesan tidak ditemukan, tidak melakukan apa-apa.
-            log_print(f"Pesan untuk topik {msg.topic} tidak ditemukan untuk dihapus.")
+            pass
+            # log_print(f"Pesan untuk topik {msg.topic} tidak ditemukan untuk dihapus.")
         
-        log_print(f"Antrian saat ini: {messages}")
+        # log_print(f"Antrian saat ini: {messages}")
         return
 
     # Bagian untuk menambahkan pesan ke list (dengan pengecekan duplikat)
@@ -80,8 +81,9 @@ def on_message(client, userdata, msg):
             messages.append(new_message)
             log_print(f"Pesan baru ditambahkan: {new_message}")
         else:
+            pass
             # Jika duplikat, abaikan pesan tersebut
-            log_print(f"Pesan duplikat diabaikan: Topik={msg.topic}")
+            # log_print(f"Pesan duplikat diabaikan: Topik={msg.topic}")
 
     except Exception as e:
         log_print(f"Terjadi error saat memproses pesan: {e}")
@@ -89,9 +91,10 @@ def on_message(client, userdata, msg):
     # log_print(f"Antrian saat ini: {messages}")
 
 def resubscribe():
+    global devices
     try:
         x = requests.get(f'http://{host}/ip-call/server/device.php').json()
-
+        devices = []
         for room in x['data']:
             for device in room['device']:
                 device['running_text'] = room['running_text']
@@ -144,6 +147,7 @@ while True:
         if not messages:
             # Kosongkan juga state posisi jika tidak ada pesan
             group_posisi.clear()
+            resubscribe()
             continue
 
         try:
@@ -193,14 +197,14 @@ while True:
                     elif data['message'] == b'a':
                         str_kirim = str_kirim.replace('Ruang', 'Perawat')
                 
-                log_print(f"PUBLISH| Grup: '{group_name}', Item ke-{posisi_sekarang}: {str_kirim}")
 
-                if data['running_text'] != None:
+                if data['running_text'] != None and data['running_text'] != '':
                     # Ambil setting speed & brightness
                     running_text_data = requests.get(f"http://{host}/ip-call/server/running_text.php?id={data['running_text']}").json()
                     speed = str(running_text_data['speed']).rjust(3, '0')
                     brightness = str(running_text_data['brightness']).rjust(3, '0')
                     client.publish(data['running_text'], payload=speed + brightness + str_kirim, qos=0, retain=False)
+                    log_print(f"PUBLISH| Grup: '{group_name}', Item ke-{posisi_sekarang}: {str_kirim}")
                 
                 # 6. Hitung posisi untuk putaran BERIKUTNYA dan simpan ke state
                 posisi_berikutnya = (posisi_sekarang + 1) % len(items_in_group)

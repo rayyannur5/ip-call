@@ -25,8 +25,20 @@ def log_print(message, level="INFO"):
     Prints a log message with a timestamp and log level.
     e.g., [2025-06-23 09:59:00] [INFO] This is a message.
     """
-    timestamp = time.strftime("%Y-%m-%d %H:%M:%S")
-    print(f"[{timestamp}] [{level.upper()}] {message}")
+    
+    # Daftar level yang diizinkan untuk dicetak (dalam huruf kecil)
+    allowed_levels = [
+	    "info", 
+	    #"debug", 
+	    "error", 
+	    "critical"
+    ]
+
+    # Cek apakah level pesan (dikonversi ke huruf kecil) ada di dalam daftar
+    if level.lower() in allowed_levels:
+        timestamp = time.strftime("%Y-%m-%d %H:%M:%S")
+        print(f"[{timestamp}] [{level.upper()}] {message}")
+    
 
 # ==============================================================================
 # Shell Command Execution
@@ -38,9 +50,8 @@ def execute(command):
     """
     log_print(f"Executing command: '{command}'", level="DEBUG")
     try:
-        # Using text=True is the modern equivalent of .stdout.decode()
-        result = subprocess.run(command, capture_output=True, shell=True, text=True, check=True)
-        return result.stdout.strip()
+        result = subprocess.run(command, capture_output=True, shell=True)
+        return result.stdout.decode()
     except subprocess.CalledProcessError as e:
         log_print(f"Error executing command: '{command}'", level="ERROR")
         log_print(f"Stderr: {e.stderr.strip()}", level="ERROR")
@@ -158,8 +169,8 @@ if __name__ == "__main__":
         log_print(f"Fatal error connecting to MQTT: {e}", level="CRITICAL")
         exit() # Exit if we can't connect to the broker
 
-    setup_linphone()
     client.loop_start()
+    setup_linphone()
 
     timer_5_seconds = millis()
 
