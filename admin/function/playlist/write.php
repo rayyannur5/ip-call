@@ -14,7 +14,7 @@ foreach ($playlists as $playlist) {
     $m3ufile = fopen($filename, "w");
 
     foreach ($playlist['items'] as $playlist_item) {
-        fwrite($m3ufile, "http://localhost/ip-call/playlist/music/" . $playlist_item['path'] . "\n");
+        fwrite($m3ufile, "/opt/lampp/htdocs/ip-call/playlist/music/" . $playlist_item['path'] . "\n");
     }
 
     fclose($m3ufile);
