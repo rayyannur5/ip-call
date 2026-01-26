@@ -83,18 +83,19 @@ def on_message(client, userdata, msg):
         log_print("Linphone not ready, ignoring message.", level="WARNING")
         return
 
-    if msg.topic == 'panggil':
+    if 'panggil' in msg.topic:
         # Don't dial if the payload is '1' (which indicates an outgoing call)
         if payload != '1':
             log_print(f"Initiating call to {payload}")
+            execute('linphonecsh generic terminate')
             execute(f'linphonecsh dial {payload}')
     
-    elif msg.topic == 'tutup':
+    elif 'tutup' in msg.topic:
         log_print("Terminating current call.")
         execute('linphonecsh generic terminate')
         in_calling.clear()
     
-    elif msg.topic == 'server':
+    elif 'server' in msg.topic:
         log_print("Received server command to re-register.")
         reregister.set()
 
@@ -122,18 +123,12 @@ def setup_linphone():
         time.sleep(2)
         
     log_print("Linphone registered successfully.")
+    is_connected.set()
     
     # Soundcard setup loop
     log_print("Setting up soundcard...")
     start_time = millis()
     soundcard_list = execute("linphonecsh generic 'soundcard list'")
-    while "echo" not in soundcard_list:
-        if millis() - start_time > 60000:
-            log_print("Soundcard 'echo' not found. Rebooting.", level="CRITICAL")
-            execute("reboot")
-            return
-        soundcard_list = execute("linphonecsh generic 'soundcard list'")
-        time.sleep(1)
         
     for line in soundcard_list.split("\n"):
         if "echo" in line:
@@ -146,7 +141,6 @@ def setup_linphone():
                 log_print(f"Could not parse soundcard line: '{line}'. Error: {e}", level="ERROR")
 
     log_print("Linphone setup complete.")
-    is_connected.set()
 
 # ==============================================================================
 # Main Execution Logic

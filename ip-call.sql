@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Waktu pembuatan: 13 Jun 2025 pada 16.34
--- Versi server: 10.4.32-MariaDB
--- Versi PHP: 8.2.12
+-- Generation Time: Jan 25, 2026 at 01:53 PM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.1.25
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -24,7 +24,7 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `adzan`
+-- Table structure for table `adzan`
 --
 
 CREATE TABLE `adzan` (
@@ -33,20 +33,20 @@ CREATE TABLE `adzan` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data untuk tabel `adzan`
+-- Dumping data for table `adzan`
 --
 
 INSERT INTO `adzan` (`key`, `value`) VALUES
 ('ashar', '14:48:00'),
 ('dhuhur', '11:27:00'),
-('isya', '21:12:00'),
+('isya', '23:05:00'),
 ('maghrib', '17:18:00'),
 ('subuh', '04:12:00');
 
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `bed`
+-- Table structure for table `bed`
 --
 
 CREATE TABLE `bed` (
@@ -59,13 +59,14 @@ CREATE TABLE `bed` (
   `mode` int(11) NOT NULL DEFAULT 0,
   `ip` varchar(255) DEFAULT NULL,
   `serial_number` varchar(255) DEFAULT NULL,
-  `bypass` int(11) NOT NULL DEFAULT 0
+  `bypass` int(11) NOT NULL DEFAULT 0,
+  `phone` varchar(6) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `category_history`
+-- Table structure for table `category_history`
 --
 
 CREATE TABLE `category_history` (
@@ -74,7 +75,7 @@ CREATE TABLE `category_history` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
--- Dumping data untuk tabel `category_history`
+-- Dumping data for table `category_history`
 --
 
 INSERT INTO `category_history` (`id`, `name`) VALUES
@@ -85,7 +86,7 @@ INSERT INTO `category_history` (`id`, `name`) VALUES
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `category_log`
+-- Table structure for table `category_log`
 --
 
 CREATE TABLE `category_log` (
@@ -94,7 +95,7 @@ CREATE TABLE `category_log` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
--- Dumping data untuk tabel `category_log`
+-- Dumping data for table `category_log`
 --
 
 INSERT INTO `category_log` (`id`, `name`) VALUES
@@ -107,7 +108,7 @@ INSERT INTO `category_log` (`id`, `name`) VALUES
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `history`
+-- Table structure for table `history`
 --
 
 CREATE TABLE `history` (
@@ -122,7 +123,7 @@ CREATE TABLE `history` (
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `list_hour_audio`
+-- Table structure for table `list_hour_audio`
 --
 
 CREATE TABLE `list_hour_audio` (
@@ -133,7 +134,7 @@ CREATE TABLE `list_hour_audio` (
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `log`
+-- Table structure for table `log`
 --
 
 CREATE TABLE `log` (
@@ -149,7 +150,7 @@ CREATE TABLE `log` (
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `mastersound`
+-- Table structure for table `mastersound`
 --
 
 CREATE TABLE `mastersound` (
@@ -159,19 +160,22 @@ CREATE TABLE `mastersound` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data untuk tabel `mastersound`
+-- Dumping data for table `mastersound`
 --
 
 INSERT INTO `mastersound` (`id`, `name`, `source`) VALUES
 (1, 'Ruang', 'static/ruang.mp3'),
 (2, 'Kamar', 'static/kamar.mp3'),
 (3, 'Toilet', 'static/toilet.mp3'),
-(4, 'Bed', 'static/Bed.mp3');
+(4, 'Bed', 'static/Bed.mp3'),
+(18, '101', 'uploads/101.mp3'),
+(19, 'Tes', 'uploads/'),
+(20, 'Tes 2', 'uploads/');
 
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `playlist`
+-- Table structure for table `playlist`
 --
 
 CREATE TABLE `playlist` (
@@ -185,7 +189,7 @@ CREATE TABLE `playlist` (
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `playlist_item`
+-- Table structure for table `playlist_item`
 --
 
 CREATE TABLE `playlist_item` (
@@ -197,7 +201,7 @@ CREATE TABLE `playlist_item` (
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `room`
+-- Table structure for table `room`
 --
 
 CREATE TABLE `room` (
@@ -211,10 +215,18 @@ CREATE TABLE `room` (
   `bypass` int(11) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
+--
+-- Dumping data for table `room`
+--
+
+INSERT INTO `room` (`id`, `type`, `name`, `running_text`, `type_bed`, `bed_separator`, `serial_number`, `bypass`) VALUES
+(1, 'Ruang', 'Tes', '', 'numeric', '', NULL, 0),
+(2, 'Ruang', 'Tes 2', '', 'numeric', '', NULL, 0);
+
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `running_text`
+-- Table structure for table `running_text`
 --
 
 CREATE TABLE `running_text` (
@@ -227,7 +239,7 @@ CREATE TABLE `running_text` (
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `toilet`
+-- Table structure for table `toilet`
 --
 
 CREATE TABLE `toilet` (
@@ -241,7 +253,7 @@ CREATE TABLE `toilet` (
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `user`
+-- Table structure for table `user`
 --
 
 CREATE TABLE `user` (
@@ -252,7 +264,7 @@ CREATE TABLE `user` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
--- Dumping data untuk tabel `user`
+-- Dumping data for table `user`
 --
 
 INSERT INTO `user` (`id`, `username`, `password`, `role`) VALUES
@@ -263,7 +275,7 @@ INSERT INTO `user` (`id`, `username`, `password`, `role`) VALUES
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `utils`
+-- Table structure for table `utils`
 --
 
 CREATE TABLE `utils` (
@@ -272,7 +284,7 @@ CREATE TABLE `utils` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data untuk tabel `utils`
+-- Dumping data for table `utils`
 --
 
 INSERT INTO `utils` (`type`, `value`) VALUES
@@ -294,120 +306,120 @@ INSERT INTO `utils` (`type`, `value`) VALUES
 --
 
 --
--- Indeks untuk tabel `adzan`
+-- Indexes for table `adzan`
 --
 ALTER TABLE `adzan`
   ADD PRIMARY KEY (`key`);
 
 --
--- Indeks untuk tabel `bed`
+-- Indexes for table `bed`
 --
 ALTER TABLE `bed`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `category_history`
+-- Indexes for table `category_history`
 --
 ALTER TABLE `category_history`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `category_log`
+-- Indexes for table `category_log`
 --
 ALTER TABLE `category_log`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `history`
+-- Indexes for table `history`
 --
 ALTER TABLE `history`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `log`
+-- Indexes for table `log`
 --
 ALTER TABLE `log`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `mastersound`
+-- Indexes for table `mastersound`
 --
 ALTER TABLE `mastersound`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `mastersound_pk_2` (`name`);
 
 --
--- Indeks untuk tabel `playlist`
+-- Indexes for table `playlist`
 --
 ALTER TABLE `playlist`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `playlist_item`
+-- Indexes for table `playlist_item`
 --
 ALTER TABLE `playlist_item`
   ADD PRIMARY KEY (`id`,`ord`);
 
 --
--- Indeks untuk tabel `room`
+-- Indexes for table `room`
 --
 ALTER TABLE `room`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `running_text`
+-- Indexes for table `running_text`
 --
 ALTER TABLE `running_text`
   ADD PRIMARY KEY (`topic`);
 
 --
--- Indeks untuk tabel `toilet`
+-- Indexes for table `toilet`
 --
 ALTER TABLE `toilet`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `user`
+-- Indexes for table `user`
 --
 ALTER TABLE `user`
   ADD PRIMARY KEY (`id`);
 
 --
--- AUTO_INCREMENT untuk tabel yang dibuang
+-- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT untuk tabel `category_log`
+-- AUTO_INCREMENT for table `category_log`
 --
 ALTER TABLE `category_log`
   MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
--- AUTO_INCREMENT untuk tabel `history`
+-- AUTO_INCREMENT for table `history`
 --
 ALTER TABLE `history`
   MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT untuk tabel `log`
+-- AUTO_INCREMENT for table `log`
 --
 ALTER TABLE `log`
   MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT untuk tabel `mastersound`
+-- AUTO_INCREMENT for table `mastersound`
 --
 ALTER TABLE `mastersound`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
--- AUTO_INCREMENT untuk tabel `playlist`
+-- AUTO_INCREMENT for table `playlist`
 --
 ALTER TABLE `playlist`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT untuk tabel `user`
+-- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
   MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;

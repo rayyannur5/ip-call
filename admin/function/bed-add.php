@@ -46,7 +46,7 @@ if(count($bed_before) == 1 ) {
 }
 
 // insert into db
-$res = queryBoolean("INSERT INTO bed VALUES ('$id', $room_id, '$name', 100, 100, 1, 0, NULL, '', 0)");
+$res = queryBoolean("INSERT INTO bed VALUES ('$id', $room_id, '$name', 100, 100, 1, 0, NULL, '', 0, '$id')");
 
 if ($res) {
     $_SESSION['flash-message'] = [

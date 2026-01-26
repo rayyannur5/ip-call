@@ -40,6 +40,14 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a href="oximonitor.php" class="nav-link <?= $menu == 'oximonitor' ? 'active' : '' ?>">
+                        <i class="nav-icon fas fa-heartbeat"></i>
+                        <p>
+                            Oxi-Monitor
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a href="audio.php" class="nav-link <?= $menu == 'audio' ? 'active' : '' ?>">
                         <i class="nav-icon fas fa-sliders-h"></i>
                         <p>
