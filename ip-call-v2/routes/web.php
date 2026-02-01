@@ -27,9 +27,8 @@ use App\Http\Controllers\Admin\CallController;
 */
 
 // Redirect root to admin panel
-// React SPA is served from htdocs root, Laravel is at /ip-call/
 Route::get('/', function () {
-    return redirect('/admin');
+    return redirect('/ip-call/admin');
 });
 
 // Legacy API Routes (No Auth, No CSRF via Middleware Exception)
