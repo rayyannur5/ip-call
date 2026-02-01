@@ -26,12 +26,15 @@ use App\Http\Controllers\Admin\CallController;
 |
 */
 
+// Redirect root to admin panel
+// React SPA is served from htdocs root, Laravel is at /ip-call/
 Route::get('/', function () {
-    return response()->file(public_path('index.html'));
+    return redirect('/admin');
 });
 
 // Legacy API Routes (No Auth, No CSRF via Middleware Exception)
-Route::group(['prefix' => 'ip-call/server'], function () {
+// Note: Laravel deployed at /ip-call/ subdirectory, so '/server' becomes '/ip-call/server'
+Route::group(['prefix' => 'server'], function () {
     
     // Exact file paths as routes
     Route::any('device.php', [DeviceController::class, 'index']);
