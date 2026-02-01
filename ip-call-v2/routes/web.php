@@ -69,6 +69,15 @@ Route::group(['prefix' => 'server'], function () {
     Route::any('log/pdf.php', [LogController::class, 'pdf']);
     Route::any('logout.php', [App\Http\Controllers\Admin\AuthController::class, 'logout']);
 
+    // History routes
+    Route::prefix('history')->group(function () {
+        Route::any('get.php', [App\Http\Controllers\Api\HistoryController::class, 'get']);
+        Route::any('create.php', [App\Http\Controllers\Api\HistoryController::class, 'create']);
+        Route::any('update.php', [App\Http\Controllers\Api\HistoryController::class, 'update']);
+        Route::any('excel.php', [App\Http\Controllers\Api\HistoryController::class, 'excel']);
+        Route::any('pdf.php', [App\Http\Controllers\Api\HistoryController::class, 'pdf']);
+    });
+
 });
 
 // Auth Routes
