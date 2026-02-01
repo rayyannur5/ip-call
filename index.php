@@ -7,6 +7,26 @@ define('LARAVEL_START', microtime(true));
 
 /*
 |--------------------------------------------------------------------------
+| Fix Request URI for Subdirectory Deployment
+|--------------------------------------------------------------------------
+| Remove the /ip-call prefix from REQUEST_URI so Laravel can route correctly
+*/
+
+$basePath = '/ip-call';
+if (isset($_SERVER['REQUEST_URI'])) {
+    $requestUri = $_SERVER['REQUEST_URI'];
+    if (strpos($requestUri, $basePath) === 0) {
+        $_SERVER['REQUEST_URI'] = substr($requestUri, strlen($basePath)) ?: '/';
+    }
+}
+
+// Also fix SCRIPT_NAME for proper URL generation
+if (isset($_SERVER['SCRIPT_NAME'])) {
+    $_SERVER['SCRIPT_NAME'] = $basePath . '/index.php';
+}
+
+/*
+|--------------------------------------------------------------------------
 | Check If The Application Is Under Maintenance
 |--------------------------------------------------------------------------
 */
