@@ -85,6 +85,23 @@ Route::get('/login', [App\Http\Controllers\Admin\AuthController::class, 'showLog
 Route::post('/login', [App\Http\Controllers\Admin\AuthController::class, 'login']);
 Route::any('/logout', [App\Http\Controllers\Admin\AuthController::class, 'logout'])->name('logout'); 
 
+// Static files routes (legacy compatibility)
+Route::get('/admin/static/{file}', function ($file) {
+    $path = public_path("assets/static/$file");
+    if (file_exists($path)) {
+        return response()->file($path);
+    }
+    abort(404);
+})->where('file', '.*');
+
+Route::get('/admin/uploads/{file}', function ($file) {
+    $path = public_path("assets/uploads/$file");
+    if (file_exists($path)) {
+        return response()->file($path);
+    }
+    abort(404);
+})->where('file', '.*');
+
 // Admin Routes (Protected)
 Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
     Route::get('/', [App\Http\Controllers\Admin\DashboardController::class, 'index']);
