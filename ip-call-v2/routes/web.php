@@ -28,7 +28,7 @@ use App\Http\Controllers\Admin\CallController;
 
 // Redirect root to admin panel
 Route::get('/', function () {
-    return redirect('/ip-call/admin');
+    return redirect('/admin');
 });
 
 // Legacy API Routes (No Auth, No CSRF via Middleware Exception)

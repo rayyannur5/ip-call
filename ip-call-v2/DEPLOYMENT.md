@@ -1,4 +1,4 @@
-# Deployment Guide - IP Call v2 dengan XAMPP
+# Deployment Guide - IP Call v2 dengan XAMPP (Symlink)
 
 ## Arsitektur URL
 
@@ -6,64 +6,68 @@
 |-----|----------|
 | `localhost/ip-call/` | Redirect ke Admin |
 | `localhost/ip-call/admin` | Laravel Admin Panel |
-| `localhost/ip-call/server/*` | Laravel API (Legacy) |
+| `localhost/ip-call/server/*` | Laravel API |
 | `localhost/ip-call/login` | Login Page |
-
-## Struktur Folder
-
-```
-htdocs/
-└── ip-call/                    ← Folder project di htdocs
-    ├── index.php               ← Entry point (mengarah ke ip-call-v2)
-    ├── .htaccess               ← Routing Laravel
-    ├── ip-call-v2/             ← Laravel application
-    │   ├── app/
-    │   ├── bootstrap/
-    │   ├── config/
-    │   ├── public/             ← Assets Laravel (CSS, JS, images)
-    │   ├── resources/
-    │   ├── routes/
-    │   ├── storage/
-    │   └── vendor/
-    └── ... (file lainnya)
-```
-
-**Folder yang dihapus setelah migrasi:**
-- `admin/` ← PHP native lama (diganti Laravel)
-- `server/` ← PHP native lama (diganti Laravel)
 
 ## Cara Kerja
 
-1. Request masuk ke `htdocs/ip-call/`
-2. `.htaccess` mengarahkan semua request ke `index.php`
-3. `index.php` load Laravel dari folder `ip-call-v2/`
-4. Laravel handle routing sesuai `routes/web.php`
+Symlink `ip-call` di htdocs mengarah ke folder `public` Laravel:
 
-## Prasyarat
-
-- XAMPP dengan PHP >= 8.0
-- Composer installed
-- mod_rewrite enabled di Apache
-
-## Langkah-langkah Deployment
-
-### 1. Setup Database
-
-```sql
-CREATE DATABASE `ip-call`;
+```
+htdocs/
+└── ip-call/              ← Symlink ke .../ip-call-project/ip-call-v2/public
+    ├── index.php         (dari Laravel public)
+    ├── .htaccess         (dari Laravel public)
+    └── ...
 ```
 
-### 2. Install Laravel Dependencies
+Project structure:
+```
+/path/to/ip-call-project/           ← Folder project (di luar atau rename)
+├── ip-call-v2/                     ← Laravel app
+│   ├── app/
+│   ├── public/                     ← Target symlink
+│   ├── resources/
+│   ├── routes/
+│   └── ...
+├── admin_backup/                   ← Backup PHP native lama
+└── server_backup/                  ← Backup PHP native lama
+```
+
+## Langkah Deployment
+
+### 1. Rename folder project (agar bisa buat symlink dengan nama ip-call)
 
 ```bash
-cd /opt/lampp/htdocs/ip-call/ip-call-v2
-composer install --optimize-autoloader --no-dev
+cd /opt/lampp/htdocs
+mv ip-call ip-call-project
 ```
 
-### 3. Konfigurasi Environment
+### 2. Buat symlink
 
-Edit `ip-call-v2/.env`:
+**Linux:**
+```bash
+ln -s ip-call-project/ip-call-v2/public ip-call
+```
 
+**Windows (CMD as Admin):**
+```batch
+mklink /D ip-call ip-call-project\ip-call-v2\public
+```
+
+### 3. Setup Laravel
+
+```bash
+cd /opt/lampp/htdocs/ip-call-project/ip-call-v2
+
+# Install dependencies
+composer install --optimize-autoloader --no-dev
+
+# Setup environment
+cp .env.example .env
+```
+
+Edit `.env`:
 ```env
 APP_ENV=production
 APP_DEBUG=false
@@ -77,7 +81,6 @@ DB_PASSWORD=
 ```
 
 Generate key:
-
 ```bash
 php artisan key:generate
 ```
@@ -85,12 +88,11 @@ php artisan key:generate
 ### 4. Set Permissions (Linux)
 
 ```bash
-cd /opt/lampp/htdocs/ip-call/ip-call-v2
 chmod -R 775 storage bootstrap/cache
 sudo chown -R $USER:daemon storage bootstrap/cache
 ```
 
-### 5. Optimasi untuk Production
+### 5. Clear Cache
 
 ```bash
 php artisan config:cache
@@ -98,62 +100,39 @@ php artisan route:cache
 php artisan view:cache
 ```
 
-### 6. Hapus Folder PHP Native Lama
+### 6. Hapus folder PHP native lama
 
 ```bash
-cd /opt/lampp/htdocs/ip-call
-
-# Backup dulu
-mv admin admin_backup
-mv server server_backup
-
-# Setelah test OK, hapus
-rm -rf admin_backup server_backup
+cd /opt/lampp/htdocs/ip-call-project
+rm -rf admin server
+# atau backup dulu: mv admin admin_backup && mv server server_backup
 ```
 
 ## Verifikasi
 
-Test URL berikut:
-
 1. `http://localhost/ip-call/` → Redirect ke `/admin`
 2. `http://localhost/ip-call/login` → Login page
 3. `http://localhost/ip-call/admin` → Admin panel
-4. `http://localhost/ip-call/server/device.php` → JSON (API)
-
-## Assets Laravel
-
-Assets (CSS, JS, images) dari Laravel ada di `ip-call-v2/public/`. 
-
-Untuk mengakses assets di Blade template, gunakan:
-
-```blade
-<link href="{{ asset('css/app.css') }}" rel="stylesheet">
-```
-
-Laravel akan otomatis handle path yang benar.
+4. `http://localhost/ip-call/server/device.php` → API JSON
 
 ## Troubleshooting
 
-### 500 Internal Server Error
+### Symlink tidak work di Windows
+- Pastikan run CMD as Administrator
+- Atau enable Developer Mode di Windows Settings
 
-```bash
-tail -f ip-call-v2/storage/logs/laravel.log
-php artisan cache:clear
-php artisan config:clear
+### 403 Forbidden
+- Pastikan Apache bisa follow symlinks
+- Edit `httpd.conf`:
+```apache
+<Directory "/opt/lampp/htdocs">
+    Options +FollowSymLinks
+    AllowOverride All
+</Directory>
 ```
 
-### 404 Not Found
-
-- Pastikan `mod_rewrite` enabled
-- Pastikan `.htaccess` ada di folder `ip-call/`
-- Pastikan `AllowOverride All` di httpd.conf
-
-### Assets Tidak Load
-
-Jika CSS/JS tidak load, cek path di Blade template. Assets harus di folder `ip-call-v2/public/`.
-
-## Catatan React SPA
-
-Jika ingin menambahkan React SPA:
-1. React diakses dari URL terpisah (misal `localhost/ip-call-spa/`)
-2. Atau React di-embed dalam Laravel sebagai frontend
+### 500 Error
+```bash
+tail -f storage/logs/laravel.log
+php artisan cache:clear
+```
