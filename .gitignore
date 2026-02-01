@@ -1,1 +1,3 @@
-log*
+# Ignore log directories/files, but not files starting with "log" like login.blade.php
+/log/
+*.log
