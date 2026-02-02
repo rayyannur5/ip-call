@@ -66,4 +66,53 @@ class DeviceController extends Controller
          // Actually, I should probably read it to be safe.
          return $this->index(); // Placeholder if identical
     }
+
+    /**
+     * Get devices by running_text
+     * GET /server/device_by_runningtext.php?running_text={running_text}
+     */
+    public function byRunningText(Request $request)
+    {
+        try {
+            $runningText = $request->input('running_text');
+            
+            $rooms = Room::where('running_text', $runningText)->get();
+            $oneRoomOneDevice = Util::where('type', 'one_room_one_device')->value('value');
+
+            $data = $rooms->map(function ($room) use ($oneRoomOneDevice) {
+                $beds = Bed::where('room_id', $room->id)->get()->toArray();
+                $toilets = Toilet::where('room_id', $room->id)->get()->toArray();
+
+                $devices = array_merge($beds, $toilets);
+
+                // Add Lampu
+                $devices[] = [
+                    'id' => $room->id,
+                    'username' => "Lampu " . $room->name
+                ];
+
+                // Add Ruang if setting enabled
+                if ($oneRoomOneDevice == 1) {
+                    $devices[] = [
+                        'id' => $room->id . '_room',
+                        'username' => "Ruang " . $room->name
+                    ];
+                }
+
+                $roomData = $room->toArray();
+                $roomData['device'] = $devices;
+                return $roomData;
+            });
+
+            return response()->json([
+                'success' => true,
+                'data' => $data
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => false,
+                'error' => $th->getMessage()
+            ]);
+        }
+    }
 }

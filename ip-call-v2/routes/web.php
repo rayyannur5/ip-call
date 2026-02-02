@@ -44,6 +44,7 @@ Route::group(['prefix' => 'server'], function () {
     Route::any('music.php', [SoundController::class, 'index']); 
     Route::any('utils.php', [UtilController::class, 'index']);
     Route::any('oximonitor.php', [OxiMonitorController::class, 'handle']);
+    Route::any('device_by_runningtext.php', [DeviceController::class, 'byRunningText']);
 
     // Subdirectories
     Route::prefix('bed')->group(function () {
@@ -136,6 +137,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
 
     // Other settings
     Route::get('/oximonitor', [App\Http\Controllers\Admin\OxiMonitorController::class, 'index']);
+    Route::get('/oximonitor/metrics', [App\Http\Controllers\Admin\OxiMonitorController::class, 'metrics']);
+    Route::post('/oximonitor/data', [App\Http\Controllers\Admin\OxiMonitorController::class, 'getData']);
     Route::get('/audio', [App\Http\Controllers\Admin\AudioController::class, 'index']);
     Route::post('/audio/store', [App\Http\Controllers\Admin\AudioController::class, 'store']);
     Route::get('/audio/destroy/{id}', [App\Http\Controllers\Admin\AudioController::class, 'destroy']);
