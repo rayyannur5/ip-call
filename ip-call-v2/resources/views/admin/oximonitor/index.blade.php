@@ -212,14 +212,14 @@
 
 @section('scripts')
 <!-- Date Range Picker Dependencies -->
-<script src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+<script src="{{ asset('assets/vendor/moment/moment.min.js') }}"></script>
+<script src="{{ asset('assets/vendor/daterangepicker/daterangepicker.min.js') }}"></script>
+<link rel="stylesheet" href="{{ asset('assets/vendor/daterangepicker/daterangepicker.css') }}" />
 
 <!-- DataTables -->
-<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
-<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" />
+<script src="{{ asset('assets/vendor/datatables/jquery.dataTables.min.js') }}"></script>
+<script src="{{ asset('assets/vendor/datatables/dataTables.bootstrap5.min.js') }}"></script>
+<link rel="stylesheet" href="{{ asset('assets/vendor/datatables/dataTables.bootstrap5.min.css') }}" />
 
 <script>
 $(document).ready(function() {

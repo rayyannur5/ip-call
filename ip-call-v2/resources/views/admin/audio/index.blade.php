@@ -100,9 +100,9 @@
 
 @section('scripts')
     <!-- Flatpickr -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/airbnb.css">
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <link rel="stylesheet" href="{{ asset('assets/vendor/flatpickr/flatpickr.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/vendor/flatpickr/airbnb.css') }}">
+    <script src="{{ asset('assets/vendor/flatpickr/flatpickr.min.js') }}"></script>
 
     <script>
         $(document).ready(function() {
