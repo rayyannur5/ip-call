@@ -1,5 +1,6 @@
 import subprocess
 import time
+import argparse
 import paho.mqtt.client as mqtt
 from threading import Event
 
@@ -11,6 +12,9 @@ MQTT_BROKER = "localhost"
 MQTT_PORT = 1883
 USERNAME = 'server'
 PASSWORD = 'server'
+
+# Default linphonecsh init arguments
+DEFAULT_INIT_ARGS = "-c /home/nursecallserver/.linphonerc"
 
 # Threading events to manage state
 is_connected = Event()
@@ -102,10 +106,10 @@ def on_message(client, userdata, msg):
 # ==============================================================================
 # Linphone Setup
 # ==============================================================================
-def setup_linphone():
+def setup_linphone(init_args=DEFAULT_INIT_ARGS):
     """Initializes and registers Linphone."""
     is_connected.clear()
-    execute("linphonecsh init -c /home/nursecallserver/.config/linphone/linphonerc")
+    execute(f"linphonecsh init {init_args}")
     log_print("Registering Linphone...")
     
     # Registration loop
@@ -143,10 +147,28 @@ def setup_linphone():
     log_print("Linphone setup complete.")
 
 # ==============================================================================
+# Argument Parsing
+# ==============================================================================
+def parse_arguments():
+    """Parse command line arguments."""
+    parser = argparse.ArgumentParser(description='Linphone MQTT Bridge')
+    parser.add_argument(
+        '--init-args',
+        type=str,
+        default=DEFAULT_INIT_ARGS,
+        help=f'Arguments for linphonecsh init command (default: {DEFAULT_INIT_ARGS})'
+    )
+    return parser.parse_args()
+
+# ==============================================================================
 # Main Execution Logic
 # ==============================================================================
 if __name__ == "__main__":
+    # Parse command line arguments
+    args = parse_arguments()
+    
     log_print("Script starting...")
+    log_print(f"Using init args: {args.init_args}")
     
     # Initialize MQTT Client
     client = mqtt.Client()
@@ -164,7 +186,7 @@ if __name__ == "__main__":
         exit() # Exit if we can't connect to the broker
 
     client.loop_start()
-    setup_linphone()
+    setup_linphone(args.init_args)
 
     timer_5_seconds = millis()
 
@@ -192,7 +214,7 @@ if __name__ == "__main__":
             if reregister.is_set():
                 log_print("Re-registering Linphone...")
                 execute('linphonecsh unregister')
-                setup_linphone()
+                setup_linphone(args.init_args)
                 reregister.clear()
             
             time.sleep(0.2) # Small delay to prevent high CPU usage

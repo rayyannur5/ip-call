@@ -9,10 +9,15 @@ import datetime
 import requests
 import os
 import subprocess
+import argparse
+
+# Default background file path
+DEFAULT_BG_FILE = "/home/nursecallserver/ip-call/assets/bg.JPEG"
 
 class USBMonitor:
-    def __init__(self, check_interval=1):
+    def __init__(self, check_interval=1, bg_file=DEFAULT_BG_FILE):
         self.check_interval = check_interval
+        self.bg_file = bg_file
         self.known_devices = set()
         self.root = None
         self.usb_window = None
@@ -65,7 +70,7 @@ class USBMonitor:
             self.center_window(self.usb_window)
 
             # Load and place background image
-            self.background_image = Image.open("/opt/lampp/htdocs/ip-call/assets/bg.JPEG")
+            self.background_image = Image.open(self.bg_file)
             self.background_image = self.background_image.resize((400, 250))
             self.background_photo = ImageTk.PhotoImage(self.background_image)
             
@@ -253,7 +258,23 @@ class USBMonitor:
         y = (screen_height // 2) - (window_height // 2)
         window.geometry(f'+{x}+{y}')  # Menyesuaikan dengan posisi tengah layar
 
+def parse_arguments():
+    """Parse command line arguments."""
+    parser = argparse.ArgumentParser(description='USB Monitor with Download/Backup')
+    parser.add_argument(
+        '--bg-file',
+        type=str,
+        default=DEFAULT_BG_FILE,
+        help=f'Path to background image file (default: {DEFAULT_BG_FILE})'
+    )
+    return parser.parse_args()
+
 if __name__ == "__main__":
+    # Parse command line arguments
+    args = parse_arguments()
     
-    monitor = USBMonitor()
+    print(f"💻 USB Monitor starting...")
+    print(f"🖼️  Menggunakan background: {args.bg_file}")
+    
+    monitor = USBMonitor(bg_file=args.bg_file)
     monitor.run()

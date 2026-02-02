@@ -1,6 +1,7 @@
 import os
 import time
 import subprocess
+import argparse
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 from datetime import date, datetime, time as dt_time, timedelta 
@@ -31,7 +32,10 @@ DEFAULT_LONGITUDE = 112.72549628465647
 latitude = DEFAULT_LATITUDE
 longitude = DEFAULT_LONGITUDE
 
-liq_file_path = "/opt/lampp/htdocs/ip-call/liquidsoap/radio.liq" 
+# Default liquidsoap file path
+DEFAULT_LIQ_FILE_PATH = "/home/nursecallserver/ip-call/liquidsoap/radio.liq"
+
+liq_file_path = DEFAULT_LIQ_FILE_PATH
 target_file = os.path.abspath(liq_file_path)
 music_schedule_url = "http://localhost/ip-call/server/music.php" 
 utils_url = "http://localhost/ip-call/server/utils.php" 
@@ -418,11 +422,30 @@ def scheduled_daily_refresh_trigger():
     log_message("SCHEDULER_DAILY_REFRESH: Sinyal refresh harian.");
     if restart_request_queue.empty(): restart_request_queue.put("RESTART_REQUESTED_BY_DAILY_SCHEDULER")
 
+def parse_arguments():
+    """Parse command line arguments."""
+    parser = argparse.ArgumentParser(description='Liquidsoap Radio Scheduler')
+    parser.add_argument(
+        '--liq-file',
+        type=str,
+        default=DEFAULT_LIQ_FILE_PATH,
+        help=f'Path to liquidsoap .liq file (default: {DEFAULT_LIQ_FILE_PATH})'
+    )
+    return parser.parse_args()
+
 if __name__ == "__main__":
+    # Parse command line arguments
+    args = parse_arguments()
+    
+    # Update liq_file_path dan target_file dari argumen
+    liq_file_path = args.liq_file
+    target_file = os.path.abspath(liq_file_path)
+    
     watch_dir = os.path.dirname(target_file)
     if not os.path.exists(watch_dir): log_message(f"❌ Error: Direktori tidak ada: {watch_dir}"); exit(1)
     
-    log_message("🚀 Skrip dimulai..."); 
+    log_message("🚀 Skrip dimulai...")
+    log_message(f"📁 Menggunakan file .liq: {target_file}")
     publish_mqtt_message(topic=mqtt_topic_schedule_audio, payload="0") # Default OFF
     
     update_location_coordinates() 

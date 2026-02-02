@@ -2,6 +2,7 @@ import time
 import glob
 import os
 import subprocess
+import argparse
 from flask import Flask, render_template
 from flask_socketio import SocketIO
 
@@ -21,7 +22,10 @@ SCRIPTS_TO_MONITOR = [
 # Inisialisasi Aplikasi Flask
 app = Flask(__name__)
 socketio = SocketIO(app)
-LOG_FOLDER = '/opt/lampp/htdocs/ip-call/logs'
+
+# Default log folder path
+DEFAULT_LOG_FOLDER = '/home/nursecallserver/ip-call/logs'
+LOG_FOLDER = DEFAULT_LOG_FOLDER
 
 # --- FUNGSI BARU: Untuk membaca N baris terakhir dari file ---
 def read_last_lines(filepath, num_lines=100):
@@ -141,7 +145,25 @@ def handle_connect():
 def handle_disconnect():
     print('Client terputus dari WebSocket.')
 
+def parse_arguments():
+    """Parse command line arguments."""
+    parser = argparse.ArgumentParser(description='Monitoring Dashboard Server')
+    parser.add_argument(
+        '--log-folder',
+        type=str,
+        default=DEFAULT_LOG_FOLDER,
+        help=f'Path to log folder (default: {DEFAULT_LOG_FOLDER})'
+    )
+    return parser.parse_args()
+
 if __name__ == '__main__':
+    # Parse command line arguments
+    args = parse_arguments()
+    
+    # Update LOG_FOLDER dari argumen
+    LOG_FOLDER = args.log_folder
+    
     print("--- Menjalankan Server Dasbor Monitor ---")
+    print(f"📁 Menggunakan log folder: {LOG_FOLDER}")
     socketio.start_background_task(target=watch_and_report_background_task)
     socketio.run(app, host='0.0.0.0', port=5000, debug=False, allow_unsafe_werkzeug=True)
