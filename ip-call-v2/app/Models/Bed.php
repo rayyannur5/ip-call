@@ -11,7 +11,11 @@ class Bed extends Model
     protected $keyType = 'string';
     public $incrementing = false;
     public $timestamps = false;
-    protected $fillable = ['id', 'room_id', 'username', 'vol', 'mic', 'tw', 'mode', 'ip', 'serial_number', 'bypass', 'phone'];
+    protected $fillable = ['id', 'room_id', 'username', 'vol', 'mic', 'tw', 'mode', 'ip', 'serial_number', 'bypass', 'phone', 'cable'];
+
+    protected $casts = [
+        'cable' => 'boolean',
+    ];
 
     public function room()
     {

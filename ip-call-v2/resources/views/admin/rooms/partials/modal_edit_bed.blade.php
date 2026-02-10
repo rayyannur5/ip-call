@@ -16,9 +16,17 @@
                     
                     <input type="text" value="{{ $bed->id }}" name="id" hidden />
                     
-                    <div class="mb-4 form-check form-switch p-3 bg-light rounded border d-flex align-items-center justify-content-between">
+                    <div class="mb-3 form-check form-switch p-3 bg-light rounded border d-flex align-items-center justify-content-between">
                         <label class="form-check-label fw-bold mb-0" for="switch-tw-{{ $bed->id }}">Twoway Communication</label>
                         <input class="form-check-input ms-0" type="checkbox" role="switch" name="tw" id="switch-tw-{{ $bed->id }}" {{ $bed->tw ? 'checked' : '' }} style="margin-left: 0 !important; float: none;">
+                    </div>
+
+                    <div class="mb-4 form-check form-switch p-3 bg-light rounded border d-flex align-items-center justify-content-between">
+                        <div>
+                            <label class="form-check-label fw-bold mb-0" for="switch-cable-{{ $bed->id }}">Cable (Shared Phone)</label>
+                            <div class="text-muted small">Phone akan mengikuti bed pertama di room ini</div>
+                        </div>
+                        <input class="form-check-input ms-0" type="checkbox" role="switch" name="cable" id="switch-cable-{{ $bed->id }}" {{ $bed->cable ? 'checked' : '' }} style="margin-left: 0 !important; float: none;">
                     </div>
                     
                     <div class="row g-3">

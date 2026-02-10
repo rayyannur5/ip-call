@@ -269,6 +269,15 @@ class RoomController extends Controller
              $first_bed->update(['username' => $first_bed_new_name]);
         }
 
+        // Cable logic: determine phone value
+        $cable = $request->has('cable') ? 1 : 0;
+        if ($cable) {
+            $first_bed = Bed::where('room_id', $room_id)->orderBy('id')->first();
+            $phone = $first_bed ? $first_bed->id : $id;
+        } else {
+            $phone = $id;
+        }
+
         Bed::create([
             'id' => $id,
             'room_id' => $room_id,
@@ -277,10 +286,9 @@ class RoomController extends Controller
             'mic' => 100,
             'tw' => 1,
             'mode' => 0,
-             // 'ip' => null, // default
-             // 'serial_number' => null,
             'bypass' => 0,
-            'phone' => $id // Logic line 49 bed-add.php: VALUES(..., '$id') for phone
+            'phone' => $phone,
+            'cable' => $cable,
         ]);
 
         return redirect()->back()->with('success', 'Bed berhasil ditambahkan');
@@ -289,18 +297,45 @@ class RoomController extends Controller
     public function updateBed(Request $request)
     {
         $bed = Bed::find($request->id);
+
+        // Cable logic: determine phone value
+        $cable = $request->has('cable') ? 1 : 0;
+        if ($cable) {
+            $first_bed = Bed::where('room_id', $bed->room_id)->orderBy('id')->first();
+            $phone = $first_bed ? $first_bed->id : $bed->id;
+        } else {
+            $phone = $bed->id;
+        }
+
         $bed->update([
             'tw' => $request->has('tw') ? 1 : 0,
             'vol' => $request->vol,
             'mic' => $request->mic,
-            'mode' => $request->mode
+            'mode' => $request->mode,
+            'cable' => $cable,
+            'phone' => $phone,
         ]);
         return redirect()->back()->with('success', 'Bed berhasil diupdate');
     }
 
     public function destroyBed(Request $request)
     {
+        $bed = Bed::find($request->id);
+        $room_id = $bed->room_id;
+        $was_first = Bed::where('room_id', $room_id)->orderBy('id')->first()->id === $bed->id;
+
         Bed::destroy($request->id);
+
+        // If deleting the first bed, recalculate phone for all cable beds in this room
+        if ($was_first) {
+            $new_first = Bed::where('room_id', $room_id)->orderBy('id')->first();
+            if ($new_first) {
+                Bed::where('room_id', $room_id)
+                    ->where('cable', 1)
+                    ->update(['phone' => $new_first->id]);
+            }
+        }
+
         return redirect()->back()->with('success', 'Bed berhasil dihapus');
     }
 
@@ -539,6 +574,36 @@ same => n,Hangup()
         Bed::query()->update(['tw' => $tw]);
 
         $message = ($tw == 1) ? 'Semua Bed berhasil diubah ke 2W (Two-Way)' : 'Semua Bed berhasil diubah ke 1W (One-Way)';
+        return redirect()->back()->with('success', $message);
+    }
+
+    public function bulkUpdateCable(Request $request)
+    {
+        $cable = $request->cable; // 1 for Cable, 0 for Non-Cable
+
+        if ($cable == 1) {
+            // Set all beds to cable=1, phone = first bed id in each room
+            $rooms = Room::with(['beds' => function ($q) { $q->orderBy('id'); }])->has('beds')->get();
+            foreach ($rooms as $room) {
+                $first_bed_id = $room->beds->first()->id;
+                Bed::where('room_id', $room->id)->update([
+                    'cable' => 1,
+                    'phone' => $first_bed_id,
+                ]);
+            }
+            $message = 'Semua Bed berhasil diubah ke Cable';
+        } else {
+            // Set all beds to cable=0, phone = own bed id
+            $beds = Bed::all();
+            foreach ($beds as $bed) {
+                $bed->update([
+                    'cable' => 0,
+                    'phone' => $bed->id,
+                ]);
+            }
+            $message = 'Semua Bed berhasil diubah ke Non-Cable';
+        }
+
         return redirect()->back()->with('success', $message);
     }
 }

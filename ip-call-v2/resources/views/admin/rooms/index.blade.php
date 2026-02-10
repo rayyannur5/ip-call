@@ -16,6 +16,9 @@
                 <li><a class="dropdown-item" href="{{ route('rooms.bulk_mode', ['mode' => 0]) }}">Jadikan Emergency Semua</a></li>
                 <li><a class="dropdown-item" href="{{ route('rooms.bulk_tw', ['tw' => 0]) }}">Jadikan 1W Semua</a></li>
                 <li><a class="dropdown-item" href="{{ route('rooms.bulk_tw', ['tw' => 1]) }}">Jadikan 2W Semua</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="{{ route('rooms.bulk_cable', ['cable' => 1]) }}">Jadikan Cable Semua</a></li>
+                <li><a class="dropdown-item" href="{{ route('rooms.bulk_cable', ['cable' => 0]) }}">Jadikan Non-Cable Semua</a></li>
             </ul>
         </div>
         
@@ -64,12 +67,22 @@
                         
                         <div class="d-flex flex-column gap-2">
                             @forelse ($room->beds as $bed)
-                                <div class="bg-white p-2 rounded shadow-sm d-flex justify-content-between align-items-center border-start border-4 border-info">
-                                    <div class="d-flex align-items-center overflow-hidden">
-                                        <div class="badge bg-secondary me-2">{{ $bed->id }}</div>
-                                        <div class="text-truncate fw-medium" title="{{ $bed->username }}">{{ $bed->username }}</div>
+                                <div class="bg-white p-2 rounded shadow-sm border-start border-4 border-info">
+                                    <div class="d-flex align-items-center justify-content-between mb-1">
+                                        <div class="d-flex align-items-center overflow-hidden">
+                                            <div class="badge bg-secondary me-2">{{ $bed->id }}</div>
+                                            <div class="text-truncate fw-medium" title="{{ $bed->username }}">{{ $bed->username }}</div>
+                                        </div>
+                                        <button class="btn btn-sm btn-link text-muted p-0" data-bs-toggle="modal" data-bs-target="#modal-ubah-bed-{{ $bed->id }}">
+                                            <i class="fas fa-sliders-h fa-xs"></i>
+                                        </button>
                                     </div>
-                                    <div class="d-flex align-items-center gap-1">
+                                    <div class="d-flex align-items-center gap-1 flex-wrap">
+                                        @if($bed->cable)
+                                            <span class="badge rounded-pill text-bg-success" style="font-size: 0.65rem;" title="Cable: Phone = {{ $bed->phone }}">
+                                                <i class="fas fa-link"></i> Cable
+                                            </span>
+                                        @endif
                                         <span class="badge rounded-pill {{ $bed->mode == 2 ? 'text-bg-primary' : 'text-bg-danger' }}" 
                                               style="font-size: 0.65rem;">
                                             {{ $bed->mode == 2 ? 'CodeBlue' : 'Emergency' }}
@@ -79,13 +92,11 @@
                                             {{ $bed->tw ? '2W' : '1W' }}
                                         </span>
                                         <a href="{{ route('rooms.bypass', ['id' => $bed->id, 'type' => 'bed']) }}" 
-                                           class="badge rounded-pill {{ $bed->bypass ? 'text-bg-danger' : 'text-bg-secondary' }} text-decoration-none"
-                                           style="font-size: 0.65rem; cursor: pointer;">
+                                           class="btn btn-sm {{ $bed->bypass ? 'btn-danger' : 'btn-outline-secondary' }} py-0 px-1"
+                                           style="font-size: 0.65rem; line-height: 1.4;"
+                                           title="Toggle Bypass">
                                             {{ $bed->bypass ? 'BYP' : 'ACT' }}
                                         </a>
-                                        <button class="btn btn-sm btn-link text-muted p-0 ms-1" data-bs-toggle="modal" data-bs-target="#modal-ubah-bed-{{ $bed->id }}">
-                                            <i class="fas fa-sliders-h fa-xs"></i>
-                                        </button>
                                     </div>
                                 </div>
                                 @include('admin.rooms.partials.modal_edit_bed', ['bed' => $bed])

@@ -103,23 +103,38 @@ Route::get('/admin/uploads/{file}', function ($file) {
     abort(404);
 })->where('file', '.*');
 
-// Admin Routes (Protected)
-Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
+// Admin Routes (Public - No Auth Required)
+Route::group(['prefix' => 'admin'], function () {
     Route::get('/', [App\Http\Controllers\Admin\DashboardController::class, 'index']);
     Route::get('/messages', [App\Http\Controllers\Admin\MessageController::class, 'index'])->name('messages.index');
     Route::get('/messages/export/{type}', [App\Http\Controllers\Admin\MessageController::class, 'export'])->name('messages.export');
     
     Route::get('/calls', [App\Http\Controllers\Admin\CallController::class, 'index'])->name('calls.index');
     Route::get('/calls/export/{type}', [App\Http\Controllers\Admin\CallController::class, 'export'])->name('calls.export');
-    
-    // General
+
+    // OxiMonitor (public view)
+    Route::get('/oximonitor', [App\Http\Controllers\Admin\OxiMonitorController::class, 'index']);
+    Route::get('/oximonitor/metrics', [App\Http\Controllers\Admin\OxiMonitorController::class, 'metrics']);
+    Route::post('/oximonitor/data', [App\Http\Controllers\Admin\OxiMonitorController::class, 'getData']);
+
+    // Audio (public view)
+    Route::get('/audio', [App\Http\Controllers\Admin\AudioController::class, 'index']);
+});
+
+// Admin Routes (Protected - Teknisi Only)
+Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
+    // Audio management
+    Route::post('/audio/store', [App\Http\Controllers\Admin\AudioController::class, 'store']);
+    Route::get('/audio/destroy/{id}', [App\Http\Controllers\Admin\AudioController::class, 'destroy']);
+
+    // General Settings
     Route::get('/general', [App\Http\Controllers\Admin\GeneralController::class, 'index']);
     Route::post('/general/update', [App\Http\Controllers\Admin\GeneralController::class, 'update']);
     
+    // Rooms
     Route::get('/rooms/bulk-mode', [App\Http\Controllers\Admin\RoomController::class, 'bulkUpdateMode'])->name('rooms.bulk_mode');
     Route::get('/rooms/bulk-tw', [App\Http\Controllers\Admin\RoomController::class, 'bulkUpdateTw'])->name('rooms.bulk_tw');
-    
-    // Rooms
+    Route::get('/rooms/bulk-cable', [App\Http\Controllers\Admin\RoomController::class, 'bulkUpdateCable'])->name('rooms.bulk_cable');
     Route::get('/rooms', [App\Http\Controllers\Admin\RoomController::class, 'index']);
     Route::post('/rooms/store', [App\Http\Controllers\Admin\RoomController::class, 'store'])->name('rooms.store');
     Route::post('/rooms/update', [App\Http\Controllers\Admin\RoomController::class, 'update'])->name('rooms.update');
@@ -135,17 +150,13 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
     Route::post('/toilets/store', [App\Http\Controllers\Admin\RoomController::class, 'storeToilet'])->name('toilets.store');
     Route::get('/toilets/destroy', [App\Http\Controllers\Admin\RoomController::class, 'destroyToilet'])->name('toilets.destroy');
 
-    // Other settings
-    Route::get('/oximonitor', [App\Http\Controllers\Admin\OxiMonitorController::class, 'index']);
-    Route::get('/oximonitor/metrics', [App\Http\Controllers\Admin\OxiMonitorController::class, 'metrics']);
-    Route::post('/oximonitor/data', [App\Http\Controllers\Admin\OxiMonitorController::class, 'getData']);
-    Route::get('/audio', [App\Http\Controllers\Admin\AudioController::class, 'index']);
-    Route::post('/audio/store', [App\Http\Controllers\Admin\AudioController::class, 'store']);
-    Route::get('/audio/destroy/{id}', [App\Http\Controllers\Admin\AudioController::class, 'destroy']);
+    // Running Text
     Route::get('/running-text', [App\Http\Controllers\Admin\RunningTextController::class, 'index']);
     Route::post('/running-text/store', [App\Http\Controllers\Admin\RunningTextController::class, 'store']);
     Route::post('/running-text/update/{topic}', [App\Http\Controllers\Admin\RunningTextController::class, 'update']);
     Route::get('/running-text/destroy/{topic}', [App\Http\Controllers\Admin\RunningTextController::class, 'destroy']);
+
+    // Adzan
     Route::get('/adzan', [App\Http\Controllers\Admin\AdzanController::class, 'index']);
     Route::post('/adzan/update', [App\Http\Controllers\Admin\AdzanController::class, 'update']);
     

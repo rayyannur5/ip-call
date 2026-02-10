@@ -66,6 +66,13 @@
         .nav-icon {
             margin-right: 10px;
         }
+
+        .header-menu {
+            color: #fff;
+            background-color: #446586ff;
+            padding: 10px;
+        }
+
     </style>
 </head>
 <body>
@@ -78,6 +85,7 @@
         </div>
 
         <ul class="list-unstyled components">
+            {{-- Public Menus - Always Visible --}}
             <li class="{{ request()->is('admin') ? 'active' : '' }}">
                 <a href="{{ url('/admin') }}">
                     <i class="fas fa-home nav-icon"></i> Dashboard
@@ -104,42 +112,51 @@
                 </a>
             </li>
 
-            {{-- Teknisi Only Menu --}}
-            {{-- Assuming basic auth check. Update with specific Gate/Policy later --}}
-            {{-- For now displaying all or logic based on session role if available --}}
+            {{-- Teknisi Only Menu - Only visible when logged in as teknisi --}}
+            @if (Auth::check() && Auth::user()->username == 'teknisi')
+                <li class="header-menu p-2">SETTINGS</li>
+                
+                <li class="{{ request()->is('admin/rooms') ? 'active' : '' }}">
+                    <a href="{{ url('/admin/rooms') }}">
+                        <i class="fas fa-door-open nav-icon"></i> Setting Ruang
+                    </a>
+                </li>
+                <li class="{{ request()->is('admin/general') ? 'active' : '' }}">
+                    <a href="{{ url('/admin/general') }}">
+                        <i class="fas fa-cogs nav-icon"></i> Setting Umum
+                    </a>
+                </li>
+                <li class="{{ request()->is('admin/running-text') ? 'active' : '' }}">
+                    <a href="{{ url('/admin/running-text') }}">
+                        <i class="fas fa-scroll nav-icon"></i> Setting Running Text
+                    </a>
+                </li>
+                <li class="{{ request()->is('admin/adzan') ? 'active' : '' }}">
+                    <a href="{{ url('/admin/adzan') }}">
+                        <i class="fas fa-mosque nav-icon"></i> Informasi Adzan
+                    </a>
+                </li>
+                <li class="{{ request()->is('admin/playlist') ? 'active' : '' }}">
+                    <a href="{{ url('/admin/playlist') }}">
+                        <i class="fas fa-music nav-icon"></i> Setting Playlist
+                    </a>
+                </li>
+            @endif
             
-            <li class="header-menu p-2 text-muted">SETTINGS</li>
-            
-            <li class="{{ request()->is('admin/rooms') ? 'active' : '' }}">
-                <a href="{{ url('/admin/rooms') }}">
-                    <i class="fas fa-door-open nav-icon"></i> Setting Ruang
-                </a>
-            </li>
-            <li class="{{ request()->is('admin/general') ? 'active' : '' }}">
-                <a href="{{ url('/admin/general') }}">
-                    <i class="fas fa-cogs nav-icon"></i> Setting Umum
-                </a>
-            </li>
-            <li class="{{ request()->is('admin/running-text') ? 'active' : '' }}">
-                <a href="{{ url('/admin/running-text') }}">
-                    <i class="fas fa-scroll nav-icon"></i> Setting Running Text
-                </a>
-            </li>
-            <li class="{{ request()->is('admin/adzan') ? 'active' : '' }}">
-                <a href="{{ url('/admin/adzan') }}">
-                    <i class="fas fa-mosque nav-icon"></i> Informasi Adzan
-                </a>
-            </li>
-            <li class="{{ request()->is('admin/playlist') ? 'active' : '' }}">
-                <a href="{{ url('/admin/playlist') }}">
-                    <i class="fas fa-music nav-icon"></i> Setting Playlist
-                </a>
-            </li>
-             <li>
-                <a href="{{ url('/logout') }}"> {{-- Implement logout route --}}
-                    <i class="fas fa-sign-out-alt nav-icon"></i> Logout
-                </a>
-            </li>
+            {{-- Login / Logout --}}
+            @if (Auth::check())
+                <li>
+                    <a href="{{ url('/logout') }}">
+                        <i class="fas fa-sign-out-alt nav-icon"></i> Logout
+                    </a>
+                </li>
+            @else
+                <li>
+                    <a href="{{ url('/login') }}">
+                        <i class="fas fa-sign-in-alt nav-icon"></i> Login
+                    </a>
+                </li>
+            @endif
         </ul>
     </nav>
 
@@ -149,13 +166,16 @@
             <div class="container-fluid">
                 <button type="button" id="sidebarCollapse" class="btn btn-info">
                     <i class="fas fa-align-left"></i>
-                    <span>Toggle Sidebar</span>
                 </button>
                 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="nav navbar-nav ms-auto">
                         <li class="nav-item">
-                            <a class="nav-link" href="#">User</a> {{-- Dynamic user name --}}
+                            @if (Auth::check())
+                                <a class="nav-link" href="#"><i class="fas fa-user me-1"></i> {{ Auth::user()->username }}</a>
+                            @else
+                                <a class="nav-link" href="{{ url('/login') }}"><i class="fas fa-user me-1"></i> Guest</a>
+                            @endif
                         </li>
                     </ul>
                 </div>
