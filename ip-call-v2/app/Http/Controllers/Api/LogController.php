@@ -9,6 +9,44 @@ use Illuminate\Support\Facades\DB;
 
 class LogController extends Controller
 {
+    // Category mapping: route segment => category_log_id
+    private const CATEGORY_MAP = [
+        'darurat' => 1,
+        'call'    => 2,
+        'blue'    => 3,
+        'infus'   => 4,
+        'assist'  => 5,
+    ];
+
+    /**
+     * Create a log entry for a specific category.
+     * Legacy: server/log/{category}/create.php
+     */
+    public function create(Request $request, string $category)
+    {
+        $categoryId = self::CATEGORY_MAP[$category] ?? null;
+
+        if (!$categoryId) {
+            return response()->json(['success' => false, 'message' => 'Invalid category'], 400);
+        }
+
+        $value = $request->input('value');
+        $device_id = $request->input('device_id');
+        $time = $request->input('time');
+        $nurse_presence = $request->input('nurse_presence');
+
+        DB::table('log')->insert([
+            'category_log_id' => $categoryId,
+            'value'           => $value,
+            'device_id'       => $device_id,
+            'time'            => $time,
+            'nurse_presence'  => $nurse_presence,
+            'timestamp'       => now()->format('Y-m-d H:i:s'),
+        ]);
+
+        return response()->json(['success' => true]);
+    }
+
     public function get(Request $request) 
     {
         $date = $request->input('date', date('Y-m-d'));

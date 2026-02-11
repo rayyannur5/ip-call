@@ -68,6 +68,8 @@ Route::group(['prefix' => 'server'], function () {
     Route::any('log/get/index.php', [LogController::class, 'get']);
     Route::any('log/excel.php', [LogController::class, 'excel']);
     Route::any('log/pdf.php', [LogController::class, 'pdf']);
+    Route::any('log/{category}/create.php', [LogController::class, 'create'])
+        ->where('category', 'darurat|call|blue|infus|assist');
     Route::any('logout.php', [App\Http\Controllers\Admin\AuthController::class, 'logout']);
 
     // History routes

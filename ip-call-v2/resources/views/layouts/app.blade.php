@@ -143,6 +143,13 @@
                 </li>
             @endif
             
+            {{-- Close Tab --}}
+            <li>
+                <a href="#" id="closeTab">
+                    <i class="fas fa-times nav-icon"></i> Tutup Tab
+                </a>
+            </li>
+
             {{-- Login / Logout --}}
             @if (Auth::check())
                 <li>
@@ -203,6 +210,17 @@
             } else {
                  $('#sidebar').css('margin-left', '0');
             }
+        });
+
+        $('#closeTab').on('click', function (e) {
+            e.preventDefault();
+            // Trik agar browser menganggap tab ini dibuka oleh script
+            window.open('', '_self');
+            window.close();
+            // Fallback jika tetap tidak bisa
+            setTimeout(function() {
+                window.location.href = 'about:blank';
+            }, 300);
         });
     });
 </script>
