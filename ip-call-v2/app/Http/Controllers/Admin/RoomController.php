@@ -440,6 +440,11 @@ type=transport
 protocol=udp
 bind=0.0.0.0
 
+[transport-tcp]
+type=transport
+protocol=tcp
+bind=0.0.0.0
+
 [transport-wss]
 type=transport
 protocol=wss
@@ -514,7 +519,7 @@ exten => 200,2,Hangup()
 exten => 300,1,Dial(PJSIP/server,10)
 exten => 300,2,Hangup()
 
-exten => h,1,System(python3 /opt/lampp/htdocs/ip-call/update.py \${datetime})
+exten => h,1,System(python3 /home/nursecallserver/ip-call/update.py \${datetime})
 
 ";
 
