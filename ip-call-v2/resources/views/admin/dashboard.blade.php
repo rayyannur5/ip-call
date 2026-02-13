@@ -70,7 +70,7 @@
 <div class="row">
     <!-- Calls Today -->
     <div class="col-xl-4 col-md-6 mb-4">
-        <div class="card card-dashboard bg-gradient-primary-to-secondary h-100 py-2">
+        <div class="card card-dashboard bg-gradient-primary-to-secondary h-100 py-2 shadow-sm">
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
@@ -88,7 +88,7 @@
 
     <!-- Messages Today -->
     <div class="col-xl-4 col-md-6 mb-4">
-        <div class="card card-dashboard bg-gradient-info-to-teal h-100 py-2">
+        <div class="card card-dashboard bg-gradient-info-to-teal h-100 py-2 shadow-sm">
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
@@ -106,7 +106,7 @@
 
     <!-- Total Rooms -->
     <div class="col-xl-4 col-md-6 mb-4">
-        <div class="card card-dashboard bg-gradient-success-to-green h-100 py-2">
+        <div class="card card-dashboard bg-gradient-success-to-green h-100 py-2 shadow-sm">
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
@@ -126,7 +126,7 @@
 <div class="row">
     <!-- Area Chart -->
     <div class="col-xl-8 col-lg-7">
-        <div class="card shadow mb-4" style="border-radius: 1rem; border: none;">
+        <div class="card shadow-sm border-0 mb-4" style="border-radius: 1rem;">
             <div class="card-header-clean d-flex flex-row align-items-center justify-content-between">
                 <h6 class="m-0 font-weight-bold text-primary">Statistik 7 Hari Terakhir</h6>
             </div>
@@ -140,7 +140,7 @@
 
     <!-- Recent Activity -->
     <div class="col-xl-4 col-lg-5">
-        <div class="card shadow mb-4" style="border-radius: 1rem; border: none;">
+        <div class="card shadow-sm border-0 mb-4" style="border-radius: 1rem;">
             <div class="card-header-clean d-flex flex-row align-items-center justify-content-between">
                 <h6 class="m-0 font-weight-bold text-primary">Aktivitas Terbaru</h6>
             </div>
@@ -156,9 +156,9 @@
                             </div>
                             <div class="h6 mb-0 font-weight-bold text-gray-800">
                                 @if($activity->type == 'call')
-                                    Device/Bed ID: {{ $activity->bed_id }}
+                                    {{ $activity->bed->username ?? '-' }} - {{ \Illuminate\Support\Str::limit($activity->duration, 30) }}
                                 @else
-                                    {{ \Illuminate\Support\Str::limit($activity->value, 30) }}
+                                    {{ $activity->bed->username ?? '-' }} 
                                 @endif
                             </div>
                             <small class="text-muted">

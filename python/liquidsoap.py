@@ -213,17 +213,24 @@ class ServerAPI:
             log_message("AMPLIFY: Gagal mengambil data utils. Default.")
         return default
 
+    def get_adzan_auto_status(self):
+        """Return '1' (auto) atau '0' (manual)."""
+        return self._find_utils_value("adzan_auto", "1")
+
     # --- Prayer Times ---
 
-    def get_prayer_times(self):
+    def get_prayer_times(self, adzan_auto_override=None):
         """
         Ambil waktu sholat. Return dict {"Fajr": time, "Dhuhr": time, ...}.
         Prioritas: manual (adzan.php) jika adzan_auto=0, lalu pyIslam.
         """
         log_message("PRAYER_TIMES: Memulai pengambilan data waktu sholat.")
 
-        # Cek mode manual/otomatis
-        adzan_auto = self._find_utils_value("adzan_auto", "1")
+        # Gunakan override jika ada, jika tidak cari di utils
+        if adzan_auto_override is not None:
+            adzan_auto = str(adzan_auto_override)
+        else:
+            adzan_auto = str(self._find_utils_value("adzan_auto", "1"))
 
         if adzan_auto == "0":
             manual_map = self._fetch_manual_prayer_times()
@@ -311,7 +318,16 @@ class AudioScheduler:
         try:
             resp = requests.get(MUSIC_SCHEDULE_URL, timeout=10)
             resp.raise_for_status()
-            self.music_schedules = resp.json() or []
+            data = resp.json()
+            
+            if isinstance(data, list):
+                self.music_schedules = data
+            elif isinstance(data, dict) and "data" in data and isinstance(data["data"], list):
+                self.music_schedules = data["data"]
+            else:
+                log_message(f"MUSIC_SCHEDULER: Format respon tidak dikenali (bukan list atau dict dengan key 'data').")
+                self.music_schedules = []
+
             log_message(
                 f"MUSIC_SCHEDULER: Menerima {len(self.music_schedules)} jadwal musik."
             )
@@ -324,6 +340,10 @@ class AudioScheduler:
         log_message("MUSIC_SCHEDULER: Jadwal event musik lama dibersihkan.")
 
         for item in self.music_schedules:
+            if not isinstance(item, dict):
+                log_message(f"MUSIC_SCHEDULER: Format item tidak valid (bukan dict): {item}")
+                continue
+
             try:
                 name = item.get("name", "N/A")
                 start_str = item.get("start_time")
@@ -438,6 +458,7 @@ class AudioScheduler:
             self.is_adzan_active = False
             return
 
+        # Ambil adzan_auto sendiri untuk konsistensi, atau biarkan get_prayer_times mengambilnya
         prayer_map = self.server.get_prayer_times()
         if not prayer_map:
             log_message("ADZAN_SCHEDULER: Gagal mendapatkan waktu sholat.")
@@ -453,19 +474,20 @@ class AudioScheduler:
 
             prayer_dt = datetime.combine(date.today(), t_obj)
             window_end = prayer_dt + timedelta(minutes=ADZAN_WINDOW_MINUTES)
+            start_sched_dt = prayer_dt - timedelta(minutes=1)
 
-            # Cek apakah saat ini di dalam jendela adzan
-            if prayer_dt <= now < window_end:
+            # Cek apakah saat ini di dalam jendela adzan (termasuk T-1 menit)
+            if start_sched_dt <= now < window_end:
                 log_message(f"ADZAN_SCHEDULER: Jendela adzan aktif untuk {name} (startup).")
                 self.is_adzan_active = True
                 found_active = True
 
-            # Jadwalkan start (jika belum lewat)
-            if prayer_dt > now:
-                start_hms = t_obj.strftime("%H:%M:%S")
+            # Jadwalkan start (jika belum lewat waktu T-1 menit)
+            if start_sched_dt > now:
+                start_hms = start_sched_dt.strftime("%H:%M:%S")
                 log_message(
                     f"ADZAN_SCHEDULER: Jadwalkan window active "
-                    f"untuk {name} @ {start_hms}"
+                    f"untuk {name} @ {start_hms} (-1 menit)"
                 )
                 schedule.every().day.at(start_hms).do(
                     self._on_adzan_start, name=name
@@ -602,21 +624,22 @@ class LiquidsoapManager:
         log_message("PY_DEBUG: updatePrayerTime() - Memulai pembaruan di .liq.")
 
         adzan_status = self.server.get_adzan_active_status()
+        adzan_auto = self.server.get_adzan_auto_status()
 
         if adzan_status == "0":
             log_message("UPDATE_LIQ: Adzan dinonaktifkan. Mengosongkan jadwal.")
             prayer_block = "#=#\n    # Adzan dinonaktifkan dari server\n#=#"
         else:
-            log_message("UPDATE_LIQ: Adzan aktif. Membangun jadwal.")
-            prayer_block = self._build_prayer_block()
+            log_message(f"UPDATE_LIQ: Adzan aktif (Auto={adzan_auto}). Membangun jadwal.")
+            prayer_block = self._build_prayer_block(adzan_auto)
 
         return self._write_prayer_block(prayer_block, adzan_status)
 
-    def _build_prayer_block(self):
+    def _build_prayer_block(self, adzan_auto=None):
         """Bangun string blok jadwal adzan untuk file .liq."""
         amplify = self.server.get_adzan_amplify()
         amp_str = f"{amplify:.2f}"
-        prayer_map = self.server.get_prayer_times()
+        prayer_map = self.server.get_prayer_times(adzan_auto)
 
         if not prayer_map:
             log_message("⚠️ Error: Gagal mendapatkan waktu sholat untuk .liq.")
@@ -701,12 +724,26 @@ class FileChangeHandler(FileSystemEventHandler):
         self.manager = manager
 
     def on_modified(self, event):
-        if os.path.abspath(event.src_path) != self.manager.target_file:
-            return
+        log_message(f"DEBUG_WATCH: Modified detected: {event.src_path}")
+        if os.path.realpath(event.src_path) == os.path.realpath(self.manager.target_file):
+            self._trigger_restart()
+
+    def on_moved(self, event):
+        log_message(f"DEBUG_WATCH: Moved detected: {event.src_path} -> {event.dest_path}")
+        if not event.is_directory and os.path.realpath(event.dest_path) == os.path.realpath(self.manager.target_file):
+            self._trigger_restart()
+
+    def on_created(self, event):
+        log_message(f"DEBUG_WATCH: Created detected: {event.src_path}")
+        if not event.is_directory and os.path.realpath(event.src_path) == os.path.realpath(self.manager.target_file):
+            self._trigger_restart()
+
+    def _trigger_restart(self):
         if self.manager.programmatic_update.is_set():
             log_message("PY_DEBUG: Perubahan terprogram, abaikan.")
             return
-        self.manager.request_restart("Perubahan EKSTERNAL, request restart.")
+        log_message("PY_DEBUG: Perubahan EKSTERNAL, request restart.")
+        self.manager.request_restart("RESTART_REQUESTED")
 
 
 # ===========================================================================

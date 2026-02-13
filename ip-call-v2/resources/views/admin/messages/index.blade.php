@@ -14,7 +14,7 @@
         </a>
     </div>
 </div>
-<div class="card">
+<div class="card shadow-sm border-0">
 <div class="card-body">
         <form action="{{ route('messages.index') }}" method="GET" class="mb-3">
             <div class="row">
@@ -46,26 +46,39 @@
         <table class="table table-bordered table-striped">
             <thead>
                 <tr>
-                    <th>ID</th>
-                    <th>Category</th>
-                    <th>Value</th>
-                    <th>Device ID</th>
+                    <th>Tanggal</th>
+                    <th>Kategori</th>
+                    <th>Nama Ruang</th>
                     <th>Time</th>
                     <th>Nurse Presence</th>
-                    <th>Timestamp</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach($logs as $log)
                 <tr>
-                    <td>{{ $log->id }}</td>
-                    <td>{{ $log->category_log_id }}</td> 
-                    {{-- Ideally fetch Category Name via relationship --}}
-                    <td>{{ $log->value }}</td>
-                    <td>{{ $log->device_id }}</td>
-                    <td>{{ $log->time }}</td>
+                    <td>{{ \Carbon\Carbon::parse($log->timestamp)->timezone('Asia/Jakarta')->format('d M Y H:i:s') }}</td>
+                    <td>
+                        <span style="height: 10px; width: 10px; background-color: {{ 
+                            match(strtoupper($log->category->name ?? '')) {
+                                'INFUS' => '#28a745',
+                                'TELEPON' => '#ffc107',
+                                'PERAWAT' => '#fd7e14',
+                                'DARURAT' => '#dc3545',
+                                'CODE BLUE' => '#007bff',
+                                default => '#6c757d',
+                            }
+                        }}; border-radius: 50%; display: inline-block; margin-right: 5px;"></span>
+                        {{ $log->category->name ?? '-' }}
+                    </td>
+                    <td>{{ $log->bed->username ?? '-' }}</td>
+                    <td>
+                        @if($log->nurse_presence)
+                            {{ \Carbon\CarbonInterval::seconds($log->time)->cascade()->locale('id')->forHumans() }}
+                        @else
+                            0 detik
+                        @endif
+                    </td>
                     <td>{{ $log->nurse_presence ? 'Yes' : 'No' }}</td>
-                    <td>{{ $log->timestamp }}</td>
                 </tr>
                 @endforeach
             </tbody>

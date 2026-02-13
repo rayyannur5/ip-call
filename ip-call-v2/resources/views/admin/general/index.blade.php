@@ -6,13 +6,14 @@
 <div class="d-flex justify-content-between align-items-center mb-4 pt-3">
     <h1 class="h3 mb-0 text-gray-800">Setting Umum</h1>
 </div>
-<div class="card">
+<div class="card shadow-sm border-0">
     <div class="card-body">
 
         <table class="table table-striped">
             <thead>
                 <tr>
                     <th>Type</th>
+                    <th>Keterangan</th>
                     <th>Value</th>
                     <th>Action</th>
                 </tr>
@@ -20,16 +21,20 @@
             <tbody>
                 @foreach($utils as $util)
                 <tr>
-                    <td>{{ $util->type }}</td>
+                    <td class="align-middle">{{ $util->type }}</td>
                     <td>
-                        <form action="{{ url('/admin/general/update') }}" method="POST" class="d-flex">
+                        <textarea name="description" class="form-control" form="form-{{ $loop->iteration }}" placeholder="Keterangan" rows="3">{{ $util->description }}</textarea>
+                    </td>
+                    <td>
+                        <input type="number" name="value" class="form-control" value="{{ $util->value }}" form="form-{{ $loop->iteration }}">
+                    </td>
+                    <td>
+                        <form action="{{ url('/admin/general/update') }}" method="POST" id="form-{{ $loop->iteration }}">
                             @csrf
                             <input type="hidden" name="type" value="{{ $util->type }}">
-                            <input type="number" name="value" class="form-control me-2" value="{{ $util->value }}">
                             <button type="submit" class="btn btn-primary">Update</button>
                         </form>
                     </td>
-                    <td></td>
                 </tr>
                 @endforeach
             </tbody>

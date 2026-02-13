@@ -3,6 +3,7 @@
 namespace App\Exports;
 
 use App\Models\Log;
+use Carbon\Carbon;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
@@ -22,7 +23,7 @@ class MessagesExport implements FromCollection, WithHeadings, WithMapping
 
     public function collection()
     {
-        $query = Log::query();
+        $query = Log::with(['category', 'bed.room']);
 
         if ($this->start_date && $this->end_date) {
             $query->whereBetween('timestamp', [$this->start_date . ' 00:00:00', $this->end_date . ' 23:59:59']);
@@ -38,26 +39,22 @@ class MessagesExport implements FromCollection, WithHeadings, WithMapping
     public function headings(): array
     {
         return [
-            'ID',
-            'Category',
-            'Value',
-            'Device ID',
+            'Tanggal',
+            'Kategori',
+            'Nama Ruang',
             'Time',
             'Nurse Presence',
-            'Timestamp',
         ];
     }
 
     public function map($log): array
     {
         return [
-            $log->id,
-            $log->category_log_id, // Ideally should be category name
-            $log->value,
-            $log->device_id,
-            $log->time,
+            Carbon::parse($log->timestamp)->timezone('Asia/Jakarta')->format('d M Y H:i:s'),
+            $log->category->name ?? '-',
+            $log->bed->username ?? '-',
+            $log->nurse_presence ? \Carbon\CarbonInterval::seconds($log->time)->cascade()->locale('id')->forHumans() : '0 detik',
             $log->nurse_presence ? 'Yes' : 'No',
-            $log->timestamp,
         ];
     }
 }

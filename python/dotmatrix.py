@@ -3,6 +3,7 @@ import requests
 import paho.mqtt.client as mqtt
 from collections import defaultdict
 import datetime
+import gc
 
 # --- Fungsi Logging Kustom ---
 def log_print(*args, **kwargs):
@@ -15,16 +16,15 @@ def log_print(*args, **kwargs):
 host = "localhost"
 devices = []
 messages = []
+subscribed_topics = set()
+session = requests.Session()
 
 # --- Fungsi Callback MQTT ---
 def on_connect(client, userdata, flags, rc):
     log_print("LOG| Connected with result code " + str(rc))
+    subscribed_topics.clear() # Reset langganan saat reconnect agar subscribe ulang
     resubscribe()
     
-
-# =================================================================
-# FUNGSI on_message YANG DIPERBARUI
-# =================================================================
 def on_message(client, userdata, msg):
     """
     Callback function untuk menangani pesan MQTT yang masuk.
@@ -93,21 +93,44 @@ def on_message(client, userdata, msg):
 def resubscribe():
     global devices
     try:
-        x = requests.get(f'http://{host}/ip-call/server/device.php').json()
-        devices = []
+        # Menggunakan session agar koneksi TCP di-reuse (hemat resource)
+        x = session.get(f'http://{host}/ip-call/server/device.php').json()
+        
+        # Buat list device baru sementara
+        new_devices = []
+        current_needed_topics = set()
+        
         for room in x['data']:
             for device in room['device']:
                 device['running_text'] = room['running_text']
                 
                 if 'room_id' in device:
-                    devices.append(device)
-                    # Berlangganan ke topik yang relevan
+                    new_devices.append(device)
+                    # Kumpulkan topik yang PERLU disubscribe kali ini
                     if 'vol' in device:
-                        client.subscribe(f"infus/{device['id']}")
-                        client.subscribe(f"bed/{device['id']}")
-                        client.subscribe(f"assist/{device['id']}")
+                        current_needed_topics.add(f"infus/{device['id']}")
+                        current_needed_topics.add(f"bed/{device['id']}")
+                        current_needed_topics.add(f"assist/{device['id']}")
                     else:
-                        client.subscribe(f"toilet/{device['id']}")
+                        current_needed_topics.add(f"toilet/{device['id']}")
+        
+        # Update list devices global
+        devices = new_devices
+        
+        # Hitung topik baru yang belum disubscribe
+        to_subscribe = current_needed_topics - subscribed_topics
+        for topic in to_subscribe:
+            client.subscribe(topic)
+            subscribed_topics.add(topic)
+            # log_print(f"Subscribed to new topic: {topic}")
+            
+        # Hitung topik lama yang tidak lagi diperlukan (opsional - agar rapi)
+        to_unsubscribe = subscribed_topics - current_needed_topics
+        for topic in to_unsubscribe:
+            client.unsubscribe(topic)
+            subscribed_topics.remove(topic)
+            # log_print(f"Unsubscribed from topic: {topic}")
+
     except requests.exceptions.RequestException as e:
         log_print(f"LOG| Tidak bisa terhubung ke server untuk mengambil data device: {e}")
 
@@ -134,7 +157,10 @@ group_posisi = {}
 # =================================================================
 
 time_before = 0
-timeout = 10000 # Default timeout 5 detik
+timeout = 10000 # Default timeout 10 detik
+
+# Nilai counter untuk Garbage Collection berkala
+gc_counter = 0
 
 # --- Loop Utama Program ---
 while True:
@@ -142,8 +168,14 @@ while True:
 
     if millis() - time_before > timeout:
         time_before = millis()
+        
+        # Jalankan GC setiap 10 siklus timeout (approx 100 detik) untuk membersihkan memori
+        gc_counter += 1
+        if gc_counter >= 10:
+            gc.collect()
+            gc_counter = 0
 
-        # Jika tidak ada pesan, tidak perlu melakukan apa-apa
+        # Jika tidak ada pesan, cek resubscribe (update config device) lalu continue
         if not messages:
             # Kosongkan juga state posisi jika tidak ada pesan
             group_posisi.clear()
@@ -151,8 +183,8 @@ while True:
             continue
 
         try:
-
-            utils = requests.get(f"http://{host}/ip-call/server/utils.php").json()['data']
+            # Menggunakan session
+            utils = session.get(f"http://{host}/ip-call/server/utils.php").json()['data']
 
             for util in utils:
                 if util['type'] == 'timeout_running_text':
@@ -162,7 +194,6 @@ while True:
             grouped_data = group_data(messages)
             
             # (Opsional tapi bagus) Bersihkan state untuk grup yang sudah tidak ada
-            # agar tidak menumpuk sampah memori.
             current_groups = set(grouped_data.keys())
             known_groups = set(group_posisi.keys())
             for group_to_remove in known_groups - current_groups:
@@ -183,8 +214,13 @@ while True:
                 
                 # --- Logika untuk publish pesan (sama seperti sebelumnya) ---
                 id = data['topic'][-6:]
-                filtered_list = [d for d in devices if d['id'] == id][0]
-                str_kirim = filtered_list['username']
+                # Gunakan pendekatan lebih aman agar tidak crash jika device hilang
+                try:
+                    filtered_list = next(d for d in devices if d['id'] == id)
+                    str_kirim = filtered_list['username']
+                except StopIteration:
+                    # Device mungkin telah dihapus tapi ada di antrian pesan
+                    continue
 
                 if 'toilet' not in data['topic']:
                     # Gunakan 'final_payload' yang sudah ditentukan di on_message
@@ -199,12 +235,16 @@ while True:
                 
 
                 if data['running_text'] != None and data['running_text'] != '':
-                    # Ambil setting speed & brightness
-                    running_text_data = requests.get(f"http://{host}/ip-call/server/running_text.php?id={data['running_text']}").json()
-                    speed = str(running_text_data['speed']).rjust(3, '0')
-                    brightness = str(running_text_data['brightness']).rjust(3, '0')
-                    client.publish(data['running_text'], payload=speed + brightness + str_kirim, qos=0, retain=False)
-                    log_print(f"PUBLISH| Grup: '{group_name}', Item ke-{posisi_sekarang}: {str_kirim}")
+                    # Ambil setting speed & brightness via session
+                    # Hati-hati: running_text.php mungkin perlu id yang valid
+                    try:
+                        running_text_data = session.get(f"http://{host}/ip-call/server/running_text.php?id={data['running_text']}").json()
+                        speed = str(running_text_data['speed']).rjust(3, '0')
+                        brightness = str(running_text_data['brightness']).rjust(3, '0')
+                        client.publish(data['running_text'], payload=speed + brightness + str_kirim, qos=0, retain=False)
+                        log_print(f"PUBLISH| Grup: '{group_name}', Item ke-{posisi_sekarang}: {str_kirim}")
+                    except Exception as e_req:
+                        log_print(f"Error fetching running text data: {e_req}")
                 
                 # 6. Hitung posisi untuk putaran BERIKUTNYA dan simpan ke state
                 posisi_berikutnya = (posisi_sekarang + 1) % len(items_in_group)

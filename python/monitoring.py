@@ -24,7 +24,7 @@ app = Flask(__name__)
 socketio = SocketIO(app)
 
 # Default log folder path
-DEFAULT_LOG_FOLDER = '/home/nursecallserver/ip-call/logs'
+DEFAULT_LOG_FOLDER = '/home/nursecallserver/ip-call/python/logs'
 LOG_FOLDER = DEFAULT_LOG_FOLDER
 
 # --- FUNGSI BARU: Untuk membaca N baris terakhir dari file ---

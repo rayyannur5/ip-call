@@ -15,6 +15,8 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\MessageController;
 use App\Http\Controllers\Admin\CallController;
 
+use App\Http\Controllers\Api\PlaylistController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -41,7 +43,7 @@ Route::group(['prefix' => 'server'], function () {
     Route::any('running_text.php', [RunningTextController::class, 'index']);
     Route::any('adzan.php', [AdzanController::class, 'index']);
     Route::any('sounds.php', [SoundController::class, 'index']);
-    Route::any('music.php', [SoundController::class, 'index']); 
+    Route::any('music.php', [PlaylistController::class, 'index']); 
     Route::any('utils.php', [UtilController::class, 'index']);
     Route::any('oximonitor.php', [OxiMonitorController::class, 'handle']);
     Route::any('device_by_runningtext.php', [DeviceController::class, 'byRunningText']);
@@ -65,6 +67,12 @@ Route::group(['prefix' => 'server'], function () {
         Route::any('get_one.php', [RoomController::class, 'getOne']);
     });
 
+    Route::prefix('hour')->group(function () {
+        Route::any('get.php', [App\Http\Controllers\Api\HourController::class, 'get']);
+        Route::any('set.php', [App\Http\Controllers\Api\HourController::class, 'set']);
+    });
+
+
     Route::any('log/get/index.php', [LogController::class, 'get']);
     Route::any('log/excel.php', [LogController::class, 'excel']);
     Route::any('log/pdf.php', [LogController::class, 'pdf']);
@@ -79,6 +87,7 @@ Route::group(['prefix' => 'server'], function () {
         Route::any('update.php', [App\Http\Controllers\Api\HistoryController::class, 'update']);
         Route::any('excel.php', [App\Http\Controllers\Api\HistoryController::class, 'excel']);
         Route::any('pdf.php', [App\Http\Controllers\Api\HistoryController::class, 'pdf']);
+        Route::any('list_audio.php', [App\Http\Controllers\Api\HistoryController::class, 'list_audio']);
     });
 
 });
@@ -170,4 +179,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
     Route::post('/playlist/item/store', [App\Http\Controllers\Admin\PlaylistController::class, 'storeItem']);
     Route::get('/playlist/item/destroy/{playlist_id}/{ord}', [App\Http\Controllers\Admin\PlaylistController::class, 'destroyItem']);
     Route::get('/playlist/write-config', [App\Http\Controllers\Admin\PlaylistController::class, 'writeConfig']);
+    
+    // Monitoring System
+    Route::get('/monitoring', function () {
+        return view('admin.monitoring');
+    });
 });

@@ -5,6 +5,11 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Models\CategoryHistory;
+use App\Models\History;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\CallsExport;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class HistoryController extends Controller
 {
@@ -83,8 +88,11 @@ class HistoryController extends Controller
      */
     public function excel(Request $request)
     {
-        // TODO: Implement Excel export
-        return response()->json(['message' => 'Not implemented yet']);
+        $start_date = $request->input('start_date');
+        $end_date = $request->input('end_date');
+        $category = $request->input('category');
+
+        return Excel::download(new CallsExport($start_date, $end_date, $category), 'calls.xlsx');
     }
 
     /**
@@ -92,7 +100,55 @@ class HistoryController extends Controller
      */
     public function pdf(Request $request)
     {
-        // TODO: Implement PDF export
-        return response()->json(['message' => 'Not implemented yet']);
+        $start_date = $request->input('start_date');
+        $end_date = $request->input('end_date');
+        $category = $request->input('category');
+
+        $query = History::with(['category', 'bed']);
+
+        if ($start_date && $end_date) {
+            $query->whereBetween('timestamp', [$start_date . ' 00:00:00', $end_date . ' 23:59:59']);
+        }
+
+        $category_name = null;
+        if ($category) {
+            $query->where('category_history_id', $category);
+            $category_name = CategoryHistory::find($category)?->name;
+        }
+
+        $calls = $query->orderBy('timestamp', 'desc')->get();
+        $pdf = Pdf::loadView('admin.calls.pdf', compact('calls', 'start_date', 'end_date', 'category_name'))
+            ->setPaper('a4', 'landscape');
+        return $pdf->download('calls.pdf');
+    }
+
+    /**
+     * Get list of audio filenames for download
+     * GET /server/history/list_audio.php?start_date=YYYY-MM-DD&end_date=YYYY-MM-DD
+     */
+    public function list_audio(Request $request)
+    {
+        $start_date = $request->input('start_date');
+        $end_date = $request->input('end_date');
+
+        $query = DB::table('history')
+            ->whereNotNull('record')
+            ->where('record', '!=', '');
+
+        if ($start_date && $end_date) {
+            $query->whereBetween('timestamp', [$start_date . ' 00:00:00', $end_date . ' 23:59:59']);
+        }
+
+        $records = $query->pluck('record')->toArray();
+
+        // Convert "records/filename.wav" to "filename.wav"
+        $filenames = array_map(function($record) {
+            return basename($record);
+        }, $records);
+        
+        // Remove empty filenames if any
+        $filenames = array_filter($filenames);
+
+        return response()->json(array_values($filenames));
     }
 }

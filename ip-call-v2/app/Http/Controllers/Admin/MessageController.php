@@ -14,7 +14,7 @@ class MessageController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Log::query();
+        $query = Log::with(['category', 'bed.room']);
 
         if ($request->start_date && $request->end_date) {
             $query->whereBetween('timestamp', [$request->start_date . ' 00:00:00', $request->end_date . ' 23:59:59']);
@@ -39,18 +39,21 @@ class MessageController extends Controller
         if ($type == 'excel') {
             return Excel::download(new MessagesExport($start_date, $end_date, $category), 'messages.xlsx');
         } elseif ($type == 'pdf') {
-            $query = Log::query();
+            $query = Log::with(['category', 'bed.room']);
 
             if ($start_date && $end_date) {
                 $query->whereBetween('timestamp', [$start_date . ' 00:00:00', $end_date . ' 23:59:59']);
             }
 
+            $category_name = null;
             if ($category) {
                 $query->where('category_log_id', $category);
+                $category_name = CategoryLog::find($category)?->name;
             }
 
             $logs = $query->orderBy('timestamp', 'desc')->get();
-            $pdf = Pdf::loadView('admin.messages.pdf', compact('logs'));
+            $pdf = Pdf::loadView('admin.messages.pdf', compact('logs', 'start_date', 'end_date', 'category_name'))
+                ->setPaper('a4', 'landscape');
             return $pdf->download('messages.pdf');
         }
 

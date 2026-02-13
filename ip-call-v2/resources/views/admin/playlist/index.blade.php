@@ -15,7 +15,7 @@
         <div class="row">
             @foreach($playlists as $playlist)
                 <div class="col-md-4">
-                    <div class="card card-success">
+                    <div class="card card-success shadow-sm border-0">
                         <div class="card-header d-flex justify-content-between align-items-center">
                             <h3 class="card-title">{{ $playlist->name }} ({{ \Carbon\Carbon::parse($playlist->start_time)->format('H:i') }} => {{ \Carbon\Carbon::parse($playlist->end_time)->format('H:i') }})</h3>
                             <div class="card-tools">

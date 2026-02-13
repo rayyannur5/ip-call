@@ -7,11 +7,9 @@
     /* Metric Cards Styling */
     .metric-card {
         border-radius: 12px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         background: white;
         padding: 20px;
         margin-bottom: 20px;
-        border: none;
         transition: transform 0.2s, box-shadow 0.2s;
     }
     .metric-card:hover {
@@ -85,9 +83,7 @@
     
     /* Card Table */
     .card-table {
-        border: none;
         border-radius: 12px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     }
     .card-table .card-body {
         padding: 25px;
@@ -114,28 +110,28 @@
 <!-- Metrics Row 1 -->
 <div class="row">
     <div class="col-md-3">
-        <div class="metric-card primary">
+        <div class="metric-card primary shadow-sm border-0">
             <span class="metric-unit">L/min</span>
             <p><span class="live-indicator"></span>Aktual</p>
             <h3 id="current_flow">0,00</h3>
         </div>
     </div>
     <div class="col-md-3">
-        <div class="metric-card">
+        <div class="metric-card shadow-sm border-0">
             <span class="metric-unit">m³</span>
             <p>Hari ini</p>
             <h3 id="usage_today">0,00</h3>
         </div>
     </div>
     <div class="col-md-3">
-        <div class="metric-card">
+        <div class="metric-card shadow-sm border-0">
             <span class="metric-unit">m³</span>
             <p>3 Hari Terakhir</p>
             <h3 id="usage_3_days">0,00</h3>
         </div>
     </div>
     <div class="col-md-3">
-        <div class="metric-card">
+        <div class="metric-card shadow-sm border-0">
             <span class="metric-unit">m³</span>
             <p>7 Hari Terakhir</p>
             <h3 id="usage_7_days">0,00</h3>
@@ -146,14 +142,14 @@
 <!-- Metrics Row 2 -->
 <div class="row">
     <div class="col-md-6">
-        <div class="metric-card">
+        <div class="metric-card shadow-sm border-0">
             <span class="metric-unit">m³</span>
             <p><i class="fas fa-chart-line me-1"></i> Rata-rata 3 Hari</p>
             <h3 id="avg_3_days">0,00</h3>
         </div>
     </div>
     <div class="col-md-6">
-        <div class="metric-card">
+        <div class="metric-card shadow-sm border-0">
             <span class="metric-unit">m³</span>
             <p><i class="fas fa-chart-line me-1"></i> Rata-rata 7 Hari</p>
             <h3 id="avg_7_days">0,00</h3>
@@ -164,14 +160,14 @@
 <!-- Metrics Row 3 -->
 <div class="row">
     <div class="col-md-6">
-        <div class="metric-card">
+        <div class="metric-card shadow-sm border-0">
             <span class="metric-unit">m³</span>
             <p>14 Hari Terakhir</p>
             <h3 id="usage_14_days">0,00</h3>
         </div>
     </div>
     <div class="col-md-6">
-        <div class="metric-card">
+        <div class="metric-card shadow-sm border-0">
             <span class="metric-unit">m³</span>
             <p>1 Bulan Terakhir</p>
             <h3 id="usage_30_days">0,00</h3>
@@ -182,7 +178,7 @@
 <!-- Log Data Section -->
 <h4 class="section-title mt-4"><i class="fas fa-list-alt me-2"></i> Log Data</h4>
 
-<div class="card card-table">
+<div class="card card-table shadow-sm border-0">
     <div class="card-body">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div></div>

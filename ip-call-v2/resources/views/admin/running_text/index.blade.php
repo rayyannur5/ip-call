@@ -11,7 +11,7 @@
         </button>
     </div>
 </div>
-<div class="card">
+<div class="card shadow-sm border-0">
     <div class="card-body">
 
 
@@ -34,7 +34,7 @@
                     <td>
                         <input type="number" class="form-control" id="brightness_{{ $text->topic }}" value="{{ $text->brightness }}">
                     </td>
-                    <td>
+                    <td class="d-flex gap-2">
                         <button type="button" class="btn btn-warning btn-sm" onclick="updateRow('{{ $text->topic }}')">
                             Update
                         </button>

@@ -60,12 +60,7 @@ class PlaylistController extends Controller
         if ($request->hasFile('file')) {
             $file = $request->file('file');
             $filename = $file->getClientOriginalName();
-            // Move to standard legacy path: /opt/lampp/htdocs/ip-call/playlist/music/
-            // Or project path if applicable. Legacy used: /opt/lampp/htdocs/ip-call/playlist/music/
-            // We should use a relative path if possible, but liquidsoap might expect absolute.
-            // Let's stick to the path structure seen in legacy code or project root/playlist/music
-            
-            $destinationPath = base_path('../playlist/music'); // Going up from ip-call-v2
+            $destinationPath = public_path('playlist/music');
             if (!file_exists($destinationPath)) {
                 mkdir($destinationPath, 0777, true);
             }
@@ -96,7 +91,7 @@ class PlaylistController extends Controller
         $playlists = Playlist::all();
         
         // 1. Write .m3u files
-        $playlistPath = base_path('../playlist'); // Adjust relative path
+        $playlistPath = public_path('playlist');
         if (!file_exists($playlistPath)) mkdir($playlistPath, 0777, true);
 
         foreach ($playlists as $playlist) {
@@ -105,11 +100,8 @@ class PlaylistController extends Controller
             
             $content = "";
             foreach ($items as $item) {
-                // Legacy path used in m3u: /opt/lampp/htdocs/ip-call/playlist/music/
                 // Use absolute path for liquidsoap relevance
-                // We should probably check where the base dir is.
-                // Assuming standard path: /mnt/24DE6914DE68E012/Projects/ip-call/playlist/music/
-                $content .= "/mnt/24DE6914DE68E012/Projects/ip-call/playlist/music/" . $item->path . "\n";
+                $content .= 'http://localhost/ip-call/playlist/music/' . $item->path . "\n";
             }
             file_put_contents($filename, $content);
         }
@@ -119,13 +111,16 @@ class PlaylistController extends Controller
         foreach($playlists as $playlist) {
             $name = str_replace(" ", "_", $playlist->name);
             // Verify path to m3u in liq
-            $m3uPath = "/mnt/24DE6914DE68E012/Projects/ip-call/playlist/$name.m3u";
+            $m3uPath = public_path("playlist/$name.m3u");
             $txt .= "$name = playlist(\"$m3uPath\", mode=\"normal\", reload_mode=\"watch\")" . "\n";
         }
 
+        $adzanM3u = public_path('playlist/adzan.m3u');
+        $adzanSubuhM3u = public_path('playlist/adzan_subuh.m3u');
+
         $txt .= "
-adzan_playlist = playlist(\"/mnt/24DE6914DE68E012/Projects/ip-call/playlist/adzan.m3u\")
-adzan_subuh_playlist = playlist(\"/mnt/24DE6914DE68E012/Projects/ip-call/playlist/adzan_subuh.m3u\")
+adzan_playlist = playlist(\"$adzanM3u\")
+adzan_subuh_playlist = playlist(\"$adzanSubuhM3u\")
 
 # Gabungkan dengan fallback
 source = fallback(track_sensitive=false, [
@@ -141,7 +136,10 @@ source = fallback(track_sensitive=false, [
             $start = \Carbon\Carbon::parse($playlist->start_time)->format('H\hi\m');
             $end = \Carbon\Carbon::parse($playlist->end_time)->format('H\hi\m');
             $volume = $playlist->volume / 100;
-            
+
+            if($volume == 1) $volume = "1.0";
+            if($volume == 0) $volume = "0.0";
+
             $txt .= "   ({ $start-$end }, amplify($volume, $name)),\n";
         }
 
@@ -161,7 +159,9 @@ output.icecast(%mp3,
 )
 ";
 
-        $liqPath = base_path('../liquidsoap/radio.liq');
+        $liqDir = base_path('../liquidsoap');
+        if (!file_exists($liqDir)) mkdir($liqDir, 0777, true);
+        $liqPath = $liqDir . '/radio.liq';
         file_put_contents($liqPath, $txt);
 
         return redirect()->back()->with('success', 'Konfigurasi berhasil disimpan');

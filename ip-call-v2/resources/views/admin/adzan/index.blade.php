@@ -6,7 +6,7 @@
 <div class="d-flex justify-content-between align-items-center mb-4 pt-3">
     <h1 class="h3 mb-0 text-gray-800">Informasi Adzan</h1>
 </div>
-<div class="card">
+<div class="card shadow-sm border-0">
     <div class="card-body">
         <form action="{{ url('admin/adzan/update') }}" method="POST">
             @csrf

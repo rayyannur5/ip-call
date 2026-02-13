@@ -14,4 +14,9 @@ class Log extends Model
     {
         return $this->belongsTo(CategoryLog::class, 'category_log_id');
     }
+
+    public function bed()
+    {
+        return $this->belongsTo(Bed::class, 'device_id', 'id');
+    }
 }

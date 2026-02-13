@@ -4,8 +4,12 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Log;
+use App\Models\CategoryLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\MessagesExport;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class LogController extends Controller
 {
@@ -75,41 +79,34 @@ class LogController extends Controller
 
     public function excel(Request $request) 
     {
-        $start_date = $request->input('start_date', date('Y-m-d'));
-        $end_date = $request->input('end_date', date('Y-m-d'));
+        $start_date = $request->input('start_date');
+        $end_date = $request->input('end_date');
+        $category = $request->input('category');
         
-        $filename = "EXCEL_LOG_" . date("Y-m-d H:i:s") . ".xlsx";
-        
-        return \Maatwebsite\Excel\Facades\Excel::download(new \App\Exports\LogExport($start_date, $end_date), $filename);
+        return Excel::download(new MessagesExport($start_date, $end_date, $category), 'messages.xlsx');
     }
 
     public function pdf(Request $request)
     {
         $start_date = $request->input('start_date');
         $end_date = $request->input('end_date');
+        $category = $request->input('category');
         
-        $start = date("{$start_date} 00:00:00");
-        $end = date("{$end_date} 23:59:59");
+        $query = Log::with(['category', 'bed.room']);
 
-        $logs = DB::table('log')
-            ->join('category_log', 'log.category_log_id', '=', 'category_log.id')
-            ->leftJoin('bed', 'bed.id', '=', 'log.device_id')
-            ->leftJoin('toilet', 'toilet.id', '=', 'log.device_id')
-            ->select(
-                'log.id',
-                'category_log.name',
-                DB::raw('coalesce(bed.username, toilet.username) as username'),
-                DB::raw('SEC_TO_TIME(log.time) as time'),
-                DB::raw("case when log.nurse_presence = 1 then 'Ya' else 'Tidak' end as presence"),
-                'log.timestamp'
-            )
-            ->whereBetween('log.timestamp', [$start, $end])
-            ->get();
+        if ($start_date && $end_date) {
+            $query->whereBetween('timestamp', [$start_date . ' 00:00:00', $end_date . ' 23:59:59']);
+        }
 
-        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('pdf.log', ['logs' => $logs]);
-        $pdf->setPaper('A4', 'portrait');
-        
-        $filename = "PDF_LOG_" . date("Y-m-d_H.i.s") . ".pdf";
-        return $pdf->stream($filename);
+        $category_name = null;
+        if ($category) {
+            $query->where('category_log_id', $category);
+            $category_name = CategoryLog::find($category)?->name;
+        }
+
+        $logs = $query->orderBy('timestamp', 'desc')->get();
+        $pdf = Pdf::loadView('admin.messages.pdf', compact('logs', 'start_date', 'end_date', 'category_name'))
+            ->setPaper('a4', 'landscape');
+        return $pdf->download('messages.pdf');
     }
 }

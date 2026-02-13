@@ -1,0 +1,252 @@
+[2026-02-13 14:30:46] [INFO] Memulai skrip polling volume otomatis.
+[2026-02-13 14:30:46] [INFO] Memulai siklus pengecekan baru...
+[2026-02-13 14:30:46] [INFO] Mengambil jadwal dari http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:30:56] [ERROR] Gagal mengambil data dari server: HTTPConnectionPool(host='localhost', port=80): Read timed out. (read timeout=10)
+[2026-02-13 14:30:56] [INFO] Siklus selesai. Menunggu selama 30 detik.
+[2026-02-13 14:31:26] [INFO] Memulai siklus pengecekan baru...
+[2026-02-13 14:31:26] [INFO] Mengambil jadwal dari http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:31:26] [ERROR] Gagal mengambil data dari server: 404 Client Error: Not Found for url: http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:31:26] [INFO] Siklus selesai. Menunggu selama 30 detik.
+[2026-02-13 14:31:56] [INFO] Memulai siklus pengecekan baru...
+[2026-02-13 14:31:56] [INFO] Mengambil jadwal dari http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:31:57] [ERROR] Gagal mengambil data dari server: 404 Client Error: Not Found for url: http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:31:57] [INFO] Siklus selesai. Menunggu selama 30 detik.
+[2026-02-13 14:32:27] [INFO] Memulai siklus pengecekan baru...
+[2026-02-13 14:32:27] [INFO] Mengambil jadwal dari http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:32:27] [ERROR] Gagal mengambil data dari server: 404 Client Error: Not Found for url: http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:32:27] [INFO] Siklus selesai. Menunggu selama 30 detik.
+[2026-02-13 14:34:31] [INFO] Memulai skrip polling volume otomatis.
+[2026-02-13 14:34:31] [INFO] Memulai siklus pengecekan baru...
+[2026-02-13 14:34:31] [INFO] Mengambil jadwal dari http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:34:41] [ERROR] Gagal mengambil data dari server: HTTPConnectionPool(host='localhost', port=80): Read timed out. (read timeout=10)
+[2026-02-13 14:34:41] [INFO] Siklus selesai. Menunggu selama 30 detik.
+[2026-02-13 14:35:11] [INFO] Memulai siklus pengecekan baru...
+[2026-02-13 14:35:11] [INFO] Mengambil jadwal dari http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:35:11] [ERROR] Gagal mengambil data dari server: 404 Client Error: Not Found for url: http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:35:11] [INFO] Siklus selesai. Menunggu selama 30 detik.
+[2026-02-13 14:35:41] [INFO] Memulai siklus pengecekan baru...
+[2026-02-13 14:35:41] [INFO] Mengambil jadwal dari http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:35:42] [ERROR] Gagal mengambil data dari server: 404 Client Error: Not Found for url: http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:35:42] [INFO] Siklus selesai. Menunggu selama 30 detik.
+[2026-02-13 14:36:12] [INFO] Memulai siklus pengecekan baru...
+[2026-02-13 14:36:12] [INFO] Mengambil jadwal dari http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:36:12] [ERROR] Gagal mengambil data dari server: 404 Client Error: Not Found for url: http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:36:12] [INFO] Siklus selesai. Menunggu selama 30 detik.
+[2026-02-13 14:36:42] [INFO] Memulai siklus pengecekan baru...
+[2026-02-13 14:36:42] [INFO] Mengambil jadwal dari http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:36:42] [ERROR] Gagal mengambil data dari server: 404 Client Error: Not Found for url: http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:36:42] [INFO] Siklus selesai. Menunggu selama 30 detik.
+[2026-02-13 14:37:12] [INFO] Memulai siklus pengecekan baru...
+[2026-02-13 14:37:12] [INFO] Mengambil jadwal dari http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:37:12] [ERROR] Gagal mengambil data dari server: 404 Client Error: Not Found for url: http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:37:12] [INFO] Siklus selesai. Menunggu selama 30 detik.
+[2026-02-13 14:37:42] [INFO] Memulai siklus pengecekan baru...
+[2026-02-13 14:37:42] [INFO] Mengambil jadwal dari http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:37:43] [ERROR] Gagal mengambil data dari server: 404 Client Error: Not Found for url: http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:37:43] [INFO] Siklus selesai. Menunggu selama 30 detik.
+[2026-02-13 14:38:13] [INFO] Memulai siklus pengecekan baru...
+[2026-02-13 14:38:13] [INFO] Mengambil jadwal dari http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:38:13] [ERROR] Gagal mengambil data dari server: 404 Client Error: Not Found for url: http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:38:13] [INFO] Siklus selesai. Menunggu selama 30 detik.
+[2026-02-13 14:38:43] [INFO] Memulai siklus pengecekan baru...
+[2026-02-13 14:38:43] [INFO] Mengambil jadwal dari http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:38:43] [ERROR] Gagal mengambil data dari server: 404 Client Error: Not Found for url: http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:38:43] [INFO] Siklus selesai. Menunggu selama 30 detik.
+[2026-02-13 14:39:13] [INFO] Memulai siklus pengecekan baru...
+[2026-02-13 14:39:13] [INFO] Mengambil jadwal dari http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:39:13] [ERROR] Gagal mengambil data dari server: 404 Client Error: Not Found for url: http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:39:13] [INFO] Siklus selesai. Menunggu selama 30 detik.
+[2026-02-13 14:39:43] [INFO] Memulai siklus pengecekan baru...
+[2026-02-13 14:39:43] [INFO] Mengambil jadwal dari http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:39:43] [ERROR] Gagal mengambil data dari server: 404 Client Error: Not Found for url: http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:39:43] [INFO] Siklus selesai. Menunggu selama 30 detik.
+[2026-02-13 14:40:13] [INFO] Memulai siklus pengecekan baru...
+[2026-02-13 14:40:13] [INFO] Mengambil jadwal dari http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:40:14] [ERROR] Gagal mengambil data dari server: 404 Client Error: Not Found for url: http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:40:14] [INFO] Siklus selesai. Menunggu selama 30 detik.
+[2026-02-13 14:40:44] [INFO] Memulai siklus pengecekan baru...
+[2026-02-13 14:40:44] [INFO] Mengambil jadwal dari http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:40:44] [ERROR] Gagal mengambil data dari server: 404 Client Error: Not Found for url: http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:40:44] [INFO] Siklus selesai. Menunggu selama 30 detik.
+[2026-02-13 14:41:14] [INFO] Memulai siklus pengecekan baru...
+[2026-02-13 14:41:14] [INFO] Mengambil jadwal dari http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:41:14] [ERROR] Gagal mengambil data dari server: 404 Client Error: Not Found for url: http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:41:14] [INFO] Siklus selesai. Menunggu selama 30 detik.
+[2026-02-13 14:41:44] [INFO] Memulai siklus pengecekan baru...
+[2026-02-13 14:41:44] [INFO] Mengambil jadwal dari http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:41:44] [ERROR] Gagal mengambil data dari server: 404 Client Error: Not Found for url: http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:41:44] [INFO] Siklus selesai. Menunggu selama 30 detik.
+[2026-02-13 14:42:14] [INFO] Memulai siklus pengecekan baru...
+[2026-02-13 14:42:14] [INFO] Mengambil jadwal dari http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:42:14] [ERROR] Gagal mengambil data dari server: 404 Client Error: Not Found for url: http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:42:14] [INFO] Siklus selesai. Menunggu selama 30 detik.
+[2026-02-13 14:42:44] [INFO] Memulai siklus pengecekan baru...
+[2026-02-13 14:42:44] [INFO] Mengambil jadwal dari http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:42:45] [ERROR] Gagal mengambil data dari server: 404 Client Error: Not Found for url: http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:42:45] [INFO] Siklus selesai. Menunggu selama 30 detik.
+[2026-02-13 14:43:15] [INFO] Memulai siklus pengecekan baru...
+[2026-02-13 14:43:15] [INFO] Mengambil jadwal dari http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:43:15] [ERROR] Gagal mengambil data dari server: 404 Client Error: Not Found for url: http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:43:15] [INFO] Siklus selesai. Menunggu selama 30 detik.
+[2026-02-13 14:43:45] [INFO] Memulai siklus pengecekan baru...
+[2026-02-13 14:43:45] [INFO] Mengambil jadwal dari http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:43:45] [ERROR] Gagal mengambil data dari server: 404 Client Error: Not Found for url: http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:43:45] [INFO] Siklus selesai. Menunggu selama 30 detik.
+[2026-02-13 14:44:15] [INFO] Memulai siklus pengecekan baru...
+[2026-02-13 14:44:15] [INFO] Mengambil jadwal dari http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:44:15] [ERROR] Gagal mengambil data dari server: 404 Client Error: Not Found for url: http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:44:15] [INFO] Siklus selesai. Menunggu selama 30 detik.
+[2026-02-13 14:44:45] [INFO] Memulai siklus pengecekan baru...
+[2026-02-13 14:44:45] [INFO] Mengambil jadwal dari http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:44:46] [ERROR] Gagal mengambil data dari server: 404 Client Error: Not Found for url: http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:44:46] [INFO] Siklus selesai. Menunggu selama 30 detik.
+[2026-02-13 14:45:16] [INFO] Memulai siklus pengecekan baru...
+[2026-02-13 14:45:16] [INFO] Mengambil jadwal dari http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:45:16] [ERROR] Gagal mengambil data dari server: 404 Client Error: Not Found for url: http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:45:16] [INFO] Siklus selesai. Menunggu selama 30 detik.
+[2026-02-13 14:45:46] [INFO] Memulai siklus pengecekan baru...
+[2026-02-13 14:45:46] [INFO] Mengambil jadwal dari http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:45:46] [ERROR] Gagal mengambil data dari server: 404 Client Error: Not Found for url: http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:45:46] [INFO] Siklus selesai. Menunggu selama 30 detik.
+[2026-02-13 14:46:16] [INFO] Memulai siklus pengecekan baru...
+[2026-02-13 14:46:16] [INFO] Mengambil jadwal dari http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:46:16] [ERROR] Gagal mengambil data dari server: 404 Client Error: Not Found for url: http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:46:16] [INFO] Siklus selesai. Menunggu selama 30 detik.
+[2026-02-13 14:46:46] [INFO] Memulai siklus pengecekan baru...
+[2026-02-13 14:46:46] [INFO] Mengambil jadwal dari http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:46:46] [ERROR] Gagal mengambil data dari server: 404 Client Error: Not Found for url: http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:46:46] [INFO] Siklus selesai. Menunggu selama 30 detik.
+[2026-02-13 14:47:16] [INFO] Memulai siklus pengecekan baru...
+[2026-02-13 14:47:16] [INFO] Mengambil jadwal dari http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:47:17] [ERROR] Gagal mengambil data dari server: 404 Client Error: Not Found for url: http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:47:17] [INFO] Siklus selesai. Menunggu selama 30 detik.
+[2026-02-13 14:47:47] [INFO] Memulai siklus pengecekan baru...
+[2026-02-13 14:47:47] [INFO] Mengambil jadwal dari http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:47:47] [ERROR] Gagal mengambil data dari server: 404 Client Error: Not Found for url: http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:47:47] [INFO] Siklus selesai. Menunggu selama 30 detik.
+[2026-02-13 14:48:17] [INFO] Memulai siklus pengecekan baru...
+[2026-02-13 14:48:17] [INFO] Mengambil jadwal dari http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:48:17] [ERROR] Gagal mengambil data dari server: 404 Client Error: Not Found for url: http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:48:17] [INFO] Siklus selesai. Menunggu selama 30 detik.
+[2026-02-13 14:48:47] [INFO] Memulai siklus pengecekan baru...
+[2026-02-13 14:48:47] [INFO] Mengambil jadwal dari http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:48:47] [ERROR] Gagal mengambil data dari server: 404 Client Error: Not Found for url: http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:48:47] [INFO] Siklus selesai. Menunggu selama 30 detik.
+[2026-02-13 14:49:17] [INFO] Memulai siklus pengecekan baru...
+[2026-02-13 14:49:17] [INFO] Mengambil jadwal dari http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:49:18] [ERROR] Gagal mengambil data dari server: 404 Client Error: Not Found for url: http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:49:18] [INFO] Siklus selesai. Menunggu selama 30 detik.
+[2026-02-13 14:49:48] [INFO] Memulai siklus pengecekan baru...
+[2026-02-13 14:49:48] [INFO] Mengambil jadwal dari http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:49:48] [ERROR] Gagal mengambil data dari server: 404 Client Error: Not Found for url: http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:49:48] [INFO] Siklus selesai. Menunggu selama 30 detik.
+[2026-02-13 14:50:18] [INFO] Memulai siklus pengecekan baru...
+[2026-02-13 14:50:18] [INFO] Mengambil jadwal dari http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:50:18] [ERROR] Gagal mengambil data dari server: 404 Client Error: Not Found for url: http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:50:18] [INFO] Siklus selesai. Menunggu selama 30 detik.
+[2026-02-13 14:50:48] [INFO] Memulai siklus pengecekan baru...
+[2026-02-13 14:50:48] [INFO] Mengambil jadwal dari http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:50:48] [ERROR] Gagal mengambil data dari server: 404 Client Error: Not Found for url: http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:50:48] [INFO] Siklus selesai. Menunggu selama 30 detik.
+[2026-02-13 14:51:18] [INFO] Memulai siklus pengecekan baru...
+[2026-02-13 14:51:18] [INFO] Mengambil jadwal dari http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:51:18] [ERROR] Gagal mengambil data dari server: 404 Client Error: Not Found for url: http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:51:18] [INFO] Siklus selesai. Menunggu selama 30 detik.
+[2026-02-13 14:51:48] [INFO] Memulai siklus pengecekan baru...
+[2026-02-13 14:51:48] [INFO] Mengambil jadwal dari http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:51:49] [ERROR] Gagal mengambil data dari server: 404 Client Error: Not Found for url: http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:51:49] [INFO] Siklus selesai. Menunggu selama 30 detik.
+[2026-02-13 14:52:19] [INFO] Memulai siklus pengecekan baru...
+[2026-02-13 14:52:19] [INFO] Mengambil jadwal dari http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:52:19] [ERROR] Gagal mengambil data dari server: 404 Client Error: Not Found for url: http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:52:19] [INFO] Siklus selesai. Menunggu selama 30 detik.
+[2026-02-13 14:52:49] [INFO] Memulai siklus pengecekan baru...
+[2026-02-13 14:52:49] [INFO] Mengambil jadwal dari http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:52:49] [INFO] Siklus selesai. Menunggu selama 30 detik.
+[2026-02-13 14:53:19] [INFO] Memulai siklus pengecekan baru...
+[2026-02-13 14:53:19] [INFO] Mengambil jadwal dari http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:53:19] [INFO] Siklus selesai. Menunggu selama 30 detik.
+[2026-02-13 14:53:49] [INFO] Memulai siklus pengecekan baru...
+[2026-02-13 14:53:49] [INFO] Mengambil jadwal dari http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:53:50] [INFO] Siklus selesai. Menunggu selama 30 detik.
+[2026-02-13 14:54:20] [INFO] Memulai siklus pengecekan baru...
+[2026-02-13 14:54:20] [INFO] Mengambil jadwal dari http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:54:20] [INFO] Siklus selesai. Menunggu selama 30 detik.
+[2026-02-13 14:54:50] [INFO] Memulai siklus pengecekan baru...
+[2026-02-13 14:54:50] [INFO] Mengambil jadwal dari http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:54:50] [INFO] Siklus selesai. Menunggu selama 30 detik.
+[2026-02-13 14:55:20] [INFO] Memulai siklus pengecekan baru...
+[2026-02-13 14:55:20] [INFO] Mengambil jadwal dari http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:55:20] [INFO] Siklus selesai. Menunggu selama 30 detik.
+[2026-02-13 14:55:50] [INFO] Memulai siklus pengecekan baru...
+[2026-02-13 14:55:50] [INFO] Mengambil jadwal dari http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:55:51] [INFO] Siklus selesai. Menunggu selama 30 detik.
+[2026-02-13 14:57:14] [INFO] Memulai siklus pengecekan baru...
+[2026-02-13 14:57:14] [INFO] Mengambil jadwal dari http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:57:15] [INFO] Siklus selesai. Menunggu selama 30 detik.
+[2026-02-13 14:57:45] [INFO] Memulai siklus pengecekan baru...
+[2026-02-13 14:57:45] [INFO] Mengambil jadwal dari http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:57:45] [INFO] Siklus selesai. Menunggu selama 30 detik.
+[2026-02-13 14:58:15] [INFO] Memulai siklus pengecekan baru...
+[2026-02-13 14:58:15] [INFO] Mengambil jadwal dari http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:58:16] [INFO] Siklus selesai. Menunggu selama 30 detik.
+[2026-02-13 14:58:46] [INFO] Memulai siklus pengecekan baru...
+[2026-02-13 14:58:46] [INFO] Mengambil jadwal dari http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:58:46] [INFO] Siklus selesai. Menunggu selama 30 detik.
+[2026-02-13 14:59:16] [INFO] Memulai siklus pengecekan baru...
+[2026-02-13 14:59:16] [INFO] Mengambil jadwal dari http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:59:16] [INFO] Siklus selesai. Menunggu selama 30 detik.
+[2026-02-13 14:59:46] [INFO] Memulai siklus pengecekan baru...
+[2026-02-13 14:59:46] [INFO] Mengambil jadwal dari http://localhost/ip-call/server/hour/get.php
+[2026-02-13 14:59:46] [INFO] Siklus selesai. Menunggu selama 30 detik.
+[2026-02-13 15:00:16] [INFO] Memulai siklus pengecekan baru...
+[2026-02-13 15:00:16] [INFO] Mengambil jadwal dari http://localhost/ip-call/server/hour/get.php
+[2026-02-13 15:00:17] [INFO] Siklus selesai. Menunggu selama 30 detik.
+[2026-02-13 15:00:47] [INFO] Memulai siklus pengecekan baru...
+[2026-02-13 15:00:47] [INFO] Mengambil jadwal dari http://localhost/ip-call/server/hour/get.php
+[2026-02-13 15:00:47] [INFO] Siklus selesai. Menunggu selama 30 detik.
+[2026-02-13 15:01:17] [INFO] Memulai siklus pengecekan baru...
+[2026-02-13 15:01:17] [INFO] Mengambil jadwal dari http://localhost/ip-call/server/hour/get.php
+[2026-02-13 15:01:17] [INFO] Siklus selesai. Menunggu selama 30 detik.
+[2026-02-13 15:01:47] [INFO] Memulai siklus pengecekan baru...
+[2026-02-13 15:01:47] [INFO] Mengambil jadwal dari http://localhost/ip-call/server/hour/get.php
+[2026-02-13 15:01:47] [INFO] Siklus selesai. Menunggu selama 30 detik.
+[2026-02-13 15:02:17] [INFO] Memulai siklus pengecekan baru...
+[2026-02-13 15:02:17] [INFO] Mengambil jadwal dari http://localhost/ip-call/server/hour/get.php
+[2026-02-13 15:02:18] [INFO] Siklus selesai. Menunggu selama 30 detik.
+[2026-02-13 15:02:48] [INFO] Memulai siklus pengecekan baru...
+[2026-02-13 15:02:48] [INFO] Mengambil jadwal dari http://localhost/ip-call/server/hour/get.php
+[2026-02-13 15:02:48] [INFO] Siklus selesai. Menunggu selama 30 detik.
+[2026-02-13 15:03:18] [INFO] Memulai siklus pengecekan baru...
+[2026-02-13 15:03:18] [INFO] Mengambil jadwal dari http://localhost/ip-call/server/hour/get.php
+[2026-02-13 15:03:18] [INFO] Siklus selesai. Menunggu selama 30 detik.
+[2026-02-13 15:03:48] [INFO] Memulai siklus pengecekan baru...
+[2026-02-13 15:03:48] [INFO] Mengambil jadwal dari http://localhost/ip-call/server/hour/get.php
+[2026-02-13 15:03:48] [INFO] Siklus selesai. Menunggu selama 30 detik.
+[2026-02-13 15:04:18] [INFO] Memulai siklus pengecekan baru...
+[2026-02-13 15:04:18] [INFO] Mengambil jadwal dari http://localhost/ip-call/server/hour/get.php
+[2026-02-13 15:04:18] [INFO] Siklus selesai. Menunggu selama 30 detik.
+[2026-02-13 15:04:48] [INFO] Memulai siklus pengecekan baru...
+[2026-02-13 15:04:48] [INFO] Mengambil jadwal dari http://localhost/ip-call/server/hour/get.php
+[2026-02-13 15:04:49] [INFO] Siklus selesai. Menunggu selama 30 detik.
+[2026-02-13 15:05:19] [INFO] Memulai siklus pengecekan baru...
+[2026-02-13 15:05:19] [INFO] Mengambil jadwal dari http://localhost/ip-call/server/hour/get.php
+[2026-02-13 15:05:19] [INFO] Siklus selesai. Menunggu selama 30 detik.
+[2026-02-13 15:05:49] [INFO] Memulai siklus pengecekan baru...
+[2026-02-13 15:05:49] [INFO] Mengambil jadwal dari http://localhost/ip-call/server/hour/get.php
+[2026-02-13 15:05:49] [INFO] Siklus selesai. Menunggu selama 30 detik.
+[2026-02-13 15:06:19] [INFO] Memulai siklus pengecekan baru...
+[2026-02-13 15:06:19] [INFO] Mengambil jadwal dari http://localhost/ip-call/server/hour/get.php
+[2026-02-13 15:06:19] [INFO] Siklus selesai. Menunggu selama 30 detik.
+[2026-02-13 15:06:49] [INFO] Memulai siklus pengecekan baru...
+[2026-02-13 15:06:49] [INFO] Mengambil jadwal dari http://localhost/ip-call/server/hour/get.php
+[2026-02-13 15:06:50] [INFO] Siklus selesai. Menunggu selama 30 detik.
+[2026-02-13 15:07:20] [INFO] Memulai siklus pengecekan baru...
+[2026-02-13 15:07:20] [INFO] Mengambil jadwal dari http://localhost/ip-call/server/hour/get.php
+[2026-02-13 15:07:20] [INFO] Siklus selesai. Menunggu selama 30 detik.
+[2026-02-13 15:07:50] [INFO] Memulai siklus pengecekan baru...
+[2026-02-13 15:07:50] [INFO] Mengambil jadwal dari http://localhost/ip-call/server/hour/get.php
+[2026-02-13 15:07:50] [INFO] Siklus selesai. Menunggu selama 30 detik.
+[2026-02-13 15:08:20] [INFO] Memulai siklus pengecekan baru...
+[2026-02-13 15:08:20] [INFO] Mengambil jadwal dari http://localhost/ip-call/server/hour/get.php
+[2026-02-13 15:08:20] [INFO] Siklus selesai. Menunggu selama 30 detik.

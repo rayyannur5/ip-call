@@ -14,4 +14,9 @@ class History extends Model
     {
         return $this->belongsTo(CategoryHistory::class, 'category_history_id');
     }
+
+    public function bed()
+    {
+        return $this->belongsTo(Bed::class, 'bed_id', 'id');
+    }
 }

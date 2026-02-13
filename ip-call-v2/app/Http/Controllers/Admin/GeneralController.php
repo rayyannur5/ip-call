@@ -19,7 +19,10 @@ class GeneralController extends Controller
         $type = $request->input('type');
         $value = $request->input('value');
 
-        Util::where('type', $type)->update(['value' => $value]);
+        Util::where('type', $type)->update([
+            'value' => $value,
+            'description' => $request->input('description')
+        ]);
 
         return redirect()->back()->with('success', 'Setting updated successfully');
     }

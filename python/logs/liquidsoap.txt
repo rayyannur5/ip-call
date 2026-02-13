@@ -1,0 +1,221 @@
+[2026-02-13 14:30:47.822] 🚀 Skrip dimulai...
+[2026-02-13 14:30:47.822] 📁 Menggunakan file .liq: /home/nursecallserver/ip-call/liquidsoap/radio.liq
+/home/nursecallserver/ip-call/python/liquidsoap.py:80: DeprecationWarning: Callback API version 1 is deprecated, update to latest version
+  client = mqtt.Client()
+[2026-02-13 14:30:47.825] MQTT: Pesan '0' berhasil dikirim ke topik 'schedule_audio'. MID: 1
+[2026-02-13 14:30:47.825] LOCATION: Mencoba memperbarui koordinat dari server...
+[2026-02-13 14:30:52.832] UTILS_DATA: Error request: HTTPConnectionPool(host='localhost', port=80): Read timed out. (read timeout=5).
+[2026-02-13 14:30:52.832] LOCATION: Gagal mengambil data utils. Koordinat tidak diperbarui.
+[2026-02-13 14:30:52.832] LOCATION: Koordinat saat ini: Latitude=-7.288354699999995, Longitude=112.72549628465647
+[2026-02-13 14:30:52.832] MUSIC_SCHEDULER: Memproses jadwal musik...
+[2026-02-13 14:31:02.106] MUSIC_SCHEDULER: Menerima 0 jadwal musik.
+[2026-02-13 14:31:02.106] MUSIC_SCHEDULER: Jadwal event musik lama dibersihkan.
+[2026-02-13 14:31:02.106] MUSIC_SCHEDULER: Tidak ada musik/adzan aktif saat ini.
+[2026-02-13 14:31:02.106] MUSIC_SCHEDULER: Pemrosesan jadwal musik selesai.
+[2026-02-13 14:31:02.106] ADZAN_SCHEDULER: Membersihkan dan membuat jadwal MQTT adzan.
+[2026-02-13 14:31:02.354] PRAYER_TIMES: Memulai pengambilan data waktu sholat.
+[2026-02-13 14:31:02.579] PRAYER_TIMES: adzan_auto=0, mengambil dari adzan.php.
+[2026-02-13 14:31:02.857] PRAYER_TIMES: Berhasil mengambil waktu manual.
+[2026-02-13 14:31:02.857] ADZAN_SCHEDULER: Jadwalkan window active untuk Asr @ 14:47:00 (-1 menit)
+[2026-02-13 14:31:02.857] ADZAN_SCHEDULER: Jadwalkan window inactive untuk Asr @ 14:53:00
+[2026-02-13 14:31:02.857] ADZAN_SCHEDULER: Jadwalkan window active untuk Isha @ 22:51:00 (-1 menit)
+[2026-02-13 14:31:02.857] ADZAN_SCHEDULER: Jadwalkan window inactive untuk Isha @ 22:57:00
+[2026-02-13 14:31:02.857] ADZAN_SCHEDULER: Jadwalkan window active untuk Maghrib @ 17:17:00 (-1 menit)
+[2026-02-13 14:31:02.858] ADZAN_SCHEDULER: Jadwalkan window inactive untuk Maghrib @ 17:23:00
+[2026-02-13 14:31:02.858] ADZAN_SCHEDULER: Selesai. is_adzan_active: False
+[2026-02-13 14:31:03.346] UPDATE_LIQ: Adzan aktif (Auto=0). Membangun jadwal.
+[2026-02-13 14:31:03.690] PRAYER_TIMES: Memulai pengambilan data waktu sholat.
+[2026-02-13 14:31:03.690] PRAYER_TIMES: adzan_auto=0, mengambil dari adzan.php.
+[2026-02-13 14:31:03.908] PRAYER_TIMES: Berhasil mengambil waktu manual.
+[2026-02-13 14:31:04.231] ✅ Jadwal di /home/nursecallserver/ip-call/liquidsoap/radio.liq diperbarui. Amplify: 0.10
+[2026-02-13 14:31:04.231] INIT: Pembaruan awal selesai.
+[2026-02-13 14:31:04.231] SCHEDULER: Refresh harian dijadwalkan pukul 00:00.
+[2026-02-13 14:31:04.232] 👀 Memantau direktori: /home/nursecallserver/ip-call/liquidsoap
+[2026-02-13 14:31:04.232] 🚀 Menjalankan Liquidsoap...
+[2026-02-13 14:31:04.443] ✅ Liquidsoap berjalan PID: 2097.
+[2026-02-13 14:31:04.444]    Tekan Ctrl+C untuk keluar.
+[2026-02-13 14:31:04.444] PERIODIC_MQTT: Music: False, Adzan: False. Sending: '0'
+/home/nursecallserver/ip-call/python/liquidsoap.py:80: DeprecationWarning: Callback API version 1 is deprecated, update to latest version
+  client = mqtt.Client()
+[2026-02-13 14:31:04.445] MQTT: Pesan '0' berhasil dikirim ke topik 'schedule_audio'. MID: 1
+[2026-02-13 14:31:34.524] PERIODIC_MQTT: Music: False, Adzan: False. Sending: '0'
+[2026-02-13 14:31:34.525] MQTT: Pesan '0' berhasil dikirim ke topik 'schedule_audio'. MID: 1
+[2026-02-13 14:32:04.554] PERIODIC_MQTT: Music: False, Adzan: False. Sending: '0'
+[2026-02-13 14:32:04.557] MQTT: Pesan '0' berhasil dikirim ke topik 'schedule_audio'. MID: 1
+[2026-02-13 14:32:34.607] PERIODIC_MQTT: Music: False, Adzan: False. Sending: '0'
+[2026-02-13 14:32:34.609] MQTT: Pesan '0' berhasil dikirim ke topik 'schedule_audio'. MID: 1
+[2026-02-13 14:34:32.794] 🚀 Skrip dimulai...
+[2026-02-13 14:34:32.831] 📁 Menggunakan file .liq: /home/nursecallserver/ip-call/liquidsoap/radio.liq
+/home/nursecallserver/ip-call/python/liquidsoap.py:80: DeprecationWarning: Callback API version 1 is deprecated, update to latest version
+  client = mqtt.Client()
+[2026-02-13 14:34:32.836] MQTT: Pesan '0' berhasil dikirim ke topik 'schedule_audio'. MID: 1
+[2026-02-13 14:34:32.836] LOCATION: Mencoba memperbarui koordinat dari server...
+[2026-02-13 14:34:37.845] UTILS_DATA: Error request: HTTPConnectionPool(host='localhost', port=80): Read timed out. (read timeout=5).
+[2026-02-13 14:34:37.845] LOCATION: Gagal mengambil data utils. Koordinat tidak diperbarui.
+[2026-02-13 14:34:37.845] LOCATION: Koordinat saat ini: Latitude=-7.288354699999995, Longitude=112.72549628465647
+[2026-02-13 14:34:37.845] MUSIC_SCHEDULER: Memproses jadwal musik...
+[2026-02-13 14:34:47.863] MUSIC_SCHEDULER: Error mengambil jadwal musik: HTTPConnectionPool(host='localhost', port=80): Read timed out. (read timeout=10)
+[2026-02-13 14:34:47.863] MUSIC_SCHEDULER: Jadwal event musik lama dibersihkan.
+[2026-02-13 14:34:47.863] MUSIC_SCHEDULER: Tidak ada musik/adzan aktif saat ini.
+[2026-02-13 14:34:47.863] MUSIC_SCHEDULER: Pemrosesan jadwal musik selesai.
+[2026-02-13 14:34:47.863] ADZAN_SCHEDULER: Membersihkan dan membuat jadwal MQTT adzan.
+[2026-02-13 14:34:49.354] PRAYER_TIMES: Memulai pengambilan data waktu sholat.
+[2026-02-13 14:34:49.751] PRAYER_TIMES: adzan_auto=0, mengambil dari adzan.php.
+[2026-02-13 14:34:50.106] PRAYER_TIMES: Berhasil mengambil waktu manual.
+[2026-02-13 14:34:50.106] ADZAN_SCHEDULER: Jadwalkan window active untuk Asr @ 14:47:00 (-1 menit)
+[2026-02-13 14:34:50.107] ADZAN_SCHEDULER: Jadwalkan window inactive untuk Asr @ 14:53:00
+[2026-02-13 14:34:50.107] ADZAN_SCHEDULER: Jadwalkan window active untuk Isha @ 22:51:00 (-1 menit)
+[2026-02-13 14:34:50.107] ADZAN_SCHEDULER: Jadwalkan window inactive untuk Isha @ 22:57:00
+[2026-02-13 14:34:50.107] ADZAN_SCHEDULER: Jadwalkan window active untuk Maghrib @ 17:17:00 (-1 menit)
+[2026-02-13 14:34:50.107] ADZAN_SCHEDULER: Jadwalkan window inactive untuk Maghrib @ 17:23:00
+[2026-02-13 14:34:50.107] ADZAN_SCHEDULER: Selesai. is_adzan_active: False
+[2026-02-13 14:34:50.841] UPDATE_LIQ: Adzan aktif (Auto=0). Membangun jadwal.
+[2026-02-13 14:34:51.087] PRAYER_TIMES: Memulai pengambilan data waktu sholat.
+[2026-02-13 14:34:51.087] PRAYER_TIMES: adzan_auto=0, mengambil dari adzan.php.
+[2026-02-13 14:34:51.319] PRAYER_TIMES: Berhasil mengambil waktu manual.
+[2026-02-13 14:34:51.715] ✅ Jadwal di /home/nursecallserver/ip-call/liquidsoap/radio.liq diperbarui. Amplify: 0.10
+[2026-02-13 14:34:51.715] INIT: Pembaruan awal selesai.
+[2026-02-13 14:34:51.715] SCHEDULER: Refresh harian dijadwalkan pukul 00:00.
+[2026-02-13 14:34:51.716] 👀 Memantau direktori: /home/nursecallserver/ip-call/liquidsoap
+[2026-02-13 14:34:51.716] 🚀 Menjalankan Liquidsoap...
+[2026-02-13 14:34:51.953] ✅ Liquidsoap berjalan PID: 2177.
+[2026-02-13 14:34:51.953]    Tekan Ctrl+C untuk keluar.
+[2026-02-13 14:34:51.953] PERIODIC_MQTT: Music: False, Adzan: False. Sending: '0'
+/home/nursecallserver/ip-call/python/liquidsoap.py:80: DeprecationWarning: Callback API version 1 is deprecated, update to latest version
+  client = mqtt.Client()
+[2026-02-13 14:34:51.955] MQTT: Pesan '0' berhasil dikirim ke topik 'schedule_audio'. MID: 1
+[2026-02-13 14:35:22.003] PERIODIC_MQTT: Music: False, Adzan: False. Sending: '0'
+[2026-02-13 14:35:22.005] MQTT: Pesan '0' berhasil dikirim ke topik 'schedule_audio'. MID: 1
+[2026-02-13 14:35:52.035] PERIODIC_MQTT: Music: False, Adzan: False. Sending: '0'
+[2026-02-13 14:35:52.036] MQTT: Pesan '0' berhasil dikirim ke topik 'schedule_audio'. MID: 1
+[2026-02-13 14:36:22.076] PERIODIC_MQTT: Music: False, Adzan: False. Sending: '0'
+[2026-02-13 14:36:22.078] MQTT: Pesan '0' berhasil dikirim ke topik 'schedule_audio'. MID: 1
+[2026-02-13 14:36:52.128] PERIODIC_MQTT: Music: False, Adzan: False. Sending: '0'
+[2026-02-13 14:36:52.130] MQTT: Pesan '0' berhasil dikirim ke topik 'schedule_audio'. MID: 1
+[2026-02-13 14:37:22.192] PERIODIC_MQTT: Music: False, Adzan: False. Sending: '0'
+[2026-02-13 14:37:22.194] MQTT: Pesan '0' berhasil dikirim ke topik 'schedule_audio'. MID: 1
+[2026-02-13 14:37:52.250] PERIODIC_MQTT: Music: False, Adzan: False. Sending: '0'
+[2026-02-13 14:37:52.252] MQTT: Pesan '0' berhasil dikirim ke topik 'schedule_audio'. MID: 1
+[2026-02-13 14:38:22.312] PERIODIC_MQTT: Music: False, Adzan: False. Sending: '0'
+[2026-02-13 14:38:22.315] MQTT: Pesan '0' berhasil dikirim ke topik 'schedule_audio'. MID: 1
+[2026-02-13 14:38:52.376] PERIODIC_MQTT: Music: False, Adzan: False. Sending: '0'
+[2026-02-13 14:38:52.378] MQTT: Pesan '0' berhasil dikirim ke topik 'schedule_audio'. MID: 1
+[2026-02-13 14:39:22.434] PERIODIC_MQTT: Music: False, Adzan: False. Sending: '0'
+[2026-02-13 14:39:22.437] MQTT: Pesan '0' berhasil dikirim ke topik 'schedule_audio'. MID: 1
+[2026-02-13 14:39:52.495] PERIODIC_MQTT: Music: False, Adzan: False. Sending: '0'
+[2026-02-13 14:39:52.497] MQTT: Pesan '0' berhasil dikirim ke topik 'schedule_audio'. MID: 1
+[2026-02-13 14:40:22.555] PERIODIC_MQTT: Music: False, Adzan: False. Sending: '0'
+[2026-02-13 14:40:22.557] MQTT: Pesan '0' berhasil dikirim ke topik 'schedule_audio'. MID: 1
+[2026-02-13 14:40:52.611] PERIODIC_MQTT: Music: False, Adzan: False. Sending: '0'
+[2026-02-13 14:40:52.613] MQTT: Pesan '0' berhasil dikirim ke topik 'schedule_audio'. MID: 1
+[2026-02-13 14:41:22.670] PERIODIC_MQTT: Music: False, Adzan: False. Sending: '0'
+[2026-02-13 14:41:22.672] MQTT: Pesan '0' berhasil dikirim ke topik 'schedule_audio'. MID: 1
+[2026-02-13 14:41:52.726] PERIODIC_MQTT: Music: False, Adzan: False. Sending: '0'
+[2026-02-13 14:41:52.728] MQTT: Pesan '0' berhasil dikirim ke topik 'schedule_audio'. MID: 1
+[2026-02-13 14:42:22.790] PERIODIC_MQTT: Music: False, Adzan: False. Sending: '0'
+[2026-02-13 14:42:22.792] MQTT: Pesan '0' berhasil dikirim ke topik 'schedule_audio'. MID: 1
+[2026-02-13 14:42:52.845] PERIODIC_MQTT: Music: False, Adzan: False. Sending: '0'
+[2026-02-13 14:42:52.847] MQTT: Pesan '0' berhasil dikirim ke topik 'schedule_audio'. MID: 1
+[2026-02-13 14:43:22.904] PERIODIC_MQTT: Music: False, Adzan: False. Sending: '0'
+[2026-02-13 14:43:22.906] MQTT: Pesan '0' berhasil dikirim ke topik 'schedule_audio'. MID: 1
+[2026-02-13 14:43:52.963] PERIODIC_MQTT: Music: False, Adzan: False. Sending: '0'
+[2026-02-13 14:43:52.965] MQTT: Pesan '0' berhasil dikirim ke topik 'schedule_audio'. MID: 1
+[2026-02-13 14:44:23.007] PERIODIC_MQTT: Music: False, Adzan: False. Sending: '0'
+[2026-02-13 14:44:23.008] MQTT: Pesan '0' berhasil dikirim ke topik 'schedule_audio'. MID: 1
+[2026-02-13 14:44:53.029] PERIODIC_MQTT: Music: False, Adzan: False. Sending: '0'
+[2026-02-13 14:44:53.030] MQTT: Pesan '0' berhasil dikirim ke topik 'schedule_audio'. MID: 1
+[2026-02-13 14:45:23.052] PERIODIC_MQTT: Music: False, Adzan: False. Sending: '0'
+[2026-02-13 14:45:23.053] MQTT: Pesan '0' berhasil dikirim ke topik 'schedule_audio'. MID: 1
+[2026-02-13 14:45:53.080] PERIODIC_MQTT: Music: False, Adzan: False. Sending: '0'
+[2026-02-13 14:45:53.082] MQTT: Pesan '0' berhasil dikirim ke topik 'schedule_audio'. MID: 1
+[2026-02-13 14:46:23.111] PERIODIC_MQTT: Music: False, Adzan: False. Sending: '0'
+[2026-02-13 14:46:23.113] MQTT: Pesan '0' berhasil dikirim ke topik 'schedule_audio'. MID: 1
+[2026-02-13 14:46:53.135] PERIODIC_MQTT: Music: False, Adzan: False. Sending: '0'
+[2026-02-13 14:46:53.136] MQTT: Pesan '0' berhasil dikirim ke topik 'schedule_audio'. MID: 1
+[2026-02-13 14:47:00.063] ADZAN_STATE: Jendela adzan untuk Asr AKTIF.
+[2026-02-13 14:47:00.066] MQTT: Pesan '1' berhasil dikirim ke topik 'schedule_audio'. MID: 1
+[2026-02-13 14:47:23.160] PERIODIC_MQTT: Music: False, Adzan: True. Sending: '1'
+[2026-02-13 14:47:23.163] MQTT: Pesan '1' berhasil dikirim ke topik 'schedule_audio'. MID: 1
+[2026-02-13 14:47:53.183] PERIODIC_MQTT: Music: False, Adzan: True. Sending: '1'
+[2026-02-13 14:47:53.184] MQTT: Pesan '1' berhasil dikirim ke topik 'schedule_audio'. MID: 1
+[2026-02-13 14:48:23.208] PERIODIC_MQTT: Music: False, Adzan: True. Sending: '1'
+[2026-02-13 14:48:23.210] MQTT: Pesan '1' berhasil dikirim ke topik 'schedule_audio'. MID: 1
+[2026-02-13 14:48:53.239] PERIODIC_MQTT: Music: False, Adzan: True. Sending: '1'
+[2026-02-13 14:48:53.242] MQTT: Pesan '1' berhasil dikirim ke topik 'schedule_audio'. MID: 1
+[2026-02-13 14:49:23.273] PERIODIC_MQTT: Music: False, Adzan: True. Sending: '1'
+[2026-02-13 14:49:23.275] MQTT: Pesan '1' berhasil dikirim ke topik 'schedule_audio'. MID: 1
+[2026-02-13 14:49:53.366] PERIODIC_MQTT: Music: False, Adzan: True. Sending: '1'
+[2026-02-13 14:49:53.367] MQTT: Pesan '1' berhasil dikirim ke topik 'schedule_audio'. MID: 1
+[2026-02-13 14:50:23.389] PERIODIC_MQTT: Music: False, Adzan: True. Sending: '1'
+[2026-02-13 14:50:23.391] MQTT: Pesan '1' berhasil dikirim ke topik 'schedule_audio'. MID: 1
+[2026-02-13 14:50:53.419] PERIODIC_MQTT: Music: False, Adzan: True. Sending: '1'
+[2026-02-13 14:50:53.421] MQTT: Pesan '1' berhasil dikirim ke topik 'schedule_audio'. MID: 1
+[2026-02-13 14:51:23.443] PERIODIC_MQTT: Music: False, Adzan: True. Sending: '1'
+[2026-02-13 14:51:23.445] MQTT: Pesan '1' berhasil dikirim ke topik 'schedule_audio'. MID: 1
+[2026-02-13 14:51:53.462] PERIODIC_MQTT: Music: False, Adzan: True. Sending: '1'
+[2026-02-13 14:51:53.464] MQTT: Pesan '1' berhasil dikirim ke topik 'schedule_audio'. MID: 1
+[2026-02-13 14:52:23.491] PERIODIC_MQTT: Music: False, Adzan: True. Sending: '1'
+[2026-02-13 14:52:23.492] MQTT: Pesan '1' berhasil dikirim ke topik 'schedule_audio'. MID: 1
+[2026-02-13 14:52:53.514] PERIODIC_MQTT: Music: False, Adzan: True. Sending: '1'
+[2026-02-13 14:52:53.516] MQTT: Pesan '1' berhasil dikirim ke topik 'schedule_audio'. MID: 1
+[2026-02-13 14:53:00.049] ADZAN_STATE: Jendela adzan untuk Asr BERAKHIR.
+[2026-02-13 14:53:00.049] ADZAN_STATE: Tidak ada musik aktif setelah Asr berakhir. Kirim MQTT '0'.
+[2026-02-13 14:53:00.051] MQTT: Pesan '0' berhasil dikirim ke topik 'schedule_audio'. MID: 1
+[2026-02-13 14:53:23.549] PERIODIC_MQTT: Music: False, Adzan: False. Sending: '0'
+[2026-02-13 14:53:23.551] MQTT: Pesan '0' berhasil dikirim ke topik 'schedule_audio'. MID: 1
+[2026-02-13 14:53:53.584] PERIODIC_MQTT: Music: False, Adzan: False. Sending: '0'
+[2026-02-13 14:53:53.585] MQTT: Pesan '0' berhasil dikirim ke topik 'schedule_audio'. MID: 1
+[2026-02-13 14:54:23.612] PERIODIC_MQTT: Music: False, Adzan: False. Sending: '0'
+[2026-02-13 14:54:23.628] MQTT: Pesan '0' berhasil dikirim ke topik 'schedule_audio'. MID: 1
+[2026-02-13 14:54:53.651] PERIODIC_MQTT: Music: False, Adzan: False. Sending: '0'
+[2026-02-13 14:54:53.652] MQTT: Pesan '0' berhasil dikirim ke topik 'schedule_audio'. MID: 1
+[2026-02-13 14:55:23.675] PERIODIC_MQTT: Music: False, Adzan: False. Sending: '0'
+[2026-02-13 14:55:23.676] MQTT: Pesan '0' berhasil dikirim ke topik 'schedule_audio'. MID: 1
+[2026-02-13 14:55:53.702] PERIODIC_MQTT: Music: False, Adzan: False. Sending: '0'
+[2026-02-13 14:55:53.703] MQTT: Pesan '0' berhasil dikirim ke topik 'schedule_audio'. MID: 1
+[2026-02-13 14:57:02.948] PERIODIC_MQTT: Music: False, Adzan: False. Sending: '0'
+[2026-02-13 14:57:02.955] MQTT: Pesan '0' berhasil dikirim ke topik 'schedule_audio'. MID: 1
+[2026-02-13 14:57:33.014] PERIODIC_MQTT: Music: False, Adzan: False. Sending: '0'
+[2026-02-13 14:57:33.015] MQTT: Pesan '0' berhasil dikirim ke topik 'schedule_audio'. MID: 1
+[2026-02-13 14:58:03.039] PERIODIC_MQTT: Music: False, Adzan: False. Sending: '0'
+[2026-02-13 14:58:03.040] MQTT: Pesan '0' berhasil dikirim ke topik 'schedule_audio'. MID: 1
+[2026-02-13 14:58:33.066] PERIODIC_MQTT: Music: False, Adzan: False. Sending: '0'
+[2026-02-13 14:58:33.068] MQTT: Pesan '0' berhasil dikirim ke topik 'schedule_audio'. MID: 1
+[2026-02-13 14:59:03.094] PERIODIC_MQTT: Music: False, Adzan: False. Sending: '0'
+[2026-02-13 14:59:03.095] MQTT: Pesan '0' berhasil dikirim ke topik 'schedule_audio'. MID: 1
+[2026-02-13 14:59:33.113] PERIODIC_MQTT: Music: False, Adzan: False. Sending: '0'
+[2026-02-13 14:59:33.115] MQTT: Pesan '0' berhasil dikirim ke topik 'schedule_audio'. MID: 1
+[2026-02-13 15:00:03.152] PERIODIC_MQTT: Music: False, Adzan: False. Sending: '0'
+[2026-02-13 15:00:03.153] MQTT: Pesan '0' berhasil dikirim ke topik 'schedule_audio'. MID: 1
+[2026-02-13 15:00:33.191] PERIODIC_MQTT: Music: False, Adzan: False. Sending: '0'
+[2026-02-13 15:00:33.193] MQTT: Pesan '0' berhasil dikirim ke topik 'schedule_audio'. MID: 1
+[2026-02-13 15:01:03.225] PERIODIC_MQTT: Music: False, Adzan: False. Sending: '0'
+[2026-02-13 15:01:03.226] MQTT: Pesan '0' berhasil dikirim ke topik 'schedule_audio'. MID: 1
+[2026-02-13 15:01:33.266] PERIODIC_MQTT: Music: False, Adzan: False. Sending: '0'
+[2026-02-13 15:01:33.268] MQTT: Pesan '0' berhasil dikirim ke topik 'schedule_audio'. MID: 1
+[2026-02-13 15:02:03.319] PERIODIC_MQTT: Music: False, Adzan: False. Sending: '0'
+[2026-02-13 15:02:03.322] MQTT: Pesan '0' berhasil dikirim ke topik 'schedule_audio'. MID: 1
+[2026-02-13 15:02:33.377] PERIODIC_MQTT: Music: False, Adzan: False. Sending: '0'
+[2026-02-13 15:02:33.380] MQTT: Pesan '0' berhasil dikirim ke topik 'schedule_audio'. MID: 1
+[2026-02-13 15:03:03.428] PERIODIC_MQTT: Music: False, Adzan: False. Sending: '0'
+[2026-02-13 15:03:03.431] MQTT: Pesan '0' berhasil dikirim ke topik 'schedule_audio'. MID: 1
+[2026-02-13 15:03:33.489] PERIODIC_MQTT: Music: False, Adzan: False. Sending: '0'
+[2026-02-13 15:03:33.491] MQTT: Pesan '0' berhasil dikirim ke topik 'schedule_audio'. MID: 1
+[2026-02-13 15:04:03.552] PERIODIC_MQTT: Music: False, Adzan: False. Sending: '0'
+[2026-02-13 15:04:03.555] MQTT: Pesan '0' berhasil dikirim ke topik 'schedule_audio'. MID: 1
+[2026-02-13 15:04:33.613] PERIODIC_MQTT: Music: False, Adzan: False. Sending: '0'
+[2026-02-13 15:04:33.615] MQTT: Pesan '0' berhasil dikirim ke topik 'schedule_audio'. MID: 1
+[2026-02-13 15:05:03.659] PERIODIC_MQTT: Music: False, Adzan: False. Sending: '0'
+[2026-02-13 15:05:03.661] MQTT: Pesan '0' berhasil dikirim ke topik 'schedule_audio'. MID: 1
+[2026-02-13 15:05:33.704] PERIODIC_MQTT: Music: False, Adzan: False. Sending: '0'
+[2026-02-13 15:05:33.706] MQTT: Pesan '0' berhasil dikirim ke topik 'schedule_audio'. MID: 1
+[2026-02-13 15:06:03.768] PERIODIC_MQTT: Music: False, Adzan: False. Sending: '0'
+[2026-02-13 15:06:03.770] MQTT: Pesan '0' berhasil dikirim ke topik 'schedule_audio'. MID: 1
+[2026-02-13 15:06:33.824] PERIODIC_MQTT: Music: False, Adzan: False. Sending: '0'
+[2026-02-13 15:06:33.826] MQTT: Pesan '0' berhasil dikirim ke topik 'schedule_audio'. MID: 1
+[2026-02-13 15:07:03.885] PERIODIC_MQTT: Music: False, Adzan: False. Sending: '0'
+[2026-02-13 15:07:03.890] MQTT: Pesan '0' berhasil dikirim ke topik 'schedule_audio'. MID: 1
+[2026-02-13 15:07:33.941] PERIODIC_MQTT: Music: False, Adzan: False. Sending: '0'
+[2026-02-13 15:07:33.943] MQTT: Pesan '0' berhasil dikirim ke topik 'schedule_audio'. MID: 1
+[2026-02-13 15:08:03.993] PERIODIC_MQTT: Music: False, Adzan: False. Sending: '0'
+[2026-02-13 15:08:03.995] MQTT: Pesan '0' berhasil dikirim ke topik 'schedule_audio'. MID: 1

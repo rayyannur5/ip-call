@@ -1,3 +1,4 @@
+test = playlist("/home/nursecallserver/ip-call/ip-call-v2/public/playlist/test.m3u", mode="normal", reload_mode="watch")
 
 adzan_playlist = playlist("/home/nursecallserver/ip-call/ip-call-v2/public/playlist/adzan.m3u")
 adzan_subuh_playlist = playlist("/home/nursecallserver/ip-call/ip-call-v2/public/playlist/adzan_subuh.m3u")
@@ -6,12 +7,9 @@ adzan_subuh_playlist = playlist("/home/nursecallserver/ip-call/ip-call-v2/public
 source = fallback(track_sensitive=false, [
   switch([
     #=#
-            ({ 04h12m }, amplify(0.10, id="adzan_subuh_amplify", adzan_subuh_playlist)), #subuh
-            ({ 11h27m }, amplify(0.10, id="adzan_amplify", adzan_playlist)), #dhuhur
-            ({ 14h48m }, amplify(0.10, id="adzan_amplify", adzan_playlist)), #ashar
-            ({ 17h18m }, amplify(0.10, id="adzan_amplify", adzan_playlist)), #maghrib
-            ({ 22h52m }, amplify(0.10, id="adzan_amplify", adzan_playlist)), #isya
-        #=#
+        adzan
+    #=#
+   ({ 12h00m-23h00m }, amplify(1, test)),
 
   ]),
   blank()

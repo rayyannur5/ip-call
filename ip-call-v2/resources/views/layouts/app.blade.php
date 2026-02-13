@@ -15,6 +15,11 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            background-image: linear-gradient(rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.7)), url('{{ asset('assets/images/bg.JPEG') }}');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
         }
         .wrapper {
             display: flex;
@@ -116,6 +121,12 @@
             @if (Auth::check() && Auth::user()->username == 'teknisi')
                 <li class="header-menu p-2">SETTINGS</li>
                 
+                <li class="{{ request()->is('admin/monitoring') ? 'active' : '' }}">
+                    <a href="{{ url('/admin/monitoring') }}">
+                        <i class="fas fa-desktop nav-icon"></i> Monitoring
+                    </a>
+                </li>
+                
                 <li class="{{ request()->is('admin/rooms') ? 'active' : '' }}">
                     <a href="{{ url('/admin/rooms') }}">
                         <i class="fas fa-door-open nav-icon"></i> Setting Ruang
@@ -169,7 +180,7 @@
 
     <!-- Page Content -->
     <div id="content">
-        <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light mb-0" style="opacity: 0.6;">
             <div class="container-fluid">
                 <button type="button" id="sidebarCollapse" class="btn btn-info">
                     <i class="fas fa-align-left"></i>
@@ -214,13 +225,33 @@
 
         $('#closeTab').on('click', function (e) {
             e.preventDefault();
-            // Trik agar browser menganggap tab ini dibuka oleh script
-            window.open('', '_self');
-            window.close();
-            // Fallback jika tetap tidak bisa
-            setTimeout(function() {
-                window.location.href = 'about:blank';
-            }, 300);
+
+            var closeTabAction = function() {
+                // Trik agar browser menganggap tab ini dibuka oleh script
+                window.open('', '_self');
+                window.close();
+                // Fallback jika tetap tidak bisa
+                setTimeout(function() {
+                    window.location.href = 'about:blank';
+                }, 300);
+            };
+
+            @if (Auth::check())
+            // Logout dulu jika sudah login, baru tutup tab
+            $.ajax({
+                url: '{{ url("/logout") }}',
+                type: 'GET',
+                success: function() {
+                    closeTabAction();
+                },
+                error: function() {
+                    // Tetap tutup tab meskipun logout gagal
+                    closeTabAction();
+                }
+            });
+            @else
+            closeTabAction();
+            @endif
         });
     });
 </script>

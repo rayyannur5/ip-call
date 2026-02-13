@@ -37,12 +37,12 @@ class DashboardController extends Controller
         }
 
         // 3. Recent Activity (Merged Calls and Logs)
-        $recentCalls = History::with('category')->latest('timestamp')->take(5)->get()->map(function($item) {
+        $recentCalls = History::with(['category', 'bed'])->latest('timestamp')->take(5)->get()->map(function($item) {
             $item->type = 'call';
             return $item;
         });
         
-        $recentLogs = Log::with('category')->latest('timestamp')->take(5)->get()->map(function($item) {
+        $recentLogs = Log::with(['category', 'bed'])->latest('timestamp')->take(5)->get()->map(function($item) {
             $item->type = 'message';
             return $item;
         });

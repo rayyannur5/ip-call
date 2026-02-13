@@ -1,0 +1,26 @@
+[2026-02-13 14:30:45] [INFO] Script starting...
+[2026-02-13 14:30:45] [INFO] Using init args: -c /home/nursecallserver/.linphonerc
+/home/nursecallserver/ip-call/python/linphone.py:174: DeprecationWarning: Callback API version 1 is deprecated, update to latest version
+  client = mqtt.Client()
+[2026-02-13 14:30:45] [INFO] Waiting 10 seconds before initialization...
+[2026-02-13 14:30:55] [INFO] Connecting to MQTT broker at localhost:1883
+[2026-02-13 14:30:55] [INFO] Connected to MQTT Broker at localhost.
+[2026-02-13 14:30:55] [INFO] Received message on topic 'server': r
+[2026-02-13 14:30:55] [INFO] Registering Linphone...
+[2026-02-13 14:31:01] [INFO] Linphone registered successfully.
+[2026-02-13 14:31:01] [INFO] Setting up soundcard...
+[2026-02-13 14:31:02] [INFO] Soundcard set to index 1:: 1: PulseAudio: Built-in Audio Analog Stereo (echo cancelled with Built-in Audio Analog Stereo)
+[2026-02-13 14:31:02] [INFO] Linphone setup complete.
+[2026-02-13 14:34:29] [INFO] Script starting...
+[2026-02-13 14:34:29] [INFO] Using init args: -c /home/nursecallserver/.linphonerc
+/home/nursecallserver/ip-call/python/linphone.py:174: DeprecationWarning: Callback API version 1 is deprecated, update to latest version
+  client = mqtt.Client()
+[2026-02-13 14:34:29] [INFO] Waiting 10 seconds before initialization...
+[2026-02-13 14:34:39] [INFO] Connecting to MQTT broker at localhost:1883
+[2026-02-13 14:34:39] [INFO] Connected to MQTT Broker at localhost.
+[2026-02-13 14:34:39] [INFO] Received message on topic 'server': r
+[2026-02-13 14:34:40] [INFO] Registering Linphone...
+[2026-02-13 14:34:46] [INFO] Linphone registered successfully.
+[2026-02-13 14:34:46] [INFO] Setting up soundcard...
+[2026-02-13 14:34:46] [INFO] Soundcard set to index 1:: 1: PulseAudio: Built-in Audio Analog Stereo (echo cancelled with Built-in Audio Analog Stereo)
+[2026-02-13 14:34:46] [INFO] Linphone setup complete.

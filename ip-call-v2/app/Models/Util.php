@@ -11,5 +11,5 @@ class Util extends Model
     protected $keyType = 'string';
     public $incrementing = false;
     public $timestamps = false;
-    protected $fillable = ['type', 'value'];
+    protected $fillable = ['type', 'value', 'description'];
 }
