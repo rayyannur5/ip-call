@@ -219,3 +219,23 @@
 [2026-02-13 15:07:33.943] MQTT: Pesan '0' berhasil dikirim ke topik 'schedule_audio'. MID: 1
 [2026-02-13 15:08:03.993] PERIODIC_MQTT: Music: False, Adzan: False. Sending: '0'
 [2026-02-13 15:08:03.995] MQTT: Pesan '0' berhasil dikirim ke topik 'schedule_audio'. MID: 1
+[2026-02-13 15:08:34.046] PERIODIC_MQTT: Music: False, Adzan: False. Sending: '0'
+[2026-02-13 15:08:34.049] MQTT: Pesan '0' berhasil dikirim ke topik 'schedule_audio'. MID: 1
+[2026-02-13 15:09:04.104] PERIODIC_MQTT: Music: False, Adzan: False. Sending: '0'
+[2026-02-13 15:09:04.107] MQTT: Pesan '0' berhasil dikirim ke topik 'schedule_audio'. MID: 1
+[2026-02-13 15:09:34.163] PERIODIC_MQTT: Music: False, Adzan: False. Sending: '0'
+[2026-02-13 15:09:34.166] MQTT: Pesan '0' berhasil dikirim ke topik 'schedule_audio'. MID: 1
+[2026-02-13 15:10:04.224] PERIODIC_MQTT: Music: False, Adzan: False. Sending: '0'
+[2026-02-13 15:10:04.226] MQTT: Pesan '0' berhasil dikirim ke topik 'schedule_audio'. MID: 1
+[2026-02-13 15:10:34.277] PERIODIC_MQTT: Music: False, Adzan: False. Sending: '0'
+[2026-02-13 15:10:34.280] MQTT: Pesan '0' berhasil dikirim ke topik 'schedule_audio'. MID: 1
+[2026-02-13 15:11:04.331] PERIODIC_MQTT: Music: False, Adzan: False. Sending: '0'
+[2026-02-13 15:11:04.333] MQTT: Pesan '0' berhasil dikirim ke topik 'schedule_audio'. MID: 1
+[2026-02-13 15:11:34.366] PERIODIC_MQTT: Music: False, Adzan: False. Sending: '0'
+[2026-02-13 15:11:34.368] MQTT: Pesan '0' berhasil dikirim ke topik 'schedule_audio'. MID: 1
+[2026-02-13 15:12:04.408] PERIODIC_MQTT: Music: False, Adzan: False. Sending: '0'
+[2026-02-13 15:12:04.410] MQTT: Pesan '0' berhasil dikirim ke topik 'schedule_audio'. MID: 1
+[2026-02-13 15:12:34.444] PERIODIC_MQTT: Music: False, Adzan: False. Sending: '0'
+[2026-02-13 15:12:34.447] MQTT: Pesan '0' berhasil dikirim ke topik 'schedule_audio'. MID: 1
+[2026-02-13 15:13:04.483] PERIODIC_MQTT: Music: False, Adzan: False. Sending: '0'
+[2026-02-13 15:13:04.485] MQTT: Pesan '0' berhasil dikirim ke topik 'schedule_audio'. MID: 1
