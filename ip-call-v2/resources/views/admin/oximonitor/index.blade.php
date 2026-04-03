@@ -325,14 +325,21 @@ $(document).ready(function() {
     $('#flow_interval_input').val(flowInterval);
 
     let flowTimer;
+    let isRequestPending = false;
 
     function updateCurrentFlow() {
+        if (isRequestPending) return;
+
         let mockFlow = localStorage.getItem('oximonitor_mock_flow');
         if (mockFlow) {
             $('#current_flow').text(mockFlow);
+            // Even with mock, we respect the interval
+            if (flowTimer) clearTimeout(flowTimer);
+            flowTimer = setTimeout(updateCurrentFlow, flowInterval);
             return;
         }
 
+        isRequestPending = true;
         $.ajax({
             url: '{{ url("/admin/oximonitor/current-flow") }}',
             method: 'GET',
@@ -342,13 +349,20 @@ $(document).ready(function() {
             },
             error: function(xhr) {
                 console.error('Failed to fetch current flow:', xhr);
+            },
+            complete: function() {
+                isRequestPending = false;
+                // Schedule next update only after previous one finishes
+                if (flowTimer) clearTimeout(flowTimer);
+                flowTimer = setTimeout(updateCurrentFlow, flowInterval);
             }
         });
     }
 
     function startFlowTimer() {
-        if (flowTimer) clearInterval(flowTimer);
-        flowTimer = setInterval(updateCurrentFlow, flowInterval);
+        if (flowTimer) clearTimeout(flowTimer);
+        isRequestPending = false; // Reset flag to allow immediate update
+        updateCurrentFlow();
     }
 
     $('#flow_interval_input').on('change', function() {
