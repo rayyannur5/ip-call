@@ -112,8 +112,19 @@
     <div class="col-md-3">
         <div class="metric-card primary shadow-sm border-0">
             <span class="metric-unit">L/min</span>
-            <p><span class="live-indicator"></span>Aktual</p>
+            <p>
+                <span class="live-indicator"></span>Aktual
+                <span class="ms-1" style="cursor: pointer; opacity: 0.7;" onclick="$('#interval-config').toggle()">
+                    <i class="fas fa-cog fa-xs"></i>
+                </span>
+            </p>
             <h3 id="current_flow">0,00</h3>
+            <div id="interval-config" style="display: none; margin-top: 10px;">
+                <div class="input-group input-group-sm">
+                    <span class="input-group-text bg-transparent text-white border-white-50">Int (ms)</span>
+                    <input type="number" id="flow_interval_input" class="form-control bg-transparent text-white border-white-50" value="500" step="100" min="100">
+                </div>
+            </div>
         </div>
     </div>
     <div class="col-md-3">
@@ -310,7 +321,18 @@ $(document).ready(function() {
         });
     }
 
+    let flowInterval = localStorage.getItem('oximonitor_flow_interval') || 500;
+    $('#flow_interval_input').val(flowInterval);
+
+    let flowTimer;
+
     function updateCurrentFlow() {
+        let mockFlow = localStorage.getItem('oximonitor_mock_flow');
+        if (mockFlow) {
+            $('#current_flow').text(mockFlow);
+            return;
+        }
+
         $.ajax({
             url: '{{ url("/admin/oximonitor/current-flow") }}',
             method: 'GET',
@@ -324,12 +346,36 @@ $(document).ready(function() {
         });
     }
 
+    function startFlowTimer() {
+        if (flowTimer) clearInterval(flowTimer);
+        flowTimer = setInterval(updateCurrentFlow, flowInterval);
+    }
+
+    $('#flow_interval_input').on('change', function() {
+        let newVal = $(this).val();
+        if (newVal >= 100) {
+            flowInterval = newVal;
+            localStorage.setItem('oximonitor_flow_interval', flowInterval);
+            startFlowTimer();
+        }
+    });
+
+    $('#mock_flow_input').on('change', function() {
+        let val = $(this).val();
+        if (val) {
+            localStorage.setItem('oximonitor_mock_flow', val);
+        } else {
+            localStorage.removeItem('oximonitor_mock_flow');
+        }
+    });
+
+    // Load initial mock value
+    $('#mock_flow_input').val(localStorage.getItem('oximonitor_mock_flow'));
+
     // Initial load
     updateMetrics();
     updateCurrentFlow();
-
-    // Poll current flow every 100ms
-    setInterval(updateCurrentFlow, 100); 
+    startFlowTimer();
     
     // Poll other metrics every 2 seconds
     setInterval(updateMetrics, 2000);
