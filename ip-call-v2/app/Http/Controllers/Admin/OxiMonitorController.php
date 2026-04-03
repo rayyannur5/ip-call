@@ -67,7 +67,6 @@ class OxiMonitorController extends Controller
         };
 
         return response()->json([
-            'current_flow' => $fmt($currentFlow),
             'usage_today' => $fmt($usageToday),
             'usage_3_days' => $fmt($usage3Days),
             'usage_7_days' => $fmt($usage7Days),
@@ -75,6 +74,19 @@ class OxiMonitorController extends Controller
             'avg_7_days' => $fmt($avg7Days),
             'usage_14_days' => $fmt($usage14Days),
             'usage_30_days' => $fmt($usage30Days),
+        ]);
+    }
+
+    /**
+     * Get only current flow rate for high-frequency updates
+     */
+    public function currentFlow()
+    {
+        $status = OxiMonitorStatus::first();
+        $currentFlow = $status ? floatval($status->flow_rate) : 0;
+
+        return response()->json([
+            'current_flow' => number_format($currentFlow, 2, ',', '.')
         ]);
     }
 

@@ -126,6 +126,7 @@ Route::group(['prefix' => 'admin'], function () {
     // OxiMonitor (public view)
     Route::get('/oximonitor', [App\Http\Controllers\Admin\OxiMonitorController::class, 'index']);
     Route::get('/oximonitor/metrics', [App\Http\Controllers\Admin\OxiMonitorController::class, 'metrics']);
+    Route::get('/oximonitor/current-flow', [App\Http\Controllers\Admin\OxiMonitorController::class, 'currentFlow']);
     Route::post('/oximonitor/data', [App\Http\Controllers\Admin\OxiMonitorController::class, 'getData']);
 
     // Audio (public view)

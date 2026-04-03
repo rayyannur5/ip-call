@@ -296,7 +296,6 @@ $(document).ready(function() {
             method: 'GET',
             dataType: 'json',
             success: function(data) {
-                $('#current_flow').text(data.current_flow);
                 $('#usage_today').text(data.usage_today);
                 $('#usage_3_days').text(data.usage_3_days);
                 $('#usage_7_days').text(data.usage_7_days);
@@ -311,10 +310,28 @@ $(document).ready(function() {
         });
     }
 
+    function updateCurrentFlow() {
+        $.ajax({
+            url: '{{ url("/admin/oximonitor/current-flow") }}',
+            method: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                $('#current_flow').text(data.current_flow);
+            },
+            error: function(xhr) {
+                console.error('Failed to fetch current flow:', xhr);
+            }
+        });
+    }
+
     // Initial load
     updateMetrics();
+    updateCurrentFlow();
 
-    // Poll every 2 seconds
+    // Poll current flow every 100ms
+    setInterval(updateCurrentFlow, 100); 
+    
+    // Poll other metrics every 2 seconds
     setInterval(updateMetrics, 2000);
 });
 </script>
