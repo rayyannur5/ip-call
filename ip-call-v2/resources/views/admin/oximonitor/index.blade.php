@@ -118,7 +118,7 @@
                     <i class="fas fa-cog fa-xs"></i>
                 </span>
             </p>
-            <h3 id="current_flow">0,00</h3>
+            <h3 id="current_flow">0,000</h3>
             <div id="interval-config" style="display: none; margin-top: 10px;">
                 <div class="input-group input-group-sm">
                     <span class="input-group-text bg-transparent text-white border-white-50">Int (ms)</span>
@@ -131,21 +131,21 @@
         <div class="metric-card shadow-sm border-0">
             <span class="metric-unit">m³</span>
             <p>Hari ini</p>
-            <h3 id="usage_today">0,00</h3>
+            <h3 id="usage_today">0,000</h3>
         </div>
     </div>
     <div class="col-md-3">
         <div class="metric-card shadow-sm border-0">
             <span class="metric-unit">m³</span>
             <p>3 Hari Terakhir</p>
-            <h3 id="usage_3_days">0,00</h3>
+            <h3 id="usage_3_days">0,000</h3>
         </div>
     </div>
     <div class="col-md-3">
         <div class="metric-card shadow-sm border-0">
             <span class="metric-unit">m³</span>
             <p>7 Hari Terakhir</p>
-            <h3 id="usage_7_days">0,00</h3>
+            <h3 id="usage_7_days">0,000</h3>
         </div>
     </div>
 </div>
@@ -156,14 +156,14 @@
         <div class="metric-card shadow-sm border-0">
             <span class="metric-unit">m³</span>
             <p><i class="fas fa-chart-line me-1"></i> Rata-rata 3 Hari</p>
-            <h3 id="avg_3_days">0,00</h3>
+            <h3 id="avg_3_days">0,000</h3>
         </div>
     </div>
     <div class="col-md-6">
         <div class="metric-card shadow-sm border-0">
             <span class="metric-unit">m³</span>
             <p><i class="fas fa-chart-line me-1"></i> Rata-rata 7 Hari</p>
-            <h3 id="avg_7_days">0,00</h3>
+            <h3 id="avg_7_days">0,000</h3>
         </div>
     </div>
 </div>
@@ -174,14 +174,14 @@
         <div class="metric-card shadow-sm border-0">
             <span class="metric-unit">m³</span>
             <p>14 Hari Terakhir</p>
-            <h3 id="usage_14_days">0,00</h3>
+            <h3 id="usage_14_days">0,000</h3>
         </div>
     </div>
     <div class="col-md-6">
         <div class="metric-card shadow-sm border-0">
             <span class="metric-unit">m³</span>
             <p>1 Bulan Terakhir</p>
-            <h3 id="usage_30_days">0,00</h3>
+            <h3 id="usage_30_days">0,000</h3>
         </div>
     </div>
 </div>

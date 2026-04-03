@@ -63,7 +63,7 @@ class OxiMonitorController extends Controller
 
         // Format numbers (Indonesian format: comma as decimal, dot as thousand separator)
         $fmt = function($num) {
-            return number_format($num, 2, ',', '.');
+            return number_format($num, 3, ',', '.');
         };
 
         return response()->json([
@@ -86,7 +86,7 @@ class OxiMonitorController extends Controller
         $currentFlow = $status ? floatval($status->flow_rate) : 0;
 
         return response()->json([
-            'current_flow' => number_format($currentFlow, 2, ',', '.')
+            'current_flow' => number_format($currentFlow, 3, ',', '.')
         ]);
     }
 
@@ -153,7 +153,7 @@ class OxiMonitorController extends Controller
             $volYesterday = $getVolumeAtDate($prevDate);
 
             $usage = $volToday - $volYesterday;
-            $usageFmt = number_format($usage, 2, ',', '.');
+            $usageFmt = number_format($usage, 3, ',', '.');
 
             // Format date to Indonesian
             $dateObj = \DateTime::createFromFormat('Y-m-d', $date);
