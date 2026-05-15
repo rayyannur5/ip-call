@@ -1,236 +1,657 @@
-@extends('layouts.app')
+@extends($layout ?? 'layouts.app')
 
 @section('title', 'Oxi-Monitor')
 
 @section('content')
 <style>
-    /* Metric Cards Styling */
+    .oxi-page {
+        color: #182230;
+    }
+
+    .oxi-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 18px;
+        padding: 22px 24px;
+        margin-bottom: 22px;
+        border: 1px solid #dbe4ee;
+        border-radius: 8px;
+        background: #ffffff;
+        box-shadow: 0 10px 30px rgba(15, 23, 42, 0.07);
+    }
+
+    .oxi-title {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin: 0;
+        font-size: 1.55rem;
+        font-weight: 800;
+        letter-spacing: 0;
+        color: #111827;
+    }
+
+    .oxi-title-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 42px;
+        height: 42px;
+        border-radius: 8px;
+        color: #0f766e;
+        background: #dff7f3;
+        border: 1px solid #bcebe4;
+    }
+
+    .oxi-subtitle {
+        margin: 8px 0 0;
+        color: #667085;
+        font-size: 0.92rem;
+    }
+
+    .unit-panel {
+        min-width: 330px;
+        padding: 12px;
+        border: 1px solid #dbe4ee;
+        border-radius: 8px;
+        background: #f8fafc;
+    }
+
+    .unit-panel-label {
+        margin-bottom: 9px;
+        color: #475467;
+        font-size: 0.78rem;
+        font-weight: 800;
+        letter-spacing: .04em;
+        text-transform: uppercase;
+    }
+
+    .unit-options {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 8px;
+    }
+
+    .unit-option {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 38px;
+        margin: 0;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        background: #ffffff;
+        color: #344054;
+        font-weight: 800;
+        cursor: pointer;
+        user-select: none;
+        transition: border-color .18s ease, color .18s ease, background .18s ease, box-shadow .18s ease;
+    }
+
+    .unit-option input {
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .unit-option:has(input:checked) {
+        border-color: #0f766e;
+        background: #ecfdf9;
+        color: #0f766e;
+        box-shadow: 0 0 0 3px rgba(15, 118, 110, .12);
+    }
+
+    .metric-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 16px;
+    }
+
     .metric-card {
-        border-radius: 12px;
-        background: white;
-        padding: 20px;
-        margin-bottom: 20px;
-        transition: transform 0.2s, box-shadow 0.2s;
+        min-height: 158px;
+        padding: 18px;
+        border: 1px solid #dbe4ee;
+        border-radius: 8px;
+        background: #ffffff;
+        box-shadow: 0 10px 26px rgba(15, 23, 42, 0.06);
+        transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
     }
+
     .metric-card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        transform: translateY(-2px);
+        border-color: #b6c6d8;
+        box-shadow: 0 16px 34px rgba(15, 23, 42, 0.1);
     }
-    .metric-card h3 {
-        font-size: 2rem;
-        font-weight: 700;
-        margin: 0;
-        color: #333;
-    }
-    .metric-card p {
-        font-size: 0.95rem;
-        margin-bottom: 5px;
-        font-weight: 600;
-        color: #666;
-    }
-    .metric-unit {
-        font-size: 0.85rem;
-        float: right;
-        color: #888;
-        background: #f8f9fa;
-        padding: 2px 8px;
-        border-radius: 4px;
-    }
-    
-    /* Header Styling */
-    .page-header {
-        background: linear-gradient(135deg, #4B39C6 0%, #6352E5 100%);
-        color: white;
-        padding: 20px 25px;
-        margin-bottom: 25px;
-        border-radius: 10px;
-        box-shadow: 0 4px 15px rgba(75, 57, 198, 0.3);
-    }
-    .page-header h3 {
-        margin: 0;
-        font-weight: 600;
-    }
-    
-    /* Live Indicator */
-    .live-indicator {
-        display: inline-block;
-        width: 10px;
-        height: 10px;
-        background-color: #28a745;
-        border-radius: 50%;
-        margin-right: 6px;
-        animation: blink 1s infinite;
-    }
-    @keyframes blink {
-        50% { opacity: 0; }
-    }
-    
-    /* Primary Metric Card */
+
     .metric-card.primary {
-        background: linear-gradient(135deg, #4B39C6 0%, #6352E5 100%);
+        border-color: #0f766e;
+        background: #0f1f1d;
+        color: #ffffff;
     }
-    .metric-card.primary h3,
-    .metric-card.primary p {
-        color: white;
+
+    .metric-card.primary .metric-label,
+    .metric-card.primary .metric-note,
+    .metric-card.primary .interval-toggle {
+        color: #d6f5ef;
     }
-    .metric-card.primary .metric-unit {
-        background: rgba(255,255,255,0.2);
-        color: white;
+
+    .metric-topline {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 10px;
+        margin-bottom: 18px;
     }
-    .metric-card.primary .live-indicator {
-        background-color: #7CFC00;
+
+    .metric-label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin: 0;
+        color: #667085;
+        font-size: 0.91rem;
+        font-weight: 800;
     }
-    
-    /* Card Table */
-    .card-table {
-        border-radius: 12px;
+
+    .metric-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 44px;
+        min-height: 26px;
+        padding: 3px 8px;
+        border-radius: 7px;
+        background: #eef4ff;
+        color: #344054;
+        font-size: 0.78rem;
+        font-weight: 800;
     }
-    .card-table .card-body {
-        padding: 25px;
+
+    .metric-card.primary .metric-badge {
+        background: rgba(255, 255, 255, .12);
+        color: #ffffff;
     }
-    
-    /* Section Title */
+
+    .metric-value {
+        margin: 0;
+        color: #111827;
+        font-size: 2rem;
+        line-height: 1.05;
+        font-weight: 900;
+    }
+
+    .metric-card.primary .metric-value {
+        color: #ffffff;
+    }
+
+    .metric-conversions {
+        display: grid;
+        gap: 6px;
+        margin-top: 12px;
+    }
+
+    .conversion-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding-top: 6px;
+        border-top: 1px solid #edf2f7;
+        color: #475467;
+        font-size: 0.86rem;
+        font-weight: 700;
+    }
+
+    .metric-card.primary .conversion-row {
+        border-top-color: rgba(255, 255, 255, .16);
+        color: #d6f5ef;
+    }
+
+    .live-dot {
+        display: inline-block;
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        background: #12b76a;
+        box-shadow: 0 0 0 4px rgba(18, 183, 106, .18);
+        animation: livePulse 1.15s infinite;
+    }
+
+    @keyframes livePulse {
+        50% { opacity: .42; }
+    }
+
+    .interval-toggle {
+        border: 0;
+        padding: 6px 9px;
+        border-radius: 7px;
+        background: rgba(255, 255, 255, .1);
+        color: #d6f5ef;
+        font-size: .86rem;
+        font-weight: 800;
+    }
+
+    .interval-toggle:hover {
+        background: rgba(255, 255, 255, .16);
+        color: #ffffff;
+    }
+
+    .interval-config {
+        display: none;
+        margin-top: 14px;
+    }
+
+    .table-shell {
+        margin-top: 22px;
+        border: 1px solid #dbe4ee;
+        border-radius: 8px;
+        background: #ffffff;
+        box-shadow: 0 10px 30px rgba(15, 23, 42, 0.07);
+        overflow: hidden;
+    }
+
+    .table-toolbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 18px 20px;
+        border-bottom: 1px solid #edf2f7;
+        background: #f8fafc;
+    }
+
     .section-title {
-        font-size: 1.25rem;
-        font-weight: 600;
-        color: #333;
-        margin-bottom: 20px;
+        margin: 0;
+        color: #111827;
+        font-size: 1.08rem;
+        font-weight: 900;
     }
-    
-    /* Date Range Picker Styling */
+
     .daterange-input {
-        max-width: 300px;
+        max-width: 320px;
+    }
+
+    .table-actions {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 14px;
+        flex-wrap: wrap;
+    }
+
+    .refresh-toggle {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        margin: 0;
+        color: #475467;
+        font-size: 0.88rem;
+        font-weight: 800;
+        user-select: none;
+    }
+
+    .refresh-toggle input {
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .refresh-switch {
+        position: relative;
+        width: 44px;
+        height: 24px;
+        border-radius: 999px;
+        background: #cbd5e1;
+        transition: background .18s ease, box-shadow .18s ease;
+    }
+
+    .refresh-switch::after {
+        content: "";
+        position: absolute;
+        top: 4px;
+        left: 4px;
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background: #ffffff;
+        box-shadow: 0 1px 3px rgba(15, 23, 42, .18);
+        transition: transform .18s ease;
+    }
+
+    .refresh-toggle input:checked + .refresh-switch {
+        background: #0f766e;
+        box-shadow: 0 0 0 3px rgba(15, 118, 110, .12);
+    }
+
+    .refresh-toggle input:checked + .refresh-switch::after {
+        transform: translateX(20px);
+    }
+
+    .oxi-table-wrap {
+        padding: 18px 20px 20px;
+    }
+
+    #logTable {
+        margin-bottom: 0;
+    }
+
+    #logTable thead th {
+        border-bottom: 1px solid #dbe4ee;
+        color: #475467;
+        font-size: 0.78rem;
+        letter-spacing: .04em;
+        text-transform: uppercase;
+    }
+
+    .usage-stack {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 7px;
+    }
+
+    .usage-pill {
+        display: inline-flex;
+        align-items: center;
+        min-height: 30px;
+        padding: 5px 9px;
+        border: 1px solid #dbe4ee;
+        border-radius: 7px;
+        background: #f8fafc;
+        color: #344054;
+        font-weight: 800;
+        white-space: nowrap;
+    }
+
+    @media (max-width: 1199px) {
+        .metric-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+
+    @media (max-width: 767px) {
+        .oxi-header,
+        .table-toolbar,
+        .table-actions {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .unit-panel {
+            min-width: 0;
+        }
+
+        .unit-options {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .metric-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .daterange-input {
+            max-width: none;
+        }
     }
 </style>
 
-<div class="page-header">
-    <h3><i class="fas fa-heartbeat me-2"></i> Oxi-Monitor</h3>
-</div>
+<div class="oxi-page">
+    <div class="oxi-header">
+        <div>
+            <h3 class="oxi-title">
+                <span class="oxi-title-icon"><i class="fas fa-heartbeat"></i></span>
+                Oxi-Monitor
+            </h3>
+            <p class="oxi-subtitle">Pantau pemakaian oksigen dengan konversi satuan yang bisa dipilih.</p>
+        </div>
 
-<!-- Metrics Row 1 -->
-<div class="row">
-    <div class="col-md-3">
-        <div class="metric-card primary shadow-sm border-0">
-            <span class="metric-unit">L/min</span>
-            <p>
-                <span class="live-indicator"></span>Aktual
-                <span class="ms-1" style="cursor: pointer; opacity: 0.7;" onclick="$('#interval-config').toggle()">
-                    <i class="fas fa-cog fa-xs"></i>
-                </span>
-            </p>
-            <h3 id="current_flow">0,000</h3>
-            <div id="interval-config" style="display: none; margin-top: 10px;">
+        <div class="unit-panel">
+            <div class="unit-panel-label">Satuan ditampilkan</div>
+            <div class="unit-options" id="unit-options">
+                <label class="unit-option"><input type="checkbox" value="m3" checked>m3</label>
+                <label class="unit-option"><input type="checkbox" value="galon">Galon</label>
+                <label class="unit-option"><input type="checkbox" value="liter">Liter</label>
+                <label class="unit-option"><input type="checkbox" value="kg">Kg</label>
+            </div>
+        </div>
+    </div>
+
+    <div class="metric-grid">
+        <div class="metric-card primary">
+            <div class="metric-topline">
+                <p class="metric-label"><span class="live-dot"></span>Aktual</p>
+                <span class="metric-badge">L/min</span>
+            </div>
+            <h3 class="metric-value" id="current_flow">0,000</h3>
+            <button type="button" class="interval-toggle mt-2" id="interval-toggle">
+                <i class="fas fa-cog fa-sm me-1"></i> Interval flow
+            </button>
+            <div class="interval-config" id="interval-config">
                 <div class="input-group input-group-sm">
-                    <span class="input-group-text bg-transparent text-white border-white-50">Int (ms)</span>
-                    <input type="number" id="flow_interval_input" class="form-control bg-transparent text-white border-white-50" value="500" step="100" min="100">
+                    <span class="input-group-text">ms</span>
+                    <input type="number" id="flow_interval_input" class="form-control" value="500" step="100" min="100">
                 </div>
             </div>
         </div>
-    </div>
-    <div class="col-md-3">
-        <div class="metric-card shadow-sm border-0">
-            <span class="metric-unit">m³</span>
-            <p>Hari ini</p>
-            <h3 id="usage_today">0,000</h3>
-        </div>
-    </div>
-    <div class="col-md-3">
-        <div class="metric-card shadow-sm border-0">
-            <span class="metric-unit">m³</span>
-            <p>3 Hari Terakhir</p>
-            <h3 id="usage_3_days">0,000</h3>
-        </div>
-    </div>
-    <div class="col-md-3">
-        <div class="metric-card shadow-sm border-0">
-            <span class="metric-unit">m³</span>
-            <p>7 Hari Terakhir</p>
-            <h3 id="usage_7_days">0,000</h3>
-        </div>
-    </div>
-</div>
 
-<!-- Metrics Row 2 -->
-<div class="row">
-    <div class="col-md-6">
-        <div class="metric-card shadow-sm border-0">
-            <span class="metric-unit">m³</span>
-            <p><i class="fas fa-chart-line me-1"></i> Rata-rata 3 Hari</p>
-            <h3 id="avg_3_days">0,000</h3>
+        <div class="metric-card" data-metric="usage_today">
+            <div class="metric-topline">
+                <p class="metric-label">Hari ini</p>
+                <span class="metric-badge">Live</span>
+            </div>
+            <h3 class="metric-value metric-main">0,000</h3>
+            <div class="metric-conversions"></div>
         </div>
-    </div>
-    <div class="col-md-6">
-        <div class="metric-card shadow-sm border-0">
-            <span class="metric-unit">m³</span>
-            <p><i class="fas fa-chart-line me-1"></i> Rata-rata 7 Hari</p>
-            <h3 id="avg_7_days">0,000</h3>
-        </div>
-    </div>
-</div>
 
-<!-- Metrics Row 3 -->
-<div class="row">
-    <div class="col-md-6">
-        <div class="metric-card shadow-sm border-0">
-            <span class="metric-unit">m³</span>
-            <p>14 Hari Terakhir</p>
-            <h3 id="usage_14_days">0,000</h3>
+        <div class="metric-card" data-metric="usage_3_days">
+            <div class="metric-topline">
+                <p class="metric-label">3 Hari Terakhir</p>
+                <span class="metric-badge">Total</span>
+            </div>
+            <h3 class="metric-value metric-main">0,000</h3>
+            <div class="metric-conversions"></div>
+        </div>
+
+        <div class="metric-card" data-metric="usage_7_days">
+            <div class="metric-topline">
+                <p class="metric-label">7 Hari Terakhir</p>
+                <span class="metric-badge">Total</span>
+            </div>
+            <h3 class="metric-value metric-main">0,000</h3>
+            <div class="metric-conversions"></div>
+        </div>
+
+        <div class="metric-card" data-metric="avg_3_days">
+            <div class="metric-topline">
+                <p class="metric-label"><i class="fas fa-chart-line"></i> Rata-rata 3 Hari</p>
+                <span class="metric-badge">Avg</span>
+            </div>
+            <h3 class="metric-value metric-main">0,000</h3>
+            <div class="metric-conversions"></div>
+        </div>
+
+        <div class="metric-card" data-metric="avg_7_days">
+            <div class="metric-topline">
+                <p class="metric-label"><i class="fas fa-chart-line"></i> Rata-rata 7 Hari</p>
+                <span class="metric-badge">Avg</span>
+            </div>
+            <h3 class="metric-value metric-main">0,000</h3>
+            <div class="metric-conversions"></div>
+        </div>
+
+        <div class="metric-card" data-metric="usage_14_days">
+            <div class="metric-topline">
+                <p class="metric-label">14 Hari Terakhir</p>
+                <span class="metric-badge">Total</span>
+            </div>
+            <h3 class="metric-value metric-main">0,000</h3>
+            <div class="metric-conversions"></div>
+        </div>
+
+        <div class="metric-card" data-metric="usage_30_days">
+            <div class="metric-topline">
+                <p class="metric-label">1 Bulan Terakhir</p>
+                <span class="metric-badge">Total</span>
+            </div>
+            <h3 class="metric-value metric-main">0,000</h3>
+            <div class="metric-conversions"></div>
         </div>
     </div>
-    <div class="col-md-6">
-        <div class="metric-card shadow-sm border-0">
-            <span class="metric-unit">m³</span>
-            <p>1 Bulan Terakhir</p>
-            <h3 id="usage_30_days">0,000</h3>
-        </div>
-    </div>
-</div>
 
-<!-- Log Data Section -->
-<h4 class="section-title mt-4"><i class="fas fa-list-alt me-2"></i> Log Data</h4>
-
-<div class="card card-table shadow-sm border-0">
-    <div class="card-body">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <div></div>
-            <div class="input-group daterange-input">
-                <span class="input-group-text bg-white">
-                    <i class="far fa-calendar-alt"></i>
-                </span>
-                <input type="text" class="form-control" id="daterange" placeholder="Pilih Rentang Tanggal">
+    <div class="table-shell">
+        <div class="table-toolbar">
+            <div>
+                <h4 class="section-title"><i class="fas fa-list-alt me-2"></i> Tabel Harian</h4>
+            </div>
+            <div class="table-actions">
+                <label class="refresh-toggle">
+                    <input type="checkbox" id="table_auto_refresh" checked>
+                    <span class="refresh-switch"></span>
+                    Auto refresh
+                </label>
+                <div class="input-group daterange-input">
+                    <span class="input-group-text bg-white">
+                        <i class="far fa-calendar-alt"></i>
+                    </span>
+                    <input type="text" class="form-control" id="daterange" placeholder="Pilih Rentang Tanggal">
+                </div>
             </div>
         </div>
-        
-        <table id="logTable" class="table table-striped table-hover" style="width:100%">
-            <thead class="table-light">
-                <tr>
-                    <th>No</th>
-                    <th>Tanggal</th>
-                    <th>Total (m³)</th>
-                </tr>
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
+
+        <div class="oxi-table-wrap">
+            <table id="logTable" class="table table-hover align-middle" style="width:100%">
+                <thead>
+                    <tr>
+                        <th style="width: 72px;">No</th>
+                        <th>Tanggal</th>
+                        <th>Total pemakaian</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
     </div>
 </div>
 
 @endsection
 
 @section('scripts')
-<!-- Date Range Picker Dependencies -->
+@php
+    $endpointUrls = $oximonitorUrls ?? [
+        'metrics' => url('/admin/oximonitor/metrics'),
+        'currentFlow' => url('/admin/oximonitor/current-flow'),
+        'data' => url('/admin/oximonitor/data'),
+    ];
+@endphp
+
 <script src="{{ asset('assets/vendor/moment/moment.min.js') }}"></script>
 <script src="{{ asset('assets/vendor/daterangepicker/daterangepicker.min.js') }}"></script>
 <link rel="stylesheet" href="{{ asset('assets/vendor/daterangepicker/daterangepicker.css') }}" />
 
-<!-- DataTables -->
 <script src="{{ asset('assets/vendor/datatables/jquery.dataTables.min.js') }}"></script>
 <script src="{{ asset('assets/vendor/datatables/dataTables.bootstrap5.min.js') }}"></script>
 <link rel="stylesheet" href="{{ asset('assets/vendor/datatables/dataTables.bootstrap5.min.css') }}" />
 
 <script>
 $(document).ready(function() {
-    // Initialize Date Range Picker
+    const endpointUrls = @json($endpointUrls);
+
+    const units = {
+        m3: { label: 'm3', factor: 1, decimals: 3 },
+        galon: { label: 'Galon', factor: 0.2982, decimals: 3 },
+        liter: { label: 'Liter', factor: 1.1288, decimals: 3 },
+        kg: { label: 'Kg', factor: 1.2876, decimals: 3 }
+    };
+
+    let latestMetrics = {};
+
+    function getSelectedUnits() {
+        const selected = $('#unit-options input:checked').map(function() {
+            return this.value;
+        }).get();
+
+        return selected.length ? selected : ['m3'];
+    }
+
+    function formatNumber(value, decimals = 3) {
+        const number = Number(value || 0);
+        return number.toLocaleString('id-ID', {
+            minimumFractionDigits: decimals,
+            maximumFractionDigits: decimals
+        });
+    }
+
+    function convertValue(rawM3, unitKey) {
+        const unit = units[unitKey] || units.m3;
+        return Number(rawM3 || 0) * unit.factor;
+    }
+
+    function renderUnitValue(rawM3, unitKey) {
+        const unit = units[unitKey] || units.m3;
+        return `${formatNumber(convertValue(rawM3, unitKey), unit.decimals)} ${unit.label}`;
+    }
+
+    function renderMetricCard(metricKey, rawM3) {
+        const selected = getSelectedUnits();
+        const mainUnit = selected[0];
+        const $card = $(`[data-metric="${metricKey}"]`);
+        const $main = $card.find('.metric-main');
+        const $badge = $card.find('.metric-badge');
+        const $conversions = $card.find('.metric-conversions');
+
+        $main.text(formatNumber(convertValue(rawM3, mainUnit), units[mainUnit].decimals));
+        $badge.text(units[mainUnit].label);
+        $conversions.empty();
+
+        selected.slice(1).forEach(function(unitKey) {
+            $conversions.append(`
+                <div class="conversion-row">
+                    <span>${units[unitKey].label}</span>
+                    <strong>${formatNumber(convertValue(rawM3, unitKey), units[unitKey].decimals)}</strong>
+                </div>
+            `);
+        });
+    }
+
+    function renderAllMetrics() {
+        Object.keys(latestMetrics).forEach(function(metricKey) {
+            renderMetricCard(metricKey, latestMetrics[metricKey]);
+        });
+    }
+
+    function renderUsageStack(rawM3) {
+        return `<div class="usage-stack">${getSelectedUnits().map(function(unitKey) {
+            return `<span class="usage-pill">${renderUnitValue(rawM3, unitKey)}</span>`;
+        }).join('')}</div>`;
+    }
+
+    function saveSelectedUnits() {
+        localStorage.setItem('oximonitor_units', JSON.stringify(getSelectedUnits()));
+    }
+
+    function restoreSelectedUnits() {
+        let savedUnits = ['m3'];
+
+        try {
+            savedUnits = JSON.parse(localStorage.getItem('oximonitor_units')) || ['m3'];
+        } catch (e) {
+            savedUnits = ['m3'];
+        }
+
+        if (!savedUnits.length) savedUnits = ['m3'];
+
+        $('#unit-options input').each(function() {
+            $(this).prop('checked', savedUnits.includes(this.value));
+        });
+    }
+
+    restoreSelectedUnits();
+
+    const savedTableAutoRefresh = localStorage.getItem('oximonitor_table_auto_refresh');
+    if (savedTableAutoRefresh !== null) {
+        $('#table_auto_refresh').prop('checked', savedTableAutoRefresh === '1');
+    }
+
     $('#daterange').daterangepicker({
         startDate: moment().subtract(29, 'days'),
         endDate: moment(),
@@ -242,7 +663,7 @@ $(document).ready(function() {
             toLabel: 'Sampai',
             customRangeLabel: 'Kustom',
             daysOfWeek: ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'],
-            monthNames: ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 
+            monthNames: ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
                          'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'],
             firstDay: 1
         },
@@ -256,10 +677,9 @@ $(document).ready(function() {
         }
     });
 
-    // Initialize DataTable
     var table = $('#logTable').DataTable({
         ajax: {
-            url: '{{ url("/admin/oximonitor/data") }}',
+            url: endpointUrls.data,
             type: 'POST',
             headers: {
                 'X-CSRF-TOKEN': '{{ csrf_token() }}'
@@ -274,6 +694,7 @@ $(document).ready(function() {
         serverSide: true,
         searching: false,
         ordering: false,
+        autoWidth: false,
         language: {
             processing: '<div class="spinner-border spinner-border-sm text-primary" role="status"><span class="visually-hidden">Loading...</span></div> Memuat...',
             lengthMenu: 'Tampilkan _MENU_ data',
@@ -289,31 +710,43 @@ $(document).ready(function() {
             }
         },
         columns: [
-            { data: 0 },
-            { data: 1 },
-            { data: 2 }
+            { data: 'no' },
+            { data: 'date' },
+            {
+                data: 'usage_raw',
+                render: function(data) {
+                    return renderUsageStack(data);
+                }
+            }
         ]
     });
 
-    // Reload table when date range changes
-    $('#daterange').on('apply.daterangepicker', function(ev, picker) {
-        table.ajax.reload();
+    $('#daterange').on('apply.daterangepicker', function() {
+        table.ajax.reload(null, false);
     });
 
-    // Real-time Metrics Update
+    $('#unit-options input').on('change', function() {
+        if ($('#unit-options input:checked').length === 0) {
+            $(this).prop('checked', true);
+        }
+
+        saveSelectedUnits();
+        renderAllMetrics();
+        table.rows().invalidate('data').draw(false);
+    });
+
+    $('#table_auto_refresh').on('change', function() {
+        localStorage.setItem('oximonitor_table_auto_refresh', this.checked ? '1' : '0');
+    });
+
     function updateMetrics() {
         $.ajax({
-            url: '{{ url("/admin/oximonitor/metrics") }}',
+            url: endpointUrls.metrics,
             method: 'GET',
             dataType: 'json',
             success: function(data) {
-                $('#usage_today').text(data.usage_today);
-                $('#usage_3_days').text(data.usage_3_days);
-                $('#usage_7_days').text(data.usage_7_days);
-                $('#avg_3_days').text(data.avg_3_days);
-                $('#avg_7_days').text(data.avg_7_days);
-                $('#usage_14_days').text(data.usage_14_days);
-                $('#usage_30_days').text(data.usage_30_days);
+                latestMetrics = data.raw || {};
+                renderAllMetrics();
             },
             error: function(xhr) {
                 console.error('Failed to fetch metrics:', xhr);
@@ -333,7 +766,6 @@ $(document).ready(function() {
         let mockFlow = localStorage.getItem('oximonitor_mock_flow');
         if (mockFlow) {
             $('#current_flow').text(mockFlow);
-            // Even with mock, we respect the interval
             if (flowTimer) clearTimeout(flowTimer);
             flowTimer = setTimeout(updateCurrentFlow, flowInterval);
             return;
@@ -341,7 +773,7 @@ $(document).ready(function() {
 
         isRequestPending = true;
         $.ajax({
-            url: '{{ url("/admin/oximonitor/current-flow") }}',
+            url: endpointUrls.currentFlow,
             method: 'GET',
             dataType: 'json',
             success: function(data) {
@@ -352,7 +784,6 @@ $(document).ready(function() {
             },
             complete: function() {
                 isRequestPending = false;
-                // Schedule next update only after previous one finishes
                 if (flowTimer) clearTimeout(flowTimer);
                 flowTimer = setTimeout(updateCurrentFlow, flowInterval);
             }
@@ -361,12 +792,16 @@ $(document).ready(function() {
 
     function startFlowTimer() {
         if (flowTimer) clearTimeout(flowTimer);
-        isRequestPending = false; // Reset flag to allow immediate update
+        isRequestPending = false;
         updateCurrentFlow();
     }
 
+    $('#interval-toggle').on('click', function() {
+        $('#interval-config').slideToggle(140);
+    });
+
     $('#flow_interval_input').on('change', function() {
-        let newVal = $(this).val();
+        let newVal = Number($(this).val());
         if (newVal >= 100) {
             flowInterval = newVal;
             localStorage.setItem('oximonitor_flow_interval', flowInterval);
@@ -374,25 +809,15 @@ $(document).ready(function() {
         }
     });
 
-    $('#mock_flow_input').on('change', function() {
-        let val = $(this).val();
-        if (val) {
-            localStorage.setItem('oximonitor_mock_flow', val);
-        } else {
-            localStorage.removeItem('oximonitor_mock_flow');
-        }
-    });
-
-    // Load initial mock value
-    $('#mock_flow_input').val(localStorage.getItem('oximonitor_mock_flow'));
-
-    // Initial load
     updateMetrics();
-    updateCurrentFlow();
     startFlowTimer();
-    
-    // Poll other metrics every 2 seconds
-    setInterval(updateMetrics, 2000);
+
+    setInterval(function() {
+        updateMetrics();
+        if ($('#table_auto_refresh').is(':checked')) {
+            table.ajax.reload(null, false);
+        }
+    }, 2000);
 });
 </script>
 @endsection

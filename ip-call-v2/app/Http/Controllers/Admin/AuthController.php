@@ -27,6 +27,14 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
+
+            if (
+                Auth::user()->username === 'oximonitor'
+                && ! config('app.oximonitor_can_access_admin')
+            ) {
+                return redirect('/oximonitor');
+            }
+
             return redirect()->intended('/admin');
         }
 

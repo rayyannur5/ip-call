@@ -96,6 +96,13 @@ Route::group(['prefix' => 'server'], function () {
 Route::get('/login', [App\Http\Controllers\Admin\AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [App\Http\Controllers\Admin\AuthController::class, 'login']);
 Route::any('/logout', [App\Http\Controllers\Admin\AuthController::class, 'logout'])->name('logout'); 
+Route::get('/monitor', function () {
+    return redirect('/oximonitor');
+})->middleware('auth');
+Route::get('/oximonitor', [App\Http\Controllers\Admin\OxiMonitorController::class, 'standalone'])->middleware('auth');
+Route::get('/oximonitor/metrics', [App\Http\Controllers\Admin\OxiMonitorController::class, 'metrics'])->middleware('auth');
+Route::get('/oximonitor/current-flow', [App\Http\Controllers\Admin\OxiMonitorController::class, 'currentFlow'])->middleware('auth');
+Route::post('/oximonitor/data', [App\Http\Controllers\Admin\OxiMonitorController::class, 'getData'])->middleware('auth');
 
 // Static files routes (legacy compatibility)
 Route::get('/admin/static/{file}', function ($file) {
@@ -115,7 +122,7 @@ Route::get('/admin/uploads/{file}', function ($file) {
 })->where('file', '.*');
 
 // Admin Routes (Public - No Auth Required)
-Route::group(['prefix' => 'admin'], function () {
+Route::group(['prefix' => 'admin', 'middleware' => 'restrict.oximonitor.admin'], function () {
     Route::get('/', [App\Http\Controllers\Admin\DashboardController::class, 'index']);
     Route::get('/messages', [App\Http\Controllers\Admin\MessageController::class, 'index'])->name('messages.index');
     Route::get('/messages/export/{type}', [App\Http\Controllers\Admin\MessageController::class, 'export'])->name('messages.export');
@@ -134,7 +141,7 @@ Route::group(['prefix' => 'admin'], function () {
 });
 
 // Admin Routes (Protected - Teknisi Only)
-Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
+Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'restrict.oximonitor.admin']], function () {
     // Audio management
     Route::post('/audio/store', [App\Http\Controllers\Admin\AudioController::class, 'store']);
     Route::get('/audio/destroy/{id}', [App\Http\Controllers\Admin\AudioController::class, 'destroy']);

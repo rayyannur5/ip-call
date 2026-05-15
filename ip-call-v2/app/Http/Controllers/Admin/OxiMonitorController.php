@@ -15,6 +15,18 @@ class OxiMonitorController extends Controller
         return view('admin.oximonitor.index');
     }
 
+    public function standalone()
+    {
+        return view('admin.oximonitor.index', [
+            'layout' => 'layouts.oximonitor',
+            'oximonitorUrls' => [
+                'metrics' => url('/oximonitor/metrics'),
+                'currentFlow' => url('/oximonitor/current-flow'),
+                'data' => url('/oximonitor/data'),
+            ],
+        ]);
+    }
+
     /**
      * Get metrics data for AJAX
      */
@@ -74,6 +86,15 @@ class OxiMonitorController extends Controller
             'avg_7_days' => $fmt($avg7Days),
             'usage_14_days' => $fmt($usage14Days),
             'usage_30_days' => $fmt($usage30Days),
+            'raw' => [
+                'usage_today' => $usageToday,
+                'usage_3_days' => $usage3Days,
+                'usage_7_days' => $usage7Days,
+                'avg_3_days' => $avg3Days,
+                'avg_7_days' => $avg7Days,
+                'usage_14_days' => $usage14Days,
+                'usage_30_days' => $usage30Days,
+            ],
         ]);
     }
 
@@ -161,9 +182,10 @@ class OxiMonitorController extends Controller
             $dateFmt = $dateObj->format('d') . ' ' . ($months[$monthName] ?? $monthName) . ' ' . $dateObj->format('Y');
 
             $data[] = [
-                $no++,
-                $dateFmt,
-                $usageFmt
+                'no' => $no++,
+                'date' => $dateFmt,
+                'usage' => $usageFmt,
+                'usage_raw' => $usage,
             ];
         }
 

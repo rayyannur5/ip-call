@@ -59,6 +59,8 @@ return [
 
     'asset_url' => env('ASSET_URL'),
 
+    'oximonitor_can_access_admin' => (bool) env('OXIMONITOR_CAN_ACCESS_ADMIN', false),
+
     /*
     |--------------------------------------------------------------------------
     | Application Timezone
