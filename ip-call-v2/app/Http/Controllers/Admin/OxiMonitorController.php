@@ -6,10 +6,54 @@ use App\Http\Controllers\Controller;
 use App\Models\OxiMonitorLog;
 use App\Models\OxiMonitorStatus;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class OxiMonitorController extends Controller
 {
+    private function formatIndonesianDate($date): string
+    {
+        if (! $date) {
+            return '-';
+        }
+
+        $months = [
+            'January' => 'Januari', 'February' => 'Februari', 'March' => 'Maret',
+            'April' => 'April', 'May' => 'Mei', 'June' => 'Juni',
+            'July' => 'Juli', 'August' => 'Agustus', 'September' => 'September',
+            'October' => 'Oktober', 'November' => 'November', 'December' => 'Desember'
+        ];
+
+        $dateObj = \DateTime::createFromFormat('Y-m-d', $date);
+
+        if (! $dateObj) {
+            return $date ?: '-';
+        }
+
+        $monthName = $dateObj->format('F');
+
+        return $dateObj->format('d') . ' ' . ($months[$monthName] ?? $monthName) . ' ' . $dateObj->format('Y');
+    }
+
+    private function getUsageBetween($startDate, $endDate): float
+    {
+        $range = [
+            $startDate . ' 00:00:00',
+            $endDate . ' 23:59:59',
+        ];
+
+        $firstLog = OxiMonitorLog::whereBetween('created_at', $range)
+            ->orderBy('created_at', 'asc')
+            ->first();
+        $lastLog = OxiMonitorLog::whereBetween('created_at', $range)
+            ->orderBy('created_at', 'desc')
+            ->first();
+
+        if (! $firstLog || ! $lastLog) {
+            return 0;
+        }
+
+        return floatval($lastLog->volume) - floatval($firstLog->volume);
+    }
+
     public function index()
     {
         return view('admin.oximonitor.index');
@@ -36,39 +80,17 @@ class OxiMonitorController extends Controller
         $status = OxiMonitorStatus::first();
         $currentFlow = $status ? floatval($status->flow_rate) : 0;
 
-        // Helper function to get volume at a specific date
-        $getVolumeAtDate = function($date) {
-            $log = OxiMonitorLog::whereDate('created_at', '<=', $date)
-                ->orderBy('created_at', 'desc')
-                ->first();
-            return $log ? floatval($log->volume) : 0;
-        };
-
-        // Get latest volume
-        $latestLog = OxiMonitorLog::orderBy('created_at', 'desc')->first();
-        $latestVolume = $latestLog ? floatval($latestLog->volume) : 0;
-
         $today = now()->format('Y-m-d');
-        $yesterday = now()->subDay()->format('Y-m-d');
-        $threeDaysAgo = now()->subDays(3)->format('Y-m-d');
-        $sevenDaysAgo = now()->subDays(7)->format('Y-m-d');
-        $fourteenDaysAgo = now()->subDays(14)->format('Y-m-d');
-        $thirtyDaysAgo = now()->subDays(30)->format('Y-m-d');
+        $threeDaysStart = now()->subDays(2)->format('Y-m-d');
+        $sevenDaysStart = now()->subDays(6)->format('Y-m-d');
+        $fourteenDaysStart = now()->subDays(13)->format('Y-m-d');
+        $thirtyDaysStart = now()->subDays(29)->format('Y-m-d');
 
-        $volYesterdayEnd = $getVolumeAtDate($yesterday);
-        $usageToday = $latestVolume - $volYesterdayEnd;
-
-        $vol3DaysAgo = $getVolumeAtDate($threeDaysAgo);
-        $usage3Days = $latestVolume - $vol3DaysAgo;
-
-        $vol7DaysAgo = $getVolumeAtDate($sevenDaysAgo);
-        $usage7Days = $latestVolume - $vol7DaysAgo;
-
-        $vol14DaysAgo = $getVolumeAtDate($fourteenDaysAgo);
-        $usage14Days = $latestVolume - $vol14DaysAgo;
-
-        $vol30DaysAgo = $getVolumeAtDate($thirtyDaysAgo);
-        $usage30Days = $latestVolume - $vol30DaysAgo;
+        $usageToday = $this->getUsageBetween($today, $today);
+        $usage3Days = $this->getUsageBetween($threeDaysStart, $today);
+        $usage7Days = $this->getUsageBetween($sevenDaysStart, $today);
+        $usage14Days = $this->getUsageBetween($fourteenDaysStart, $today);
+        $usage30Days = $this->getUsageBetween($thirtyDaysStart, $today);
 
         $avg3Days = $usage3Days / 3;
         $avg7Days = $usage7Days / 7;
@@ -151,39 +173,30 @@ class OxiMonitorController extends Controller
         $data = [];
         $no = $start + 1;
 
-        // Helper function to get volume at date
-        $getVolumeAtDate = function($date) {
-            $log = OxiMonitorLog::whereDate('created_at', '<=', $date)
-                ->orderBy('created_at', 'desc')
-                ->first();
-            return $log ? floatval($log->volume) : 0;
-        };
+        $summaryStartDate = $startDate;
+        $summaryEndDate = $endDate;
 
-        // Indonesian month names
-        $months = [
-            'January' => 'Januari', 'February' => 'Februari', 'March' => 'Maret', 
-            'April' => 'April', 'May' => 'Mei', 'June' => 'Juni', 
-            'July' => 'Juli', 'August' => 'Agustus', 'September' => 'September', 
-            'October' => 'Oktober', 'November' => 'November', 'December' => 'Desember'
-        ];
+        if (! $summaryStartDate || ! $summaryEndDate) {
+            $dateBoundsQuery = OxiMonitorLog::selectRaw('MIN(DATE(created_at)) as start_date, MAX(DATE(created_at)) as end_date')
+                ->first();
+
+            $summaryStartDate = $summaryStartDate ?: ($dateBoundsQuery->start_date ?? null);
+            $summaryEndDate = $summaryEndDate ?: ($dateBoundsQuery->end_date ?? null);
+        }
+
+        $summaryUsage = 0;
+
+        if ($summaryStartDate && $summaryEndDate) {
+            $summaryUsage = $this->getUsageBetween($summaryStartDate, $summaryEndDate);
+        }
 
         foreach ($dates as $date) {
-            $prevDate = date('Y-m-d', strtotime($date . ' -1 day'));
-
-            $volToday = $getVolumeAtDate($date);
-            $volYesterday = $getVolumeAtDate($prevDate);
-
-            $usage = $volToday - $volYesterday;
+            $usage = $this->getUsageBetween($date, $date);
             $usageFmt = number_format($usage, 3, ',', '.');
-
-            // Format date to Indonesian
-            $dateObj = \DateTime::createFromFormat('Y-m-d', $date);
-            $monthName = $dateObj->format('F');
-            $dateFmt = $dateObj->format('d') . ' ' . ($months[$monthName] ?? $monthName) . ' ' . $dateObj->format('Y');
 
             $data[] = [
                 'no' => $no++,
-                'date' => $dateFmt,
+                'date' => $this->formatIndonesianDate($date),
                 'usage' => $usageFmt,
                 'usage_raw' => $usage,
             ];
@@ -193,7 +206,15 @@ class OxiMonitorController extends Controller
             'draw' => $draw,
             'recordsTotal' => $totalRecords,
             'recordsFiltered' => $filteredRecords,
-            'data' => $data
+            'data' => $data,
+            'summary' => [
+                'start_date' => $summaryStartDate,
+                'end_date' => $summaryEndDate,
+                'start_date_label' => $this->formatIndonesianDate($summaryStartDate),
+                'end_date_label' => $this->formatIndonesianDate($summaryEndDate),
+                'total_usage' => $summaryUsage,
+                'days' => $filteredRecords,
+            ],
         ]);
     }
 }
