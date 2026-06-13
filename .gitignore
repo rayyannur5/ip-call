@@ -2,3 +2,5 @@
 /log/
 python/logs/*
 *.log
+._*
+*.txt
