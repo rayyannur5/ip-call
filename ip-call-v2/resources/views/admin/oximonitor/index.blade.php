@@ -328,6 +328,53 @@
         transform: translateX(20px);
     }
 
+    .daily-summary-card {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 16px;
+        align-items: center;
+        margin: 18px 20px 0;
+        padding: 16px 18px;
+        border: 1px solid #bcebe4;
+        border-radius: 8px;
+        background: #ecfdf9;
+    }
+
+    .daily-summary-title {
+        margin: 0 0 6px;
+        color: #0f766e;
+        font-size: 0.82rem;
+        font-weight: 900;
+        letter-spacing: .04em;
+        text-transform: uppercase;
+    }
+
+    .daily-summary-range {
+        margin: 0;
+        color: #344054;
+        font-size: 0.96rem;
+        font-weight: 800;
+    }
+
+    .daily-summary-total {
+        display: grid;
+        justify-items: end;
+        gap: 8px;
+        min-width: 260px;
+    }
+
+    .daily-summary-main {
+        color: #111827;
+        font-size: 1.45rem;
+        line-height: 1.1;
+        font-weight: 900;
+        white-space: nowrap;
+    }
+
+    .daily-summary-total .usage-stack {
+        justify-content: flex-end;
+    }
+
     .oxi-table-wrap {
         padding: 18px 20px 20px;
     }
@@ -372,9 +419,23 @@
     @media (max-width: 767px) {
         .oxi-header,
         .table-toolbar,
+        .daily-summary-card,
         .table-actions {
             flex-direction: column;
             align-items: stretch;
+        }
+
+        .daily-summary-card {
+            display: flex;
+        }
+
+        .daily-summary-total {
+            justify-items: start;
+            min-width: 0;
+        }
+
+        .daily-summary-total .usage-stack {
+            justify-content: flex-start;
         }
 
         .unit-panel {
@@ -518,6 +579,17 @@
             </div>
         </div>
 
+        <div class="daily-summary-card" id="daily-summary-card">
+            <div>
+                <p class="daily-summary-title">Data Rangkuman Tabel Harian</p>
+                <p class="daily-summary-range" id="daily-summary-range">Data dari - ke -</p>
+            </div>
+            <div class="daily-summary-total">
+                <div class="daily-summary-main" id="daily-summary-main">0,000 m3</div>
+                <div id="daily-summary-conversions"></div>
+            </div>
+        </div>
+
         <div class="oxi-table-wrap">
             <table id="logTable" class="table table-hover align-middle" style="width:100%">
                 <thead>
@@ -564,6 +636,7 @@ $(document).ready(function() {
     };
 
     let latestMetrics = {};
+    let latestTableSummary = null;
 
     function getSelectedUnits() {
         const selected = $('#unit-options input:checked').map(function() {
@@ -623,6 +696,29 @@ $(document).ready(function() {
         return `<div class="usage-stack">${getSelectedUnits().map(function(unitKey) {
             return `<span class="usage-pill">${renderUnitValue(rawM3, unitKey)}</span>`;
         }).join('')}</div>`;
+    }
+
+    function renderDailySummary(summary) {
+        latestTableSummary = summary || latestTableSummary;
+
+        if (!latestTableSummary) return;
+
+        const selected = getSelectedUnits();
+        const mainUnit = selected[0];
+        const totalUsage = Number(latestTableSummary.total_usage || 0);
+        const startDate = latestTableSummary.start_date_label || '-';
+        const endDate = latestTableSummary.end_date_label || '-';
+
+        $('#daily-summary-range').text(`Data dari ${startDate} ke ${endDate}`);
+        $('#daily-summary-main').text(renderUnitValue(totalUsage, mainUnit));
+
+        $('#daily-summary-conversions').html(
+            selected.length > 1
+                ? `<div class="usage-stack">${selected.slice(1).map(function(unitKey) {
+                    return `<span class="usage-pill">${renderUnitValue(totalUsage, unitKey)}</span>`;
+                }).join('')}</div>`
+                : ''
+        );
     }
 
     function saveSelectedUnits() {
@@ -688,6 +784,10 @@ $(document).ready(function() {
                 var drp = $('#daterange').data('daterangepicker');
                 d.startDate = drp.startDate.format('YYYY-MM-DD');
                 d.endDate = drp.endDate.format('YYYY-MM-DD');
+            },
+            dataSrc: function(json) {
+                renderDailySummary(json.summary);
+                return json.data || [];
             }
         },
         processing: true,
@@ -732,6 +832,7 @@ $(document).ready(function() {
 
         saveSelectedUnits();
         renderAllMetrics();
+        renderDailySummary();
         table.rows().invalidate('data').draw(false);
     });
 
