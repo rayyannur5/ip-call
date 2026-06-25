@@ -329,15 +329,19 @@
     }
 
     .daily-summary-card {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr) auto;
-        gap: 16px;
+        display: flex;
+        justify-content: space-between;
         align-items: center;
+        gap: 24px;
         margin: 18px 20px 0;
         padding: 16px 18px;
         border: 1px solid #bcebe4;
         border-radius: 8px;
         background: #ecfdf9;
+    }
+
+    .daily-summary-info {
+        flex: 1;
     }
 
     .daily-summary-title {
@@ -356,11 +360,26 @@
         font-weight: 800;
     }
 
-    .daily-summary-total {
+    .daily-summary-stats {
+        display: flex;
+        gap: 32px;
+        align-items: flex-start;
+    }
+
+    .daily-summary-block {
         display: grid;
         justify-items: end;
-        gap: 8px;
-        min-width: 260px;
+        gap: 6px;
+        min-width: 200px;
+    }
+
+    .daily-summary-label {
+        margin: 0 0 2px;
+        color: #0f766e;
+        font-size: 0.78rem;
+        font-weight: 800;
+        letter-spacing: .04em;
+        text-transform: uppercase;
     }
 
     .daily-summary-main {
@@ -371,7 +390,7 @@
         white-space: nowrap;
     }
 
-    .daily-summary-total .usage-stack {
+    .daily-summary-block .usage-stack {
         justify-content: flex-end;
     }
 
@@ -427,14 +446,21 @@
 
         .daily-summary-card {
             display: flex;
+            gap: 16px;
         }
 
-        .daily-summary-total {
+        .daily-summary-stats {
+            flex-direction: column;
+            gap: 16px;
+            align-items: stretch;
+        }
+
+        .daily-summary-block {
             justify-items: start;
             min-width: 0;
         }
 
-        .daily-summary-total .usage-stack {
+        .daily-summary-block .usage-stack {
             justify-content: flex-start;
         }
 
@@ -576,17 +602,28 @@
                     </span>
                     <input type="text" class="form-control" id="daterange" placeholder="Pilih Rentang Tanggal">
                 </div>
+                <button type="button" class="btn btn-success d-inline-flex align-items-center" id="btn-export" style="background: #107c41; border-color: #107c41; font-weight: 800; font-size: 0.88rem; height: 38px; border-radius: 8px;">
+                    <i class="fas fa-file-excel me-2"></i> Export Excel
+                </button>
             </div>
         </div>
 
         <div class="daily-summary-card" id="daily-summary-card">
-            <div>
+            <div class="daily-summary-info">
                 <p class="daily-summary-title">Data Rangkuman Tabel Harian</p>
                 <p class="daily-summary-range" id="daily-summary-range">Data dari - ke -</p>
             </div>
-            <div class="daily-summary-total">
-                <div class="daily-summary-main" id="daily-summary-main">0,000 m3</div>
-                <div id="daily-summary-conversions"></div>
+            <div class="daily-summary-stats">
+                <div class="daily-summary-block" id="daily-summary-total-block">
+                    <p class="daily-summary-label">Total Pemakaian</p>
+                    <div class="daily-summary-main" id="daily-summary-main">0,000 m3</div>
+                    <div id="daily-summary-conversions"></div>
+                </div>
+                <div class="daily-summary-block" id="daily-summary-avg-block">
+                    <p class="daily-summary-label">Rata-rata Harian</p>
+                    <div class="daily-summary-main" id="daily-summary-avg-main">0,000 m3</div>
+                    <div id="daily-summary-avg-conversions"></div>
+                </div>
             </div>
         </div>
 
@@ -613,6 +650,7 @@
         'metrics' => url('/admin/oximonitor/metrics'),
         'currentFlow' => url('/admin/oximonitor/current-flow'),
         'data' => url('/admin/oximonitor/data'),
+        'export' => url('/admin/oximonitor/export'),
     ];
 @endphp
 
@@ -706,6 +744,8 @@ $(document).ready(function() {
         const selected = getSelectedUnits();
         const mainUnit = selected[0];
         const totalUsage = Number(latestTableSummary.total_usage || 0);
+        const days = Number(latestTableSummary.days || 1);
+        const avgUsage = totalUsage / (days > 0 ? days : 1);
         const startDate = latestTableSummary.start_date_label || '-';
         const endDate = latestTableSummary.end_date_label || '-';
 
@@ -716,6 +756,16 @@ $(document).ready(function() {
             selected.length > 1
                 ? `<div class="usage-stack">${selected.slice(1).map(function(unitKey) {
                     return `<span class="usage-pill">${renderUnitValue(totalUsage, unitKey)}</span>`;
+                }).join('')}</div>`
+                : ''
+        );
+
+        $('#daily-summary-avg-main').text(renderUnitValue(avgUsage, mainUnit));
+
+        $('#daily-summary-avg-conversions').html(
+            selected.length > 1
+                ? `<div class="usage-stack">${selected.slice(1).map(function(unitKey) {
+                    return `<span class="usage-pill">${renderUnitValue(avgUsage, unitKey)}</span>`;
                 }).join('')}</div>`
                 : ''
         );
@@ -793,7 +843,8 @@ $(document).ready(function() {
         processing: true,
         serverSide: true,
         searching: false,
-        ordering: false,
+        ordering: true,
+        order: [[1, 'desc']],
         autoWidth: false,
         language: {
             processing: '<div class="spinner-border spinner-border-sm text-primary" role="status"><span class="visually-hidden">Loading...</span></div> Memuat...',
@@ -810,10 +861,11 @@ $(document).ready(function() {
             }
         },
         columns: [
-            { data: 'no' },
-            { data: 'date' },
+            { data: 'no', orderable: false },
+            { data: 'date', orderable: true },
             {
                 data: 'usage_raw',
+                orderable: false,
                 render: function(data) {
                     return renderUsageStack(data);
                 }
@@ -823,6 +875,15 @@ $(document).ready(function() {
 
     $('#daterange').on('apply.daterangepicker', function() {
         table.ajax.reload(null, false);
+    });
+
+    $('#btn-export').on('click', function() {
+        var drp = $('#daterange').data('daterangepicker');
+        var startDate = drp.startDate.format('YYYY-MM-DD');
+        var endDate = drp.endDate.format('YYYY-MM-DD');
+        
+        var url = endpointUrls.export + '?startDate=' + startDate + '&endDate=' + endDate;
+        window.location.href = url;
     });
 
     $('#unit-options input').on('change', function() {

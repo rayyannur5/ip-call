@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\OxiMonitorLog;
 use App\Models\OxiMonitorStatus;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\OxiMonitorExport;
 
 class OxiMonitorController extends Controller
 {
@@ -67,6 +69,7 @@ class OxiMonitorController extends Controller
                 'metrics' => url('/oximonitor/metrics'),
                 'currentFlow' => url('/oximonitor/current-flow'),
                 'data' => url('/oximonitor/data'),
+                'export' => url('/oximonitor/export'),
             ],
         ]);
     }
@@ -165,7 +168,15 @@ class OxiMonitorController extends Controller
             $datesQuery->whereRaw('DATE(created_at) BETWEEN ? AND ?', [$startDate, $endDate]);
         }
         
-        $dates = $datesQuery->orderBy('log_date', 'desc')
+        $orderDir = 'desc';
+        if ($request->has('order')) {
+            $order = $request->input('order');
+            if (isset($order[0]['column']) && $order[0]['column'] == 1) {
+                $orderDir = ($order[0]['dir'] === 'asc') ? 'asc' : 'desc';
+            }
+        }
+        
+        $dates = $datesQuery->orderBy('log_date', $orderDir)
             ->offset($start)
             ->limit($limit)
             ->pluck('log_date');
@@ -216,5 +227,16 @@ class OxiMonitorController extends Controller
                 'days' => $filteredRecords,
             ],
         ]);
+    }
+
+    /**
+     * Export log data to Excel
+     */
+    public function export(Request $request)
+    {
+        $startDate = $request->input('startDate');
+        $endDate = $request->input('endDate');
+
+        return Excel::download(new OxiMonitorExport($startDate, $endDate), 'oximonitor_logs.xlsx');
     }
 }
