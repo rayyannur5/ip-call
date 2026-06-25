@@ -64,7 +64,19 @@
                                 {{ \Carbon\Carbon::parse($call->timestamp)->timezone('Asia/Jakarta')->format('d M Y H:i:s') }}
                             </td>
                             <td class="align-middle">{{ $call->bed->username ?? '-' }}</td>
-                            <td class="align-middle">{{ $call->category->name ?? '-' }}</td>
+                            <td class="align-middle">
+                                <span style="height: 10px; width: 10px; background-color: {{ 
+                                    match(strtoupper($call->category->name ?? '')) {
+                                        'INFUS' => '#28a745',
+                                        'TELEPON' => '#ffc107',
+                                        'PERAWAT' => '#fd7e14',
+                                        'DARURAT' => '#dc3545',
+                                        'CODE BLUE' => '#007bff',
+                                        default => '#6c757d',
+                                    }
+                                }}; border-radius: 50%; display: inline-block; margin-right: 5px;"></span>
+                                {{ $call->category->name ?? '-' }}
+                            </td>
                             <td class="align-middle">{{ $call->duration }}</td>
                             <td class="align-middle">
                                 <div style="height: 35px; display: flex; align-items: center;">

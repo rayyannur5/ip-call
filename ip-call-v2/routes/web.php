@@ -103,6 +103,7 @@ Route::get('/oximonitor', [App\Http\Controllers\Admin\OxiMonitorController::clas
 Route::get('/oximonitor/metrics', [App\Http\Controllers\Admin\OxiMonitorController::class, 'metrics'])->middleware('auth');
 Route::get('/oximonitor/current-flow', [App\Http\Controllers\Admin\OxiMonitorController::class, 'currentFlow'])->middleware('auth');
 Route::post('/oximonitor/data', [App\Http\Controllers\Admin\OxiMonitorController::class, 'getData'])->middleware('auth');
+Route::get('/oximonitor/export', [App\Http\Controllers\Admin\OxiMonitorController::class, 'export'])->middleware('auth');
 
 // Static files routes (legacy compatibility)
 Route::get('/admin/static/{file}', function ($file) {
@@ -135,6 +136,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'restrict.oximonitor.admin'],
     Route::get('/oximonitor/metrics', [App\Http\Controllers\Admin\OxiMonitorController::class, 'metrics']);
     Route::get('/oximonitor/current-flow', [App\Http\Controllers\Admin\OxiMonitorController::class, 'currentFlow']);
     Route::post('/oximonitor/data', [App\Http\Controllers\Admin\OxiMonitorController::class, 'getData']);
+    Route::get('/oximonitor/export', [App\Http\Controllers\Admin\OxiMonitorController::class, 'export']);
 
     // Audio (public view)
     Route::get('/audio', [App\Http\Controllers\Admin\AudioController::class, 'index']);

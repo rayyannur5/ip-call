@@ -41,7 +41,62 @@
             </div>
         </form>
 
+        <div class="row mb-4">
+            <!-- Rata-rata Waktu Respon -->
+            <div class="col-md-4 mb-3 mb-md-0">
+                <div class="card bg-light border-0 shadow-sm h-100">
+                    <div class="card-body d-flex align-items-center">
+                        <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px; flex-shrink: 0;">
+                            <i class="fas fa-clock fa-lg"></i>
+                        </div>
+                        <div>
+                            <h6 class="text-muted mb-1" style="font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Rata-rata Waktu Respon</h6>
+                            <h4 class="mb-0 text-dark" style="font-weight: 700;">
+                                @if($averageResponseTime !== null)
+                                    {{ \Carbon\CarbonInterval::seconds(round($averageResponseTime))->cascade()->locale('id')->forHumans() }}
+                                @else
+                                    -
+                                @endif
+                            </h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
+            <!-- Ada Response Time -->
+            <div class="col-md-4 mb-3 mb-md-0">
+                <div class="card bg-light border-0 shadow-sm h-100">
+                    <div class="card-body d-flex align-items-center">
+                        <div class="rounded-circle bg-success text-white d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px; flex-shrink: 0;">
+                            <i class="fas fa-check-circle fa-lg"></i>
+                        </div>
+                        <div>
+                            <h6 class="text-muted mb-1" style="font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Dengan Respon</h6>
+                            <h4 class="mb-0 text-dark" style="font-weight: 700;">
+                                {{ $hasResponseCount }} <span style="font-size: 1rem; font-weight: normal; color: #6c757d;">pesan</span>
+                            </h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tanpa Response Time -->
+            <div class="col-md-4">
+                <div class="card bg-light border-0 shadow-sm h-100">
+                    <div class="card-body d-flex align-items-center">
+                        <div class="rounded-circle bg-danger text-white d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px; flex-shrink: 0;">
+                            <i class="fas fa-times-circle fa-lg"></i>
+                        </div>
+                        <div>
+                            <h6 class="text-muted mb-1" style="font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Tanpa Respon</h6>
+                            <h4 class="mb-0 text-dark" style="font-weight: 700;">
+                                {{ $noResponseCount }} <span style="font-size: 1rem; font-weight: normal; color: #6c757d;">pesan</span>
+                            </h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <table class="table table-bordered table-striped">
             <thead>

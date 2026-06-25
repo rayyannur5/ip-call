@@ -24,10 +24,28 @@ class MessageController extends Controller
             $query->where('category_log_id', $request->category);
         }
 
+        // Calculate average response time for logs with nurse presence
+        $averageResponseTime = (clone $query)->where('nurse_presence', 1)
+            ->whereNotNull('time')
+            ->avg('time');
+
+        // Count messages with and without response times
+        $hasResponseCount = (clone $query)->where('nurse_presence', 1)->count();
+        $noResponseCount = (clone $query)->where(function($q) {
+            $q->where('nurse_presence', '!=', 1)
+              ->orWhereNull('nurse_presence');
+        })->count();
+
         $logs = $query->orderBy('timestamp', 'desc')->paginate(10);
         $categories = CategoryLog::all();
 
-        return view('admin.messages.index', compact('logs', 'categories'));
+        return view('admin.messages.index', compact(
+            'logs', 
+            'categories', 
+            'averageResponseTime', 
+            'hasResponseCount', 
+            'noResponseCount'
+        ));
     }
 
     public function export(Request $request, $type)
