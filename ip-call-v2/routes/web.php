@@ -14,6 +14,7 @@ use App\Http\Controllers\Api\LogController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\MessageController;
 use App\Http\Controllers\Admin\CallController;
+use App\Http\Controllers\Admin\BackupRestoreController;
 
 use App\Http\Controllers\Api\PlaylistController;
 
@@ -194,4 +195,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'restrict.oximonitor
     Route::get('/monitoring', function () {
         return view('admin.monitoring');
     });
+
+    // Backup & Restore
+    Route::get('/backup-restore', [BackupRestoreController::class, 'index'])->name('backup_restore.index');
+    Route::post('/backup-restore/run', [BackupRestoreController::class, 'backup'])->name('backup_restore.run');
+    Route::post('/backup-restore/restore', [BackupRestoreController::class, 'restore'])->name('backup_restore.restore');
 });

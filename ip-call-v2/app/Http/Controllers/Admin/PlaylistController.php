@@ -53,7 +53,7 @@ class PlaylistController extends Controller
     public function storeItem(Request $request)
     {
         $request->validate([
-            'file' => 'required|file|mimes:mp3,wav,ogg',
+            'file' => 'required',
             'playlist_id' => 'required'
         ]);
 

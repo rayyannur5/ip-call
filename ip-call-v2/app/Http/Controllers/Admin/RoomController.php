@@ -491,45 +491,56 @@ type=transport
 protocol=tcp
 bind=0.0.0.0
 
-[transport-wss]
+[transport-ws]
 type=transport
-protocol=wss
+protocol=ws
 bind=0.0.0.0
 
-[endpoint_basic](!)
-type=endpoint
-context=plan-num
-disallow=all
-allow=ulaw
-direct_media=no
-language=en
-
-[authentication](!)
-type=auth
-auth_type=userpass
-
-[aor_template](!)
+[hp]
 type=aor
 max_contacts=10
 remove_existing=yes
 
-[hp](endpoint_basic)
-auth=hp
-aors=hp
-callerid=\"HP TEST\" <200>
-[hp](authentication)
-password=hp
+[hp]
+type=auth
+auth_type=userpass
 username=hp
-[hp](aor_template)
+password=hp
 
-[server](endpoint_basic)
-auth=server
-aors=server
-callerid=\"server\" <server>
-[server](authentication)
-password=server
+[hp]
+type=endpoint
+aors=hp
+auth=hp
+webrtc=yes
+dtls_auto_generate_cert=yes
+context=plan-num
+disallow=all
+allow=ulaw,alaw,opus
+direct_media=no
+language=en
+
+[server]
+type=aor
+max_contacts=10
+remove_existing=yes
+
+[server]
+type=auth
+auth_type=userpass
 username=server
-[server](aor_template)
+password=server
+
+[server]
+type=endpoint
+aors=server
+auth=server
+webrtc=yes
+dtls_auto_generate_cert=yes
+context=plan-num
+disallow=all
+allow=ulaw,alaw,opus
+direct_media=no
+language=en
 
 [webrtc_client]
 type=aor
@@ -547,9 +558,10 @@ type=endpoint
 aors=webrtc_client
 auth=webrtc_client
 webrtc=yes
+dtls_auto_generate_cert=yes
 context=plan-num
 disallow=all
-allow=ulaw
+allow=ulaw,alaw,opus
 direct_media=no
 ";
 
@@ -565,7 +577,7 @@ exten => 200,2,Hangup()
 exten => 300,1,Dial(PJSIP/server,10)
 exten => 300,2,Hangup()
 
-exten => h,1,System(python3 /home/nursecallserver/ip-call/python/update.py \${datetime})
+exten => h,1,System(curl -s 'http://localhost/ip-call/server/history/update.php?name=\${datetime}')
 
 ";
 
@@ -575,19 +587,31 @@ exten => h,1,System(python3 /home/nursecallserver/ip-call/python/update.py \${da
 
                 if ($bed->tw == 1) {
                     $txt .= "
-[$bed_id](endpoint_basic)
-auth=$bed_id
-aors=$bed_id
-callerid=\"$bed_name\" <$bed_id>
-[$bed_id](authentication)
-password=$bed_id
-username=$bed_id
-[$bed_id](aor_template)
+[$bed_id]
+type=aor
+max_contacts=10
+remove_existing=yes
 
+[$bed_id]
+type=auth
+auth_type=userpass
+username=$bed_id
+password=$bed_id
+
+[$bed_id]
+type=endpoint
+aors=$bed_id
+auth=$bed_id
+context=plan-num
+disallow=all
+allow=ulaw,alaw,opus
+direct_media=no
+language=en
+ 
 ";
                     $txt_extensions .= "
 exten => $bed_id,1,Set(datetime=\${STRFTIME(\${EPOCH},,%Y%m%d-%H%M%S)})
-same => n,Set(recording_file=/opt/lampp/htdocs/records/\${datetime}.wav)
+same => n,Set(recording_file=/var/www/html/records/\${datetime}.wav)
 same => n,MixMonitor(\${recording_file})
 same => n,Dial(PJSIP/$bed_id,10)
 same => n,Hangup()     

@@ -137,6 +137,11 @@
                         <i class="fas fa-cogs nav-icon"></i> Setting Umum
                     </a>
                 </li>
+                <li class="{{ request()->is('admin/backup-restore') ? 'active' : '' }}">
+                    <a href="{{ url('/admin/backup-restore') }}">
+                        <i class="fas fa-database nav-icon"></i> Backup & Restore
+                    </a>
+                </li>
                 <li class="{{ request()->is('admin/running-text') ? 'active' : '' }}">
                     <a href="{{ url('/admin/running-text') }}">
                         <i class="fas fa-scroll nav-icon"></i> Setting Running Text
