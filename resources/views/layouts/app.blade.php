@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>@yield('title', 'Nurse Call Admin')</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="{{ asset('assets/vendor/bootstrap/bootstrap.min.css') }}" rel="stylesheet">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="{{ asset('assets/vendor/fontawesome/all.min.css') }}">
+    
+    <style>
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-image: linear-gradient(rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.7)), url('{{ asset('assets/images/bg.JPEG') }}');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+        .wrapper {
+            display: flex;
+            width: 100%;
+            align-items: stretch;
+            flex: 1;
+        }
+        #sidebar {
+            min-width: 250px;
+            max-width: 250px;
+            min-height: 100vh;
+            background: #343a40;
+            color: #fff;
+            transition: all 0.3s;
+        }
+        #sidebar .sidebar-header {
+            padding: 20px;
+            background: #343a40;
+        }
+        #sidebar ul.components {
+            padding: 20px 0;
+            border-bottom: 1px solid #47748b;
+        }
+        #sidebar ul p {
+            color: #fff;
+            padding: 10px;
+        }
+        #sidebar ul li a {
+            padding: 10px;
+            font-size: 1.1em;
+            display: block;
+            color: #c2c7d0;
+            text-decoration: none;
+        }
+        #sidebar ul li a:hover {
+            color: #fff;
+            background: #495057;
+        }
+        #sidebar ul li.active > a {
+            color: #fff;
+            background: #007bff;
+        }
+        #content {
+            width: 100%;
+            padding: 20px;
+            min-height: 100vh;
+            transition: all 0.3s;
+        }
+        .nav-icon {
+            margin-right: 10px;
+        }
+
+        .header-menu {
+            color: #fff;
+            background-color: #446586ff;
+            padding: 10px;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="wrapper">
+    <!-- Sidebar -->
+    <nav id="sidebar">
+        <div class="sidebar-header">
+            <h3>Nurse Call</h3>
+        </div>
+
+        <ul class="list-unstyled components">
+            {{-- Public Menus - Always Visible --}}
+            <li class="{{ request()->is('ip-call/admin') ? 'active' : '' }}">
+                <a href="{{ url('/ip-call/admin') }}">
+                    <i class="fas fa-home nav-icon"></i> Dashboard
+                </a>
+            </li>
+            <li class="{{ request()->is('ip-call/admin/messages') ? 'active' : '' }}">
+                <a href="{{ url('/ip-call/admin/messages') }}">
+                    <i class="fas fa-envelope nav-icon"></i> Log Pesan
+                </a>
+            </li>
+            <li class="{{ request()->is('ip-call/admin/calls') ? 'active' : '' }}">
+                <a href="{{ url('/ip-call/admin/calls') }}">
+                    <i class="fas fa-phone nav-icon"></i> Log Panggilan
+                </a>
+            </li>
+            <li class="{{ request()->is('ip-call/admin/oximonitor') ? 'active' : '' }}">
+                <a href="{{ url('/ip-call/admin/oximonitor') }}">
+                    <i class="fas fa-heartbeat nav-icon"></i> Oxi-Monitor
+                </a>
+            </li>
+            <li class="{{ request()->is('ip-call/admin/audio') ? 'active' : '' }}">
+                <a href="{{ url('/ip-call/admin/audio') }}">
+                    <i class="fas fa-volume-up nav-icon"></i> Setting Audio
+                </a>
+            </li>
+
+            {{-- Teknisi Only Menu - Only visible when logged in as teknisi --}}
+            @if (Auth::check() && Auth::user()->username == 'teknisi')
+                <li class="header-menu p-2">SETTINGS</li>
+                
+                <li class="{{ request()->is('ip-call/admin/monitoring') ? 'active' : '' }}">
+                    <a href="{{ url('/ip-call/admin/monitoring') }}">
+                        <i class="fas fa-desktop nav-icon"></i> Monitoring
+                    </a>
+                </li>
+                
+                <li class="{{ request()->is('ip-call/admin/rooms') ? 'active' : '' }}">
+                    <a href="{{ url('/ip-call/admin/rooms') }}">
+                        <i class="fas fa-door-open nav-icon"></i> Setting Ruang
+                    </a>
+                </li>
+                <li class="{{ request()->is('ip-call/admin/general') ? 'active' : '' }}">
+                    <a href="{{ url('/ip-call/admin/general') }}">
+                        <i class="fas fa-cogs nav-icon"></i> Setting Umum
+                    </a>
+                </li>
+                <li class="{{ request()->is('ip-call/admin/backup-restore') ? 'active' : '' }}">
+                    <a href="{{ url('/ip-call/admin/backup-restore') }}">
+                        <i class="fas fa-database nav-icon"></i> Backup & Restore
+                    </a>
+                </li>
+                <li class="{{ request()->is('ip-call/admin/running-text') ? 'active' : '' }}">
+                    <a href="{{ url('/ip-call/admin/running-text') }}">
+                        <i class="fas fa-scroll nav-icon"></i> Setting Running Text
+                    </a>
+                </li>
+                <li class="{{ request()->is('ip-call/admin/adzan') ? 'active' : '' }}">
+                    <a href="{{ url('/ip-call/admin/adzan') }}">
+                        <i class="fas fa-mosque nav-icon"></i> Informasi Adzan
+                    </a>
+                </li>
+                <li class="{{ request()->is('ip-call/admin/playlist') ? 'active' : '' }}">
+                    <a href="{{ url('/ip-call/admin/playlist') }}">
+                        <i class="fas fa-music nav-icon"></i> Setting Playlist
+                    </a>
+                </li>
+            @endif
+            
+            {{-- Close Tab --}}
+            <li>
+                <a href="#" id="closeTab">
+                    <i class="fas fa-times nav-icon"></i> Tutup Tab
+                </a>
+            </li>
+
+            {{-- Login / Logout --}}
+            @if (Auth::check())
+                <li>
+                    <a href="{{ url('/ip-call/logout') }}">
+                        <i class="fas fa-sign-out-alt nav-icon"></i> Logout
+                    </a>
+                </li>
+            @else
+                <li>
+                    <a href="{{ url('/ip-call/login') }}">
+                        <i class="fas fa-sign-in-alt nav-icon"></i> Login
+                    </a>
+                </li>
+            @endif
+        </ul>
+    </nav>
+
+    <!-- Page Content -->
+    <div id="content">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light mb-0" style="opacity: 0.6;">
+            <div class="container-fluid">
+                <button type="button" id="sidebarCollapse" class="btn btn-info">
+                    <i class="fas fa-align-left"></i>
+                </button>
+                
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="nav navbar-nav ms-auto">
+                        <li class="nav-item">
+                            @if (Auth::check())
+                                <a class="nav-link" href="#"><i class="fas fa-user me-1"></i> {{ Auth::user()->username }}</a>
+                            @else
+                                <a class="nav-link" href="{{ url('/ip-call/login') }}"><i class="fas fa-user me-1"></i> Guest</a>
+                            @endif
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container-fluid">
+            @yield('content')
+        </div>
+    </div>
+</div>
+
+<!-- jQuery and Bootstrap Bundle (includes Popper) -->
+<script src="{{ asset('assets/vendor/jquery/jquery-3.6.0.min.js') }}"></script>
+<script src="{{ asset('assets/vendor/bootstrap/bootstrap.bundle.min.js') }}"></script>
+<!-- Chart.js -->
+<script src="{{ asset('assets/vendor/chartjs/chart.js') }}"></script>
+
+<script>
+    $(document).ready(function () {
+        $('#sidebarCollapse').on('click', function () {
+            $('#sidebar').toggleClass('active');
+            if($('#sidebar').hasClass('active')){
+                 $('#sidebar').css('margin-left', '-250px');
+            } else {
+                 $('#sidebar').css('margin-left', '0');
+            }
+        });
+
+        $('#closeTab').on('click', function (e) {
+            e.preventDefault();
+
+            var closeTabAction = function() {
+                // Trik agar browser menganggap tab ini dibuka oleh script
+                window.open('', '_self');
+                window.close();
+                // Fallback jika tetap tidak bisa
+                setTimeout(function() {
+                    window.location.href = 'about:blank';
+                }, 300);
+            };
+
+            @if (Auth::check())
+            // Logout dulu jika sudah login, baru tutup tab
+            $.ajax({
+                url: '{{ url("/ip-call/logout") }}',
+                type: 'GET',
+                success: function() {
+                    closeTabAction();
+                },
+                error: function() {
+                    // Tetap tutup tab meskipun logout gagal
+                    closeTabAction();
+                }
+            });
+            @else
+            closeTabAction();
+            @endif
+        });
+    });
+</script>
+@yield('scripts')
+
+<!-- SweetAlert2 -->
+<script src="{{ asset('assets/vendor/sweetalert2/sweetalert2.min.js') }}"></script>
+
+<script>
+    // Global SweetAlert2 Toast Mixin
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+    });
+
+    @if(session('success'))
+        Toast.fire({
+            icon: 'success',
+            title: '{{ session('success') }}'
+        });
+    @endif
+
+    @if(session('error'))
+        Toast.fire({
+            icon: 'error',
+            title: '{{ session('error') }}'
+        });
+    @endif
+</script>
+</body>
+</html>

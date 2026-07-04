@@ -1,0 +1,4 @@
+/home/nursecallserver/ip-call/python/ping.py:8: DeprecationWarning: Callback API version 1 is deprecated, update to latest version
+  client = mqtt.Client()
+/home/nursecallserver/ip-call/python/ping.py:8: DeprecationWarning: Callback API version 1 is deprecated, update to latest version
+  client = mqtt.Client()

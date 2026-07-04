@@ -1,0 +1,6 @@
+/home/nursecallserver/ip-call/python/dotmatrix.py:148: DeprecationWarning: Callback API version 1 is deprecated, update to latest version
+  client = mqtt.Client()
+[2026-02-13 14:30:46] LOG| Connected with result code 0
+/home/nursecallserver/ip-call/python/dotmatrix.py:148: DeprecationWarning: Callback API version 1 is deprecated, update to latest version
+  client = mqtt.Client()
+[2026-02-13 14:34:31] LOG| Connected with result code 0

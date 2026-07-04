@@ -1,0 +1,5 @@
+docker/mysql/data
+node_modules
+storage/logs
+.git
+.env
