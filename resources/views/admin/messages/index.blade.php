@@ -6,25 +6,25 @@
 <div class="d-flex justify-content-between align-items-center mb-4 pt-3">
     <h1 class="h3 mb-0 text-gray-800">Log Pesan</h1>
     <div class="d-flex gap-2">
-        <a href="{{ route('messages.export', ['type' => 'pdf', 'start_date' => request('start_date'), 'end_date' => request('end_date'), 'category' => request('category')]) }}" class="btn btn-danger shadow-sm">
+        <a href="{{ route('messages.export', ['type' => 'pdf', 'start_date' => request('start_date'), 'end_date' => request('end_date'), 'category' => request('category'), 'nurse_presence' => request('nurse_presence')]) }}" class="btn btn-danger shadow-sm">
             <i class="fas fa-file-pdf me-2"></i> Export PDF
         </a>
-        <a href="{{ route('messages.export', ['type' => 'excel', 'start_date' => request('start_date'), 'end_date' => request('end_date'), 'category' => request('category')]) }}" class="btn btn-success shadow-sm">
+        <a href="{{ route('messages.export', ['type' => 'excel', 'start_date' => request('start_date'), 'end_date' => request('end_date'), 'category' => request('category'), 'nurse_presence' => request('nurse_presence')]) }}" class="btn btn-success shadow-sm">
             <i class="fas fa-file-excel me-2"></i> Export Excel
         </a>
     </div>
 </div>
 <div class="card shadow-sm border-0">
 <div class="card-body">
-        <form action="{{ route('messages.index') }}" method="GET" class="mb-3">
+        <form action="{{ route('messages.index') }}" method="GET" class="mb-3" style="max-width: 950px;">
             <div class="row">
-                <div class="col-md-3">
+                <div class="col-md-2 mb-2 mb-md-0">
                     <input type="date" name="start_date" class="form-control" value="{{ request('start_date') }}" placeholder="Start Date">
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-2 mb-2 mb-md-0">
                     <input type="date" name="end_date" class="form-control" value="{{ request('end_date') }}" placeholder="End Date">
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-3 mb-2 mb-md-0">
                     <select name="category" class="form-control">
                         <option value="">All Categories</option>
                         @foreach($categories as $cat)
@@ -34,9 +34,16 @@
                         @endforeach
                     </select>
                 </div>
-                <div class="col-md-3">
-                    <button type="submit" class="btn btn-primary">Filter</button>
-                    <a href="{{ route('messages.index') }}" class="btn btn-secondary">Reset</a>
+                <div class="col-md-3 mb-2 mb-md-0">
+                    <select name="nurse_presence" class="form-control">
+                        <option value="">All Presence</option>
+                        <option value="1" {{ request('nurse_presence') === '1' ? 'selected' : '' }}>Ada Respon Perawat</option>
+                        <option value="0" {{ request('nurse_presence') === '0' ? 'selected' : '' }}>Tidak Ada Respon</option>
+                    </select>
+                </div>
+                <div class="col-md-2 d-flex gap-2">
+                    <button type="submit" class="btn btn-primary w-50">Filter</button>
+                    <a href="{{ route('messages.index') }}" class="btn btn-secondary w-50 d-inline-flex align-items-center justify-content-center">Reset</a>
                 </div>
             </div>
         </form>

@@ -13,12 +13,14 @@ class MessagesExport implements FromCollection, WithHeadings, WithMapping
     protected $start_date;
     protected $end_date;
     protected $category;
+    protected $nurse_presence;
 
-    public function __construct($start_date, $end_date, $category)
+    public function __construct($start_date, $end_date, $category, $nurse_presence = null)
     {
         $this->start_date = $start_date;
         $this->end_date = $end_date;
         $this->category = $category;
+        $this->nurse_presence = $nurse_presence;
     }
 
     public function collection()
@@ -31,6 +33,17 @@ class MessagesExport implements FromCollection, WithHeadings, WithMapping
 
         if ($this->category) {
             $query->where('category_log_id', $this->category);
+        }
+
+        if ($this->nurse_presence !== null && $this->nurse_presence !== '') {
+            if ($this->nurse_presence == '1') {
+                $query->where('nurse_presence', 1);
+            } else {
+                $query->where(function($q) {
+                    $q->where('nurse_presence', '!=', 1)
+                      ->orWhereNull('nurse_presence');
+                });
+            }
         }
 
         return $query->orderBy('timestamp', 'desc')->get();

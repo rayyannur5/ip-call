@@ -44,5 +44,9 @@ RUN composer install --no-scripts --no-autoloader
 COPY . .
 RUN composer dump-autoload --optimize
 
+# Setup entrypoint script
+RUN chmod +x docker-entrypoint.sh
+ENTRYPOINT ["/var/www/docker-entrypoint.sh"]
+
 EXPOSE 80
 CMD ["apache2-foreground"]

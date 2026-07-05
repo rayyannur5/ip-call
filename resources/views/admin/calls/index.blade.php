@@ -14,11 +14,15 @@
                 class="btn btn-success shadow-sm">
                 <i class="fas fa-file-excel me-2"></i> Export Excel
             </a>
+            <a href="{{ route('calls.export_zip', ['start_date' => request('start_date'), 'end_date' => request('end_date'), 'category' => request('category')]) }}"
+                class="btn btn-primary shadow-sm">
+                <i class="fas fa-file-archive me-2"></i> Download ZIP + Records
+            </a>
         </div>
     </div>
     <div class="card shadow-sm border-0">
         <div class="card-body">
-            <form action="{{ route('calls.index') }}" method="GET" class="mb-3">
+            <form action="{{ route('calls.index') }}" method="GET" class="mb-3" style="max-width: 950px;">
                 <div class="row">
                     <div class="col-md-3">
                         <input type="date" name="start_date" class="form-control" value="{{ request('start_date') }}"

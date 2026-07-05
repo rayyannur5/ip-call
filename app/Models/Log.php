@@ -19,4 +19,9 @@ class Log extends Model
     {
         return $this->belongsTo(Bed::class, 'device_id', 'id');
     }
+
+    public function toilet()
+    {
+        return $this->belongsTo(Toilet::class, 'device_id', 'id');
+    }
 }

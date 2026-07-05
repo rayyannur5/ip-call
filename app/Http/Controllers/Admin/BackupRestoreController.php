@@ -184,12 +184,14 @@ class BackupRestoreController extends Controller
                 $passwordOpt = $password !== '' ? '--password=' . escapeshellarg($password) : '';
                 
                 // Perform DB restoration
-                $mysqlCommand = "mysql -h {$escapedHost} -P {$escapedPort} -u {$escapedUsername} {$passwordOpt} {$escapedDatabase} < {$escapedSqlFile}";
-                exec($mysqlCommand, $output, $returnVar);
-
-                if ($returnVar !== 0) {
+                $mysqlCommand = "mysql -h {$escapedHost} -P {$escapedPort} -u {$escapedUsername} {$passwordOpt} --skip-ssl {$escapedDatabase} < {$escapedSqlFile} 2>&1";
+                $dbOutput = [];
+                $dbReturnVar = 0;
+                exec($mysqlCommand, $dbOutput, $dbReturnVar);
+ 
+                if ($dbReturnVar !== 0) {
                     File::deleteDirectory($tempRestorePath);
-                    throw new \Exception("Database restore failed with code {$returnVar}. Command output: " . implode("\n", $output));
+                    throw new \Exception("Database restore failed with code {$dbReturnVar}. Command output: " . implode("\n", $dbOutput));
                 }
             }
 

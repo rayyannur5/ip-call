@@ -12,7 +12,6 @@ services:
         environment:
             APP_NAME: "IP Call"
             APP_ENV: local
-            APP_KEY: base64:ONDJfuw1P0U/yUDqhVgQhoechlrIUXuS7tFQOu7y/Y8=
             APP_DEBUG: "true"
             APP_URL: http://localhost/ip-call
             LOG_CHANNEL: stack
@@ -29,10 +28,10 @@ services:
             QUEUE_CONNECTION: sync
             SESSION_DRIVER: file
             SESSION_LIFETIME: 120
-            OXIMONITOR_CAN_ACCESS_ADMIN: 0
+            OXIMONITOR_CAN_ACCESS_ADMIN: 1
         volumes:
             - ./:/var/www
-            - vendor_data:/var/www/vendor
+            - /var/www/vendor
         networks:
             - ip-call-network
         depends_on:
@@ -48,6 +47,8 @@ services:
         environment:
             MYSQL_DATABASE: ip_call
             MYSQL_ROOT_PASSWORD: root
+        volumes:
+            - ./docker/mysql/data:/var/lib/mysql
         healthcheck:
             test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot"]
             interval: 10s
@@ -75,6 +76,3 @@ services:
 networks:
     ip-call-network:
         driver: bridge
-
-volumes:
-    vendor_data:

@@ -42,7 +42,7 @@ class DashboardController extends Controller
             return $item;
         });
         
-        $recentLogs = Log::with(['category', 'bed'])->latest('timestamp')->take(5)->get()->map(function($item) {
+        $recentLogs = Log::with(['category', 'bed', 'toilet'])->latest('timestamp')->take(5)->get()->map(function($item) {
             $item->type = 'message';
             return $item;
         });

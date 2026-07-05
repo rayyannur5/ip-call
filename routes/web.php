@@ -113,22 +113,6 @@ Route::prefix('ip-call')->group(function () {
     Route::post('/oximonitor/data', [App\Http\Controllers\Admin\OxiMonitorController::class, 'getData'])->middleware('auth');
     Route::get('/oximonitor/export', [App\Http\Controllers\Admin\OxiMonitorController::class, 'export'])->middleware('auth');
 
-    // Static files routes (legacy compatibility)
-    Route::get('/admin/static/{file}', function ($file) {
-        $path = public_path("assets/static/$file");
-        if (file_exists($path)) {
-            return response()->file($path);
-        }
-        abort(404);
-    })->where('file', '.*');
-
-    Route::get('/admin/uploads/{file}', function ($file) {
-        $path = public_path("assets/uploads/$file");
-        if (file_exists($path)) {
-            return response()->file($path);
-        }
-        abort(404);
-    })->where('file', '.*');
 
     // Admin Routes (Public - No Auth Required)
     Route::group(['prefix' => 'admin', 'middleware' => 'restrict.oximonitor.admin'], function () {
@@ -138,6 +122,7 @@ Route::prefix('ip-call')->group(function () {
         
         Route::get('/calls', [App\Http\Controllers\Admin\CallController::class, 'index'])->name('calls.index');
         Route::get('/calls/export/{type}', [App\Http\Controllers\Admin\CallController::class, 'export'])->name('calls.export');
+        Route::get('/calls/export-zip', [App\Http\Controllers\Admin\CallController::class, 'exportZip'])->name('calls.export_zip');
 
         // OxiMonitor (public view)
         Route::get('/oximonitor', [App\Http\Controllers\Admin\OxiMonitorController::class, 'index']);

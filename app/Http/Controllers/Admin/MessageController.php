@@ -14,6 +14,13 @@ class MessageController extends Controller
 {
     public function index(Request $request)
     {
+        if (!$request->filled('start_date') || !$request->filled('end_date')) {
+            $request->merge([
+                'start_date' => $request->input('start_date') ?: now()->startOfMonth()->toDateString(),
+                'end_date' => $request->input('end_date') ?: now()->endOfMonth()->toDateString(),
+            ]);
+        }
+
         $query = Log::with(['category', 'bed.room']);
 
         if ($request->start_date && $request->end_date) {
@@ -22,6 +29,17 @@ class MessageController extends Controller
 
         if ($request->category) {
             $query->where('category_log_id', $request->category);
+        }
+
+        if ($request->filled('nurse_presence')) {
+            if ($request->nurse_presence == '1') {
+                $query->where('nurse_presence', 1);
+            } else {
+                $query->where(function($q) {
+                    $q->where('nurse_presence', '!=', 1)
+                      ->orWhereNull('nurse_presence');
+                });
+            }
         }
 
         // Calculate average response time for logs with nurse presence
@@ -50,9 +68,17 @@ class MessageController extends Controller
 
     public function export(Request $request, $type)
     {
+        if (!$request->filled('start_date') || !$request->filled('end_date')) {
+            $request->merge([
+                'start_date' => $request->input('start_date') ?: now()->startOfMonth()->toDateString(),
+                'end_date' => $request->input('end_date') ?: now()->endOfMonth()->toDateString(),
+            ]);
+        }
+
         $start_date = $request->start_date;
         $end_date = $request->end_date;
         $category = $request->category;
+        $nurse_presence = $request->nurse_presence;
 
         $filename = 'messages';
         if ($start_date && $end_date) {
@@ -62,7 +88,7 @@ class MessageController extends Controller
         }
 
         if ($type == 'excel') {
-            return Excel::download(new MessagesExport($start_date, $end_date, $category), $filename . '.xlsx');
+            return Excel::download(new MessagesExport($start_date, $end_date, $category, $nurse_presence), $filename . '.xlsx');
         } elseif ($type == 'pdf') {
             $query = Log::with(['category', 'bed.room']);
 
@@ -74,6 +100,17 @@ class MessageController extends Controller
             if ($category) {
                 $query->where('category_log_id', $category);
                 $category_name = CategoryLog::find($category)?->name;
+            }
+
+            if ($request->filled('nurse_presence')) {
+                if ($request->nurse_presence == '1') {
+                    $query->where('nurse_presence', 1);
+                } else {
+                    $query->where(function($q) {
+                        $q->where('nurse_presence', '!=', 1)
+                          ->orWhereNull('nurse_presence');
+                    });
+                }
             }
 
             $logs = $query->orderBy('timestamp', 'desc')->get();

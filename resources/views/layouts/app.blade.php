@@ -12,6 +12,7 @@
     
     <style>
         body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -28,54 +29,190 @@
             flex: 1;
         }
         #sidebar {
-            min-width: 250px;
-            max-width: 250px;
-            min-height: 100vh;
-            background: #343a40;
+            min-width: 260px;
+            max-width: 260px;
+            height: 100vh;
+            position: sticky;
+            top: 0;
+            background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
             color: #fff;
-            transition: all 0.3s;
+            transition: all 0.3s ease;
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.15);
+            z-index: 100;
+            overflow-y: auto;
+        }
+        /* Custom scrollbar for sidebar */
+        #sidebar::-webkit-scrollbar {
+            width: 5px;
+        }
+        #sidebar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        #sidebar::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+        #sidebar::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.2);
         }
         #sidebar .sidebar-header {
-            padding: 20px;
-            background: #343a40;
+            padding: 24px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            position: sticky;
+            top: 0;
+            background: #0f172a;
+            z-index: 10;
+        }
+        .sidebar-brand-icon {
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, rgba(79, 70, 229, 0.15), rgba(6, 182, 212, 0.15));
+            border: 1px solid rgba(79, 70, 229, 0.3);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .sidebar-brand-icon i {
+            font-size: 18px;
+            color: #06b6d4;
+        }
+        .brand-text {
+            font-size: 1.15rem;
+            letter-spacing: -0.3px;
+            color: #f8fafc;
+        }
+        .brand-subtext {
+            font-size: 0.725rem;
+            color: #64748b;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         #sidebar ul.components {
-            padding: 20px 0;
-            border-bottom: 1px solid #47748b;
+            padding: 15px 0;
         }
-        #sidebar ul p {
-            color: #fff;
-            padding: 10px;
+        #sidebar ul li {
+            margin: 4px 12px;
         }
         #sidebar ul li a {
-            padding: 10px;
-            font-size: 1.1em;
-            display: block;
-            color: #c2c7d0;
+            padding: 12px 16px;
+            font-size: 0.925rem;
+            font-weight: 550;
+            display: flex;
+            align-items: center;
+            color: #94a3b8;
             text-decoration: none;
+            border-radius: 12px;
+            transition: all 0.25s ease;
         }
         #sidebar ul li a:hover {
-            color: #fff;
-            background: #495057;
+            color: #f8fafc;
+            background: rgba(255, 255, 255, 0.05);
+            transform: translateX(4px);
         }
         #sidebar ul li.active > a {
             color: #fff;
-            background: #007bff;
+            background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.35);
+        }
+        @keyframes contentFadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
         }
         #content {
             width: 100%;
-            padding: 20px;
+            padding: 24px;
             min-height: 100vh;
             transition: all 0.3s;
+            flex-fill: 1;
+        }
+        .fade-in-active {
+            animation: contentFadeIn 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
         }
         .nav-icon {
-            margin-right: 10px;
+            font-size: 1.1rem;
+            width: 24px;
+            text-align: center;
+            margin-right: 12px;
+            opacity: 0.85;
+        }
+        #sidebar ul li a:hover .nav-icon {
+            opacity: 1;
+            color: #06b6d4;
+        }
+        #sidebar ul li.active > a .nav-icon {
+            opacity: 1;
+            color: #fff !important;
+        }
+        .header-menu {
+            color: #64748b !important;
+            font-size: 0.75rem !important;
+            font-weight: 700 !important;
+            letter-spacing: 1px !important;
+            text-transform: uppercase;
+            padding: 18px 16px 8px 16px !important;
+            margin-top: 10px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            background-color: transparent !important;
         }
 
-        .header-menu {
-            color: #fff;
-            background-color: #446586ff;
-            padding: 10px;
+        /* Floating Glassmorphic App Bar */
+        .navbar-custom {
+            background: rgba(255, 255, 255, 0.75) !important;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.5) !important;
+            border-radius: 16px;
+            padding: 10px 20px !important;
+            margin-bottom: 24px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+            display: flex;
+            align-items: center;
+        }
+
+        .btn-sidebar-toggle {
+            background: rgba(79, 70, 229, 0.08) !important;
+            border: 1px solid rgba(79, 70, 229, 0.2) !important;
+            color: #4f46e5 !important;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.25s ease;
+        }
+
+        .btn-sidebar-toggle:hover {
+            background: #4f46e5 !important;
+            color: #fff !important;
+            box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3);
+        }
+
+        .user-profile-badge {
+            background: rgba(79, 70, 229, 0.08) !important;
+            border: 1px solid rgba(79, 70, 229, 0.15) !important;
+            color: #4f46e5 !important;
+            font-weight: 600;
+            padding: 8px 16px !important;
+            border-radius: 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            transition: all 0.25s ease;
+            text-decoration: none !important;
+        }
+
+        .user-profile-badge:hover {
+            background: rgba(79, 70, 229, 0.12) !important;
+            color: #4338ca !important;
         }
 
     </style>
@@ -85,8 +222,14 @@
 <div class="wrapper">
     <!-- Sidebar -->
     <nav id="sidebar">
-        <div class="sidebar-header">
-            <h3>Nurse Call</h3>
+        <div class="sidebar-header d-flex align-items-center gap-3">
+            <div class="sidebar-brand-icon">
+                <i class="fas fa-user-nurse"></i>
+            </div>
+            <div>
+                <h4 class="m-0 fw-bold brand-text">Nurse Call</h4>
+                <small class="brand-subtext">Administrator</small>
+            </div>
         </div>
 
         <ul class="list-unstyled components">
@@ -185,9 +328,9 @@
 
     <!-- Page Content -->
     <div id="content">
-        <nav class="navbar navbar-expand-lg navbar-light bg-light mb-0" style="opacity: 0.6;">
-            <div class="container-fluid">
-                <button type="button" id="sidebarCollapse" class="btn btn-info">
+        <nav class="navbar navbar-expand-lg navbar-custom">
+            <div class="container-fluid p-0">
+                <button type="button" id="sidebarCollapse" class="btn-sidebar-toggle">
                     <i class="fas fa-align-left"></i>
                 </button>
                 
@@ -195,9 +338,14 @@
                     <ul class="nav navbar-nav ms-auto">
                         <li class="nav-item">
                             @if (Auth::check())
-                                <a class="nav-link" href="#"><i class="fas fa-user me-1"></i> {{ Auth::user()->username }}</a>
+                                <span class="user-profile-badge">
+                                    <i class="fas fa-user-circle"></i>
+                                    {{ Auth::user()->username }}
+                                </span>
                             @else
-                                <a class="nav-link" href="{{ url('/ip-call/login') }}"><i class="fas fa-user me-1"></i> Guest</a>
+                                <a class="user-profile-badge" href="{{ url('/ip-call/login') }}">
+                                    <i class="fas fa-sign-in-alt"></i> Login
+                                </a>
                             @endif
                         </li>
                     </ul>
@@ -292,6 +440,18 @@
             title: '{{ session('error') }}'
         });
     @endif
+</script>
+<script>
+    // Dynamically trigger content fade-in and clean it up to prevent stacking context (z-index modal) bugs
+    (function() {
+        const content = document.getElementById('content');
+        if (content) {
+            content.classList.add('fade-in-active');
+            content.addEventListener('animationend', function() {
+                content.classList.remove('fade-in-active');
+            });
+        }
+    })();
 </script>
 </body>
 </html>

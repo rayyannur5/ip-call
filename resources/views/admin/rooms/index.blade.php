@@ -159,6 +159,28 @@
 
 @section('scripts')
 <script>
+    // Preserve scroll position on reload/refresh
+    window.addEventListener('beforeunload', function() {
+        localStorage.setItem('scrollPosition_' + window.location.pathname, window.scrollY);
+    });
+
+    window.addEventListener('DOMContentLoaded', function() {
+        const key = 'scrollPosition_' + window.location.pathname;
+        const scrollPosition = localStorage.getItem(key);
+        if (scrollPosition) {
+            // Temporarily disable smooth scrolling to prevent visible slide/jump
+            const docEl = document.documentElement;
+            const originalBehavior = docEl.style.scrollBehavior;
+            docEl.style.scrollBehavior = 'auto';
+            
+            window.scrollTo(0, parseInt(scrollPosition, 10));
+            
+            // Restore original behavior
+            docEl.style.scrollBehavior = originalBehavior;
+            localStorage.removeItem(key);
+        }
+    });
+
     // Include script for dynamic inputs here or in the partial
     var counterNama = 1;
     function tambahKombinasi() {
