@@ -35,7 +35,7 @@ from pyIslam.praytimes import PrayerConf, Prayer
 
 DEFAULT_LATITUDE = -7.288354699999995
 DEFAULT_LONGITUDE = 112.72549628465647
-DEFAULT_LIQ_FILE_PATH = "/home/nursecallserver/ip-call/liquidsoap/radio.liq"
+DEFAULT_LIQ_FILE_PATH = "/var/www/ip-call/public/liquidsoap/radio.liq"
 
 MUSIC_SCHEDULE_URL = "http://localhost/ip-call/server/music.php"
 UTILS_URL = "http://localhost/ip-call/server/utils.php"
@@ -576,7 +576,7 @@ class LiquidsoapManager:
                 return
             self.process = subprocess.Popen(
                 ["liquidsoap", self.target_file],
-                stdout=subprocess.DEVNULL,
+                # stdout=subprocess.DEVNULL,
             )
             log_message(f"✅ Liquidsoap berjalan PID: {self.process.pid}.")
         except Exception as e:
