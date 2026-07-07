@@ -7,7 +7,7 @@
     <h1 class="h3 mb-0 text-gray-800">Setting Musik (Murotal)</h1>
     <div class="d-flex gap-2">
         <button class="btn btn-primary shadow-sm" data-bs-toggle="modal" data-bs-target="#modal-tambah-playlist"><i class="fa fa-plus me-2"></i> Tambah</button>
-        <a href="{{ url('admin/playlist/write-config') }}" class="btn btn-danger shadow-sm"><i class="fa fa-check me-2"></i> Update Config</a>
+        <a href="{{ url('ip-call/admin/playlist/write-config') }}" class="btn btn-danger shadow-sm"><i class="fa fa-check me-2"></i> Update Config</a>
     </div>
 </div>
 
@@ -37,7 +37,7 @@
                                          For now, let's keep the legacy URL pattern if the server configuration allows it.
                                     -->
                                     <audio src="/ip-call/playlist/music/{{ $item->path }}" controls class="w-100 mb-0" style="height: 30px"></audio>
-                                    <a href="{{ url('admin/playlist/item/destroy/' . $item->id . '/' . $item->ord) }}" class="btn m-0 p-0 text-white">
+                                    <a href="{{ url('ip-call/admin/playlist/item/destroy/' . $item->id . '/' . $item->ord) }}" class="btn m-0 p-0 text-white">
                                         <i class="fas fa-trash"></i>
                                     </a>
                                 </div>
@@ -51,7 +51,7 @@
                 <div class="modal fade" id="modal-ubah-playlist-{{ $playlist->id }}" tabindex="-1" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
-                            <form action="{{ url('admin/playlist/update') }}" method="post">
+                            <form action="{{ url('ip-call/admin/playlist/update') }}" method="post">
                                 @csrf
                                 <div class="modal-header">
                                     <h4 class="modal-title">Ubah Playlist</h4>
@@ -79,7 +79,7 @@
                                 <div class="modal-footer justify-content-between">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
                                     <div>
-                                        <a href="{{ url('admin/playlist/destroy/' . $playlist->id) }}" class="btn btn-danger">Hapus</a>
+                                        <a href="{{ url('ip-call/admin/playlist/destroy/' . $playlist->id) }}" class="btn btn-danger">Hapus</a>
                                         <button type="submit" class="btn btn-primary">Update</button>
                                     </div>
                                 </div>
@@ -92,7 +92,7 @@
                 <div class="modal fade" id="modal-tambah-playlist-item-{{ $playlist->id }}" tabindex="-1" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
-                            <form action="{{ url('admin/playlist/item/store') }}" method="post" enctype="multipart/form-data">
+                            <form action="{{ url('ip-call/admin/playlist/item/store') }}" method="post" enctype="multipart/form-data">
                                 @csrf
                                 <div class="modal-header">
                                     <h4 class="modal-title">Tambah Playlist Item</h4>
@@ -121,7 +121,7 @@
 <div class="modal fade" id="modal-tambah-playlist" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form action="{{ url('admin/playlist/store') }}" method="post">
+            <form action="{{ url('ip-call/admin/playlist/store') }}" method="post">
                 @csrf
                 <div class="modal-header">
                     <h4 class="modal-title">Tambah Playlist</h4>

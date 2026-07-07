@@ -101,7 +101,7 @@ class PlaylistController extends Controller
             $content = "";
             foreach ($items as $item) {
                 // Use absolute path for liquidsoap relevance
-                $content .= 'http://localhost/ip-call/playlist/music/' . $item->path . "\n";
+                $content .= 'http://localhost/playlist/music/' . $item->path . "\n";
             }
             file_put_contents($filename, $content);
         }
@@ -159,9 +159,7 @@ output.icecast(%mp3,
 )
 ";
 
-        $liqDir = base_path('../liquidsoap');
-        if (!file_exists($liqDir)) mkdir($liqDir, 0777, true);
-        $liqPath = $liqDir . '/radio.liq';
+        $liqPath = public_path('liquidsoap/radio.liq');
         file_put_contents($liqPath, $txt);
 
         return redirect()->back()->with('success', 'Konfigurasi berhasil disimpan');
