@@ -34,6 +34,7 @@ services:
         volumes:
             - ./:/var/www
             - /var/www/vendor
+            - asterisk_config:/etc/asterisk
         networks:
             - ip-call-network
         depends_on:
@@ -44,7 +45,7 @@ services:
         container_name: ip-call-db
         restart: unless-stopped
         ports:
-            - "3307:3306"
+            - "3306:3306"
         environment:
             MYSQL_DATABASE: ip_call
             MYSQL_ROOT_PASSWORD: root
@@ -71,9 +72,52 @@ services:
         networks:
             - ip-call-network
         depends_on:
-            db:
-                condition: service_healthy
+            - db
+
+    asterisk:
+        image: andrius/asterisk:latest
+        container_name: ip-call-asterisk
+        restart: unless-stopped
+        network_mode: "host"
+        volumes:
+            - asterisk_config:/etc/asterisk
+            - ./public/records:/var/www/html/records
+        entrypoint: >
+            sh -c "
+            mkdir -p /etc/asterisk &&
+            echo '[general]' > /etc/asterisk/http.conf &&
+            echo 'enabled=yes' >> /etc/asterisk/http.conf &&
+            echo 'bindaddr=0.0.0.0' >> /etc/asterisk/http.conf &&
+            echo 'bindport=8088' >> /etc/asterisk/http.conf &&
+            exec asterisk -f
+            "
+
+    mosquitto:
+        image: eclipse-mosquitto:latest
+        container_name: ip-call-mqtt
+        restart: unless-stopped
+        ports:
+            - "1883:1883"
+            - "9001:9001"
+        volumes:
+            - ./docker/mosquitto/data:/mosquitto/data
+            - ./docker/mosquitto/log:/mosquitto/log
+        entrypoint: >
+            sh -c "
+            mkdir -p /mosquitto/config &&
+            echo 'listener 1883' > /mosquitto/config/mosquitto.conf &&
+            echo 'listener 9001' >> /mosquitto/config/mosquitto.conf &&
+            echo 'protocol websockets' >> /mosquitto/config/mosquitto.conf &&
+            echo 'allow_anonymous true' >> /mosquitto/config/mosquitto.conf &&
+            chown -R mosquitto:mosquitto /mosquitto/config &&
+            exec /docker-entrypoint.sh mosquitto -c /mosquitto/config/mosquitto.conf
+            "
+        networks:
+            - ip-call-network
 
 networks:
     ip-call-network:
         driver: bridge
+
+volumes:
+    asterisk_config:

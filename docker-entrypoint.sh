@@ -47,5 +47,16 @@ while [ $count -lt $max_tries ]; do
     fi
 done
 
+# Set full read/write permissions for storage, public, and bootstrap/cache directories
+echo "Setting permissions for storage, public, bootstrap/cache, and asterisk config..."
+chmod -R 777 storage public bootstrap/cache || true
+chmod -R 777 /etc/asterisk || true
+
+# Automate Mosquitto configuration permissions on host via mapped volume
+if [ -d "docker/mosquitto" ]; then
+    echo "Adjusting permissions for Mosquitto directory..."
+    chmod -R 777 docker/mosquitto || true
+fi
+
 # Execute the main container command (e.g., apache2-foreground)
 exec "$@"
