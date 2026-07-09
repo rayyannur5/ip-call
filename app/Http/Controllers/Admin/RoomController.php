@@ -430,7 +430,33 @@ class RoomController extends Controller
             $item->bypass = $item->bypass == 1 ? 0 : 1;
             $item->save();
         }
-        
+
+        return redirect()->back();
+    }
+
+    // Toggle single bed mode (Emergency <-> CodeBlue)
+    public function toggleMode(Request $request)
+    {
+        $bed = Bed::find($request->id);
+
+        if ($bed) {
+            $bed->mode = $bed->mode == 2 ? 0 : 2;
+            $bed->save();
+        }
+
+        return redirect()->back();
+    }
+
+    // Toggle single bed tw (1W <-> 2W)
+    public function toggleTw(Request $request)
+    {
+        $bed = Bed::find($request->id);
+
+        if ($bed) {
+            $bed->tw = $bed->tw == 1 ? 0 : 1;
+            $bed->save();
+        }
+
         return redirect()->back();
     }
 

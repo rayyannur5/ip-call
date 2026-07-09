@@ -83,14 +83,18 @@
                                                 <i class="fas fa-link"></i> Cable
                                             </span>
                                         @endif
-                                        <span class="badge rounded-pill {{ $bed->mode == 2 ? 'text-bg-primary' : 'text-bg-danger' }}" 
-                                              style="font-size: 0.65rem;">
+                                        <a href="{{ route('beds.toggle_mode', ['id' => $bed->id]) }}"
+                                           class="badge rounded-pill text-decoration-none {{ $bed->mode == 2 ? 'text-bg-primary' : 'text-bg-danger' }}"
+                                           style="font-size: 0.65rem; cursor: pointer;"
+                                           title="Toggle Emergency / CodeBlue">
                                             {{ $bed->mode == 2 ? 'CodeBlue' : 'Emergency' }}
-                                        </span>
-                                        <span class="badge rounded-pill {{ $bed->tw ? 'text-bg-primary' : 'text-bg-warning' }}" 
-                                              style="font-size: 0.65rem;">
+                                        </a>
+                                        <a href="{{ route('beds.toggle_tw', ['id' => $bed->id]) }}"
+                                           class="badge rounded-pill text-decoration-none {{ $bed->tw ? 'text-bg-primary' : 'text-bg-warning' }}"
+                                           style="font-size: 0.65rem; cursor: pointer;"
+                                           title="Toggle 1W / 2W">
                                             {{ $bed->tw ? '2W' : '1W' }}
-                                        </span>
+                                        </a>
                                         <a href="{{ route('rooms.bypass', ['id' => $bed->id, 'type' => 'bed']) }}" 
                                            class="btn btn-sm {{ $bed->bypass ? 'btn-danger' : 'btn-outline-secondary' }} py-0 px-1"
                                            style="font-size: 0.65rem; line-height: 1.4;"

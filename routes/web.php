@@ -163,6 +163,8 @@ Route::prefix('ip-call')->group(function () {
         Route::post('/beds/store', [App\Http\Controllers\Admin\RoomController::class, 'storeBed'])->name('beds.store');
         Route::post('/beds/update', [App\Http\Controllers\Admin\RoomController::class, 'updateBed'])->name('beds.update');
         Route::get('/beds/destroy', [App\Http\Controllers\Admin\RoomController::class, 'destroyBed'])->name('beds.destroy');
+        Route::get('/beds/toggle-mode', [App\Http\Controllers\Admin\RoomController::class, 'toggleMode'])->name('beds.toggle_mode');
+        Route::get('/beds/toggle-tw', [App\Http\Controllers\Admin\RoomController::class, 'toggleTw'])->name('beds.toggle_tw');
         
         Route::post('/toilets/store', [App\Http\Controllers\Admin\RoomController::class, 'storeToilet'])->name('toilets.store');
         Route::get('/toilets/destroy', [App\Http\Controllers\Admin\RoomController::class, 'destroyToilet'])->name('toilets.destroy');
