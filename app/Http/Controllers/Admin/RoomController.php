@@ -611,7 +611,7 @@ language=en
 ";
                     $txt_extensions .= "
 exten => $bed_id,1,Set(datetime=\${STRFTIME(\${EPOCH},,%Y%m%d-%H%M%S)})
-same => n,Set(recording_file=/var/www/html/records/\${datetime}.wav)
+same => n,Set(recording_file=/var/www/ip-call/public/records/\${datetime}.wav)
 same => n,MixMonitor(\${recording_file})
 same => n,Dial(PJSIP/$bed_id,10)
 same => n,Hangup()     
