@@ -155,7 +155,7 @@
 </head>
 <body>
     <div class="bg-overlay">
-        <img src="{{ public_path('assets/images/bg.JPEG') }}" />
+        <img src="{{ public_path('admin_assets/images/bg.JPEG') }}" />
     </div>
 
     <div class="container">

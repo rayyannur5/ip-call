@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>@yield('title', 'Oxi-Monitor')</title>
-    <link href="{{ asset('assets/vendor/bootstrap/bootstrap.min.css') }}" rel="stylesheet">
-    <link rel="stylesheet" href="{{ asset('assets/vendor/fontawesome/all.min.css') }}">
+    <link href="{{ asset('admin_assets/vendor/bootstrap/bootstrap.min.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('admin_assets/vendor/fontawesome/all.min.css') }}">
 
     <style>
         body {
             min-height: 100vh;
-            background-image: linear-gradient(rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.7)), url('{{ asset('assets/images/bg.JPEG') }}');
+            background-image: linear-gradient(rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.7)), url('{{ asset('admin_assets/images/bg.JPEG') }}');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -64,11 +64,11 @@
         </div>
     </main>
 
-    <script src="{{ asset('assets/vendor/jquery/jquery-3.6.0.min.js') }}"></script>
-    <script src="{{ asset('assets/vendor/bootstrap/bootstrap.bundle.min.js') }}"></script>
-    <script src="{{ asset('assets/vendor/chartjs/chart.js') }}"></script>
+    <script src="{{ asset('admin_assets/vendor/jquery/jquery-3.6.0.min.js') }}"></script>
+    <script src="{{ asset('admin_assets/vendor/bootstrap/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ asset('admin_assets/vendor/chartjs/chart.js') }}"></script>
     @yield('scripts')
 
-    <script src="{{ asset('assets/vendor/sweetalert2/sweetalert2.min.js') }}"></script>
+    <script src="{{ asset('admin_assets/vendor/sweetalert2/sweetalert2.min.js') }}"></script>
 </body>
 </html>

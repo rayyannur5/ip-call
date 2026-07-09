@@ -6,9 +6,9 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>@yield('title', 'Nurse Call Admin')</title>
     <!-- Bootstrap 5 CSS -->
-    <link href="{{ asset('assets/vendor/bootstrap/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('admin_assets/vendor/bootstrap/bootstrap.min.css') }}" rel="stylesheet">
     <!-- FontAwesome -->
-    <link rel="stylesheet" href="{{ asset('assets/vendor/fontawesome/all.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('admin_assets/vendor/fontawesome/all.min.css') }}">
     
     <style>
         body {
@@ -16,7 +16,7 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            background-image: linear-gradient(rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.7)), url('{{ asset('assets/images/bg.JPEG') }}');
+            background-image: linear-gradient(rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.7)), url('{{ asset('admin_assets/images/bg.JPEG') }}');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -131,9 +131,10 @@
             min-height: 100vh;
             transition: all 0.3s;
             flex-fill: 1;
+            opacity: 0;
         }
         .fade-in-active {
-            animation: contentFadeIn 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+            animation: contentFadeIn 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
         }
         .nav-icon {
             font-size: 1.1rem;
@@ -360,10 +361,10 @@
 </div>
 
 <!-- jQuery and Bootstrap Bundle (includes Popper) -->
-<script src="{{ asset('assets/vendor/jquery/jquery-3.6.0.min.js') }}"></script>
-<script src="{{ asset('assets/vendor/bootstrap/bootstrap.bundle.min.js') }}"></script>
+<script src="{{ asset('admin_assets/vendor/jquery/jquery-3.6.0.min.js') }}"></script>
+<script src="{{ asset('admin_assets/vendor/bootstrap/bootstrap.bundle.min.js') }}"></script>
 <!-- Chart.js -->
-<script src="{{ asset('assets/vendor/chartjs/chart.js') }}"></script>
+<script src="{{ asset('admin_assets/vendor/chartjs/chart.js') }}"></script>
 
 <script>
     $(document).ready(function () {
@@ -411,7 +412,7 @@
 @yield('scripts')
 
 <!-- SweetAlert2 -->
-<script src="{{ asset('assets/vendor/sweetalert2/sweetalert2.min.js') }}"></script>
+<script src="{{ asset('admin_assets/vendor/sweetalert2/sweetalert2.min.js') }}"></script>
 
 <script>
     // Global SweetAlert2 Toast Mixin
@@ -449,6 +450,7 @@
             content.classList.add('fade-in-active');
             content.addEventListener('animationend', function() {
                 content.classList.remove('fade-in-active');
+                content.style.opacity = '1';
             });
         }
     })();

@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Nurse Call Admin</title>
     <!-- Bootstrap 5 CSS -->
-    <link href="{{ asset('assets/vendor/bootstrap/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('admin_assets/vendor/bootstrap/bootstrap.min.css') }}" rel="stylesheet">
     <!-- Local FontAwesome -->
-    <link href="{{ asset('assets/vendor/fontawesome/all.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('admin_assets/vendor/fontawesome/all.min.css') }}" rel="stylesheet">
     
     <style>
         :root {

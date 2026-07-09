@@ -157,8 +157,8 @@
 @endsection
 
 @section('scripts')
-<link rel="stylesheet" href="{{ asset('assets/vendor/flatpickr/flatpickr.min.css') }}">
-<script src="{{ asset('assets/vendor/flatpickr/flatpickr.min.js') }}"></script>
+<link rel="stylesheet" href="{{ asset('admin_assets/vendor/flatpickr/flatpickr.min.css') }}">
+<script src="{{ asset('admin_assets/vendor/flatpickr/flatpickr.min.js') }}"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         flatpickr(".timepicker", {

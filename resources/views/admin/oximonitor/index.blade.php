@@ -654,13 +654,13 @@
     ];
 @endphp
 
-<script src="{{ asset('assets/vendor/moment/moment.min.js') }}"></script>
-<script src="{{ asset('assets/vendor/daterangepicker/daterangepicker.min.js') }}"></script>
-<link rel="stylesheet" href="{{ asset('assets/vendor/daterangepicker/daterangepicker.css') }}" />
+<script src="{{ asset('admin_assets/vendor/moment/moment.min.js') }}"></script>
+<script src="{{ asset('admin_assets/vendor/daterangepicker/daterangepicker.min.js') }}"></script>
+<link rel="stylesheet" href="{{ asset('admin_assets/vendor/daterangepicker/daterangepicker.css') }}" />
 
-<script src="{{ asset('assets/vendor/datatables/jquery.dataTables.min.js') }}"></script>
-<script src="{{ asset('assets/vendor/datatables/dataTables.bootstrap5.min.js') }}"></script>
-<link rel="stylesheet" href="{{ asset('assets/vendor/datatables/dataTables.bootstrap5.min.css') }}" />
+<script src="{{ asset('admin_assets/vendor/datatables/jquery.dataTables.min.js') }}"></script>
+<script src="{{ asset('admin_assets/vendor/datatables/dataTables.bootstrap5.min.js') }}"></script>
+<link rel="stylesheet" href="{{ asset('admin_assets/vendor/datatables/dataTables.bootstrap5.min.css') }}" />
 
 <script>
 $(document).ready(function() {

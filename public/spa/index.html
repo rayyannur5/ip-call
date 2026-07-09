@@ -1,47 +1,29 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IP Call System</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: Arial, sans-serif;
-            background: #f0f2f5;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nurse Call</title>
+    <script type="module" crossorigin src="/assets/index-CFMo_XPW.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-DJn0mMSu.css">
+  </head>
+  <body>
+    <div id="root"></div>
+    <script>
+
+      document.addEventListener('mousewheel', e => { // Preventing the pinch-to-zoom
+        if (e.ctrlKey){
+          e.preventDefault()
         }
-        .card {
-            background: white;
-            border-radius: 8px;
-            padding: 40px;
-            text-align: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            max-width: 400px;
-            width: 90%;
+      }, {passive: false})
+
+      document.addEventListener("keydown", function (event) {
+        if ((event.ctrlKey || event.metaKey) && (event.key === '+' || event.key === '-' || event.key === '=')) {
+          event.preventDefault();
         }
-        h1 { font-size: 24px; color: #333; margin-bottom: 8px; }
-        p { color: #888; margin-bottom: 24px; font-size: 14px; }
-        a {
-            display: inline-block;
-            background: #1a73e8;
-            color: white;
-            text-decoration: none;
-            padding: 12px 32px;
-            border-radius: 4px;
-            font-size: 15px;
-        }
-        a:hover { background: #1558b0; }
-    </style>
-</head>
-<body>
-    <div class="card">
-        <h1>IP Call System</h1>
-        <p>Selamat datang di halaman utama.</p>
-        <a href="/ip-call/admin">Masuk ke Admin Panel</a>
-    </div>
-</body>
+      });
+
+    </script>
+  </body>
 </html>
