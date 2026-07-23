@@ -14,7 +14,7 @@ USERNAME = 'server'
 PASSWORD = 'server'
 
 # Default linphonecsh init arguments
-DEFAULT_INIT_ARGS = "-c /home/nursecallserver/.linphonerc"
+DEFAULT_INIT_ARGS = "-c /home/nursecallserver/.config/linphone/linphonerc"
 
 # Threading events to manage state
 is_connected = Event()
