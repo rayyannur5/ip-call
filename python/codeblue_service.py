@@ -30,10 +30,19 @@ PUBLIC_DIR = "/var/www/ip-call/public"  # for mastersound-resolved static files
 DEDUP_WINDOW_SECONDS = 1  # port of processingTopics (mqtt_service.dart)
 WORD_GAP_MS = 100  # port of wordGap (audio_service.dart)
 NUMBER_GAP_MS = 50  # port of numberGap (audio_service.dart)
-DEFAULT_INTERVAL_SPEAKS_MS = 8000  # fallback if utils.php has no interval_speaks row
+DEFAULT_INTERVAL_SPEAKS_MS = 1000  # fallback if utils.php has no interval_speaks row
 SPEAK_ROUND_ROBIN_REPEATS = 3  # port of counterIndexInterval >= 3 (message_controller.dart)
 PLAYBACK_POLL_SECONDS = 0.02  # how often to check if a clip finished playing
 PLAYBACK_TIMEOUT_MARGIN_SECONDS = 2.0  # extra time allowed past a clip's real duration before giving up
+# Source clips in speaks/ peak around 0.4-0.6 instead of near 1.0, and playback
+# goes straight to a raw ALSA hw: device (see _resample comment below), which
+# bypasses the OS/software mixer entirely - so system "master volume" has no
+# effect here. Clips are scaled so their peak would hit this value, then
+# hard-clipped to [-1, 1] - intentionally >1.0 so quiet clips get overdriven
+# for extra loudness rather than just filling headroom. Raise further for more
+# volume (at the cost of more clipping distortion), or drop back to ~0.97 for
+# a clean, undistorted ceiling. Set to 0 to disable and play clips unmodified.
+PLAYBACK_TARGET_PEAK = 2
 
 # Built-in catalog (verbatim from audio_service.dart's speakFiles + letter loop)
 BUILTIN_WORDS = [
@@ -193,6 +202,17 @@ class AudioPlayerService:
             device_samplerate = self._query_device_samplerate(device_index)
 
             data, samplerate = sf.read(path)
+            if PLAYBACK_TARGET_PEAK:
+                peak = np.max(np.abs(data)) if data.size else 0
+                if peak > 0:
+                    data = np.clip(data * (PLAYBACK_TARGET_PEAK / peak), -1.0, 1.0)
+            if data.ndim == 1:
+                # Source clips are mono, but this plays straight to a raw ALSA
+                # hw: device (see _resample comment below) with no "plug" layer
+                # to remap channels - a 1-channel stream isn't guaranteed to
+                # come out of both physical outputs. Duplicate to stereo so it
+                # always does.
+                data = np.column_stack([data, data])
             if device_samplerate is not None and samplerate != device_samplerate:
                 data = self._resample(data, samplerate, device_samplerate)
                 samplerate = device_samplerate
@@ -347,13 +367,13 @@ class MessageController:
 # HTTP helpers
 # ==============================================================================
 def fetch_interval_speaks(host):
-    try:
-        res = requests.get(f"http://{host}/ip-call/server/utils.php", timeout=5).json()
-        for util in res.get("data", []):
-            if util.get("type") == "interval_speaks":
-                return int(util["value"])
-    except Exception as e:
-        log_print(f"Failed to fetch interval_speaks from utils.php: {e}", level="ERROR")
+    # try:
+    #     res = requests.get(f"http://{host}/ip-call/server/utils.php", timeout=5).json()
+    #     for util in res.get("data", []):
+    #         if util.get("type") == "interval_speaks":
+    #             return int(util["value"])
+    # except Exception as e:
+    #     log_print(f"Failed to fetch interval_speaks from utils.php: {e}", level="ERROR")
     return DEFAULT_INTERVAL_SPEAKS_MS
 
 
